@@ -32,14 +32,14 @@ The results below represent the amount of time (ns) the operation takes per iter
 
 | Operation     | Doublets United Volatile | Doublets United NonVolatile | Doublets Split Volatile | Doublets Split NonVolatile | Neo4j NonTransaction | Neo4j Transaction |
 |---------------|--------------------------|-----------------------------|-------------------------|----------------------------|----------------------|-------------------|
-| Create        | (pending benchmark)      | (pending benchmark)         | (pending benchmark)     | (pending benchmark)        | (pending benchmark)  | (pending benchmark) |
-| Update        | (pending benchmark)      | (pending benchmark)         | (pending benchmark)     | (pending benchmark)        | (pending benchmark)  | (pending benchmark) |
-| Delete        | (pending benchmark)      | (pending benchmark)         | (pending benchmark)     | (pending benchmark)        | (pending benchmark)  | (pending benchmark) |
-| Each All      | (pending benchmark)      | (pending benchmark)         | (pending benchmark)     | (pending benchmark)        | (pending benchmark)  | (pending benchmark) |
-| Each Identity | (pending benchmark)      | (pending benchmark)         | (pending benchmark)     | (pending benchmark)        | (pending benchmark)  | (pending benchmark) |
-| Each Concrete | (pending benchmark)      | (pending benchmark)         | (pending benchmark)     | (pending benchmark)        | (pending benchmark)  | (pending benchmark) |
-| Each Outgoing | (pending benchmark)      | (pending benchmark)         | (pending benchmark)     | (pending benchmark)        | (pending benchmark)  | (pending benchmark) |
-| Each Incoming | (pending benchmark)      | (pending benchmark)         | (pending benchmark)     | (pending benchmark)        | (pending benchmark)  | (pending benchmark) |
+| Create        | 98004 (0.3x faster)      | 100671 (0.3x faster)        | 84577 (0.4x faster)     | 83341 (0.4x faster)        | 3113953004           | 31741             |
+| Update        | N/A                      | N/A                         | N/A                     | N/A                        | N/A                  | N/A               |
+| Delete        | N/A                      | N/A                         | N/A                     | N/A                        | 1897759743           | N/A               |
+| Each All      | N/A                      | N/A                         | N/A                     | N/A                        | N/A                  | N/A               |
+| Each Identity | N/A                      | N/A                         | N/A                     | N/A                        | N/A                  | N/A               |
+| Each Concrete | N/A                      | N/A                         | N/A                     | N/A                        | N/A                  | N/A               |
+| Each Outgoing | N/A                      | N/A                         | N/A                     | N/A                        | N/A                  | N/A               |
+| Each Incoming | N/A                      | N/A                         | N/A                     | N/A                        | N/A                  | N/A               |
 
 ## Conclusion
 
