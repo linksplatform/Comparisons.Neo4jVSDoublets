@@ -34,36 +34,65 @@ struct Statement {
     parameters: Option<Value>,
 }
 
+/// Response from Neo4j Cypher query
 #[derive(Debug, Deserialize)]
-struct CypherResponse {
-    results: Vec<QueryResult>,
+pub struct CypherResponse {
+    pub results: Vec<QueryResult>,
     #[serde(default)]
-    errors: Vec<CypherError>,
+    pub errors: Vec<CypherError>,
 }
 
+/// Result from a single Cypher query statement
 #[derive(Debug, Deserialize)]
-struct QueryResult {
+pub struct QueryResult {
     #[serde(default)]
     #[allow(dead_code)]
-    columns: Vec<String>,
+    pub columns: Vec<String>,
     #[serde(default)]
-    data: Vec<RowData>,
+    pub data: Vec<RowData>,
 }
 
+/// A single row of data from a Cypher query
 #[derive(Debug, Deserialize)]
-struct RowData {
-    row: Vec<Value>,
+pub struct RowData {
+    pub row: Vec<Value>,
 }
 
+/// Error returned from Neo4j
 #[derive(Debug, Deserialize)]
-struct CypherError {
+pub struct CypherError {
     #[allow(dead_code)]
-    code: String,
+    pub code: String,
     #[allow(dead_code)]
-    message: String,
+    pub message: String,
 }
 
 impl<T: LinkType> Client<T> {
+    /// Get the host for this client
+    pub fn host(&self) -> &str {
+        &self.host
+    }
+
+    /// Get the port for this client
+    pub fn port(&self) -> u16 {
+        self.port
+    }
+
+    /// Get the auth header for this client
+    pub fn auth(&self) -> &str {
+        &self.auth
+    }
+
+    /// Get the constants for this client
+    pub fn constants(&self) -> &LinksConstants<T> {
+        &self.constants
+    }
+
+    /// Get and increment the next_id atomically
+    pub fn fetch_next_id(&self) -> i64 {
+        self.next_id.fetch_add(1, Ordering::SeqCst)
+    }
+
     pub fn new(uri: &str, user: &str, password: &str) -> Result<Self> {
         // Parse URI to extract host and port
         let uri = uri.replace("bolt://", "").replace("http://", "");
@@ -118,7 +147,8 @@ impl<T: LinkType> Client<T> {
         Ok(client)
     }
 
-    fn execute_cypher(&self, query: &str, params: Option<Value>) -> Result<CypherResponse> {
+    /// Execute a Cypher query against Neo4j
+    pub fn execute_cypher(&self, query: &str, params: Option<Value>) -> Result<CypherResponse> {
         let request = CypherRequest {
             statements: vec![Statement {
                 statement: query.to_string(),
