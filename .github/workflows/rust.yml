@@ -1,0 +1,116 @@
+name: Benchmark Rust version
+
+on: [push, pull_request]
+
+env:
+  toolchain: nightly-2024-01-01
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+
+    services:
+      neo4j:
+        image: neo4j:5.15.0
+        env:
+          NEO4J_AUTH: neo4j/password
+          NEO4J_PLUGINS: '[]'
+        options: >-
+          --health-cmd "wget -q --spider http://localhost:7474 || exit 1"
+          --health-interval 10s
+          --health-timeout 10s
+          --health-retries 10
+          --health-start-period 30s
+        ports:
+          - 7474:7474
+          - 7687:7687
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: ${{env.toolchain}}
+          components: rustfmt, clippy
+
+      - name: Wait for Neo4j to be ready
+        run: |
+          echo "Waiting for Neo4j to be fully ready..."
+          for i in {1..30}; do
+            if curl -s http://localhost:7474 > /dev/null; then
+              echo "Neo4j is ready!"
+              break
+            fi
+            echo "Attempt $i: Neo4j not ready yet..."
+            sleep 2
+          done
+
+      - name: Build benchmark
+        run: cargo build --release --all-features --manifest-path rust/Cargo.toml
+
+      - name: Run benchmark
+        working-directory: rust
+        env:
+          NEO4J_URI: bolt://localhost:7687
+          NEO4J_USER: neo4j
+          NEO4J_PASSWORD: password
+        run: cargo bench --bench bench -- --output-format bencher | tee out.txt
+
+      - name: Prepare benchmark results
+        run: |
+          git config --global user.email "linksplatform@gmail.com"
+          git config --global user.name "LinksPlatformBencher"
+          cd rust
+          pip install numpy matplotlib
+          python3 out.py
+          cd ..
+
+          # Create Docs directory if it doesn't exist
+          mkdir -p Docs
+
+          # Copy generated images
+          cp -f rust/bench_rust.png Docs/
+          cp -f rust/bench_rust_log_scale.png Docs/
+
+          # Update README with latest results
+          if [ -f rust/results.md ]; then
+            # Replace the results section in README.md
+            python3 -c "
+          import re
+
+          with open('rust/results.md', 'r') as f:
+              results = f.read()
+
+          with open('README.md', 'r') as f:
+              readme = f.read()
+
+          # Pattern to find and replace the results table
+          pattern = r'(\| Operation.*?\n\|[-|]+\n(?:\|.*?\n)*)'
+          if re.search(pattern, readme):
+              readme = re.sub(pattern, results.strip() + '\n', readme)
+
+          with open('README.md', 'w') as f:
+              f.write(readme)
+          "
+          fi
+
+          # Commit changes if any
+          git add Docs README.md
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update benchmark results"
+            git push origin HEAD
+          fi
+
+      - name: Save benchmark results
+        uses: actions/upload-artifact@v4
+        with:
+          name: Benchmark results
+          path: |
+            rust/bench_rust.png
+            rust/bench_rust_log_scale.png
+            rust/out.txt
