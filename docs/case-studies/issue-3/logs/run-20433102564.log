@@ -1,0 +1,791 @@
+benchmark	UNKNOWN STEP	﻿2025-12-22T13:20:19.8925673Z Current runner version: '2.330.0'
+benchmark	UNKNOWN STEP	2025-12-22T13:20:19.8949060Z ##[group]Runner Image Provisioner
+benchmark	UNKNOWN STEP	2025-12-22T13:20:19.8949919Z Hosted Compute Agent
+benchmark	UNKNOWN STEP	2025-12-22T13:20:19.8950481Z Version: 20251211.462
+benchmark	UNKNOWN STEP	2025-12-22T13:20:19.8951168Z Commit: 6cbad8c2bb55d58165063d031ccabf57e2d2db61
+benchmark	UNKNOWN STEP	2025-12-22T13:20:19.8951903Z Build Date: 2025-12-11T16:28:49Z
+benchmark	UNKNOWN STEP	2025-12-22T13:20:19.8952526Z Worker ID: {180be412-f760-4aef-b303-c322d0e449a6}
+benchmark	UNKNOWN STEP	2025-12-22T13:20:19.8953259Z ##[endgroup]
+benchmark	UNKNOWN STEP	2025-12-22T13:20:19.8953758Z ##[group]Operating System
+benchmark	UNKNOWN STEP	2025-12-22T13:20:19.8954775Z Ubuntu
+benchmark	UNKNOWN STEP	2025-12-22T13:20:19.8955345Z 24.04.3
+benchmark	UNKNOWN STEP	2025-12-22T13:20:19.8955816Z LTS
+benchmark	UNKNOWN STEP	2025-12-22T13:20:19.8956279Z ##[endgroup]
+benchmark	UNKNOWN STEP	2025-12-22T13:20:19.8956769Z ##[group]Runner Image
+benchmark	UNKNOWN STEP	2025-12-22T13:20:19.8957349Z Image: ubuntu-24.04
+benchmark	UNKNOWN STEP	2025-12-22T13:20:19.8957831Z Version: 20251215.174.1
+benchmark	UNKNOWN STEP	2025-12-22T13:20:19.8958903Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20251215.174/images/ubuntu/Ubuntu2404-Readme.md
+benchmark	UNKNOWN STEP	2025-12-22T13:20:19.8960575Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20251215.174
+benchmark	UNKNOWN STEP	2025-12-22T13:20:19.8961649Z ##[endgroup]
+benchmark	UNKNOWN STEP	2025-12-22T13:20:19.8964143Z ##[group]GITHUB_TOKEN Permissions
+benchmark	UNKNOWN STEP	2025-12-22T13:20:19.8966348Z Actions: write
+benchmark	UNKNOWN STEP	2025-12-22T13:20:19.8966932Z ArtifactMetadata: write
+benchmark	UNKNOWN STEP	2025-12-22T13:20:19.8967477Z Attestations: write
+benchmark	UNKNOWN STEP	2025-12-22T13:20:19.8967940Z Checks: write
+benchmark	UNKNOWN STEP	2025-12-22T13:20:19.8968496Z Contents: write
+benchmark	UNKNOWN STEP	2025-12-22T13:20:19.8968959Z Deployments: write
+benchmark	UNKNOWN STEP	2025-12-22T13:20:19.8969460Z Discussions: write
+benchmark	UNKNOWN STEP	2025-12-22T13:20:19.8970069Z Issues: write
+benchmark	UNKNOWN STEP	2025-12-22T13:20:19.8970522Z Metadata: read
+benchmark	UNKNOWN STEP	2025-12-22T13:20:19.8970992Z Models: read
+benchmark	UNKNOWN STEP	2025-12-22T13:20:19.8971510Z Packages: write
+benchmark	UNKNOWN STEP	2025-12-22T13:20:19.8972011Z Pages: write
+benchmark	UNKNOWN STEP	2025-12-22T13:20:19.8972479Z PullRequests: write
+benchmark	UNKNOWN STEP	2025-12-22T13:20:19.8973187Z RepositoryProjects: write
+benchmark	UNKNOWN STEP	2025-12-22T13:20:19.8973725Z SecurityEvents: write
+benchmark	UNKNOWN STEP	2025-12-22T13:20:19.8974413Z Statuses: write
+benchmark	UNKNOWN STEP	2025-12-22T13:20:19.8974995Z ##[endgroup]
+benchmark	UNKNOWN STEP	2025-12-22T13:20:19.8977036Z Secret source: Actions
+benchmark	UNKNOWN STEP	2025-12-22T13:20:19.8977750Z Prepare workflow directory
+benchmark	UNKNOWN STEP	2025-12-22T13:20:19.9542667Z Prepare all required actions
+benchmark	UNKNOWN STEP	2025-12-22T13:20:19.9579762Z Getting action download info
+benchmark	UNKNOWN STEP	2025-12-22T13:20:20.4166517Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+benchmark	UNKNOWN STEP	2025-12-22T13:20:20.5079017Z Download action repository 'dtolnay/rust-toolchain@master' (SHA:f7ccc83f9ed1e5b9c81d8a67d7ad1a747e22a561)
+benchmark	UNKNOWN STEP	2025-12-22T13:20:20.9439166Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+benchmark	UNKNOWN STEP	2025-12-22T13:20:21.1769122Z Complete job name: benchmark
+benchmark	UNKNOWN STEP	2025-12-22T13:20:21.2240165Z ##[group]Checking docker version
+benchmark	UNKNOWN STEP	2025-12-22T13:20:21.2253509Z ##[command]/usr/bin/docker version --format '{{.Server.APIVersion}}'
+benchmark	UNKNOWN STEP	2025-12-22T13:20:21.2946761Z '1.48'
+benchmark	UNKNOWN STEP	2025-12-22T13:20:21.2959001Z Docker daemon API version: '1.48'
+benchmark	UNKNOWN STEP	2025-12-22T13:20:21.2959818Z ##[command]/usr/bin/docker version --format '{{.Client.APIVersion}}'
+benchmark	UNKNOWN STEP	2025-12-22T13:20:21.3115459Z '1.48'
+benchmark	UNKNOWN STEP	2025-12-22T13:20:21.3128764Z Docker client API version: '1.48'
+benchmark	UNKNOWN STEP	2025-12-22T13:20:21.3135078Z ##[endgroup]
+benchmark	UNKNOWN STEP	2025-12-22T13:20:21.3138055Z ##[group]Clean up resources from previous jobs
+benchmark	UNKNOWN STEP	2025-12-22T13:20:21.3143643Z ##[command]/usr/bin/docker ps --all --quiet --no-trunc --filter "label=df425d"
+benchmark	UNKNOWN STEP	2025-12-22T13:20:21.3322365Z ##[command]/usr/bin/docker network prune --force --filter "label=df425d"
+benchmark	UNKNOWN STEP	2025-12-22T13:20:21.3458094Z ##[endgroup]
+benchmark	UNKNOWN STEP	2025-12-22T13:20:21.3458635Z ##[group]Create local container network
+benchmark	UNKNOWN STEP	2025-12-22T13:20:21.3468923Z ##[command]/usr/bin/docker network create --label df425d github_network_3e32eed10ba8435596fdf631b2c79201
+benchmark	UNKNOWN STEP	2025-12-22T13:20:21.3965120Z 8bd2c2055fa817fc519aae263c5090e91687341b95eb774c908b05c7509c2e4c
+benchmark	UNKNOWN STEP	2025-12-22T13:20:21.3981871Z ##[endgroup]
+benchmark	UNKNOWN STEP	2025-12-22T13:20:21.4007253Z ##[group]Starting neo4j service container
+benchmark	UNKNOWN STEP	2025-12-22T13:20:21.4028759Z ##[command]/usr/bin/docker pull neo4j:5.15.0
+benchmark	UNKNOWN STEP	2025-12-22T13:20:22.4121540Z 5.15.0: Pulling from library/neo4j
+benchmark	UNKNOWN STEP	2025-12-22T13:20:22.6840906Z 0e0969fcaa82: Pulling fs layer
+benchmark	UNKNOWN STEP	2025-12-22T13:20:22.6843524Z 46717352c8c1: Pulling fs layer
+benchmark	UNKNOWN STEP	2025-12-22T13:20:22.6844657Z 7b6c4391345c: Pulling fs layer
+benchmark	UNKNOWN STEP	2025-12-22T13:20:22.6845605Z b3a561d23014: Pulling fs layer
+benchmark	UNKNOWN STEP	2025-12-22T13:20:22.6846527Z 4136c74b119e: Pulling fs layer
+benchmark	UNKNOWN STEP	2025-12-22T13:20:22.6847433Z b3a561d23014: Waiting
+benchmark	UNKNOWN STEP	2025-12-22T13:20:22.6848184Z 4136c74b119e: Waiting
+benchmark	UNKNOWN STEP	2025-12-22T13:20:22.9336491Z 7b6c4391345c: Verifying Checksum
+benchmark	UNKNOWN STEP	2025-12-22T13:20:22.9338792Z 7b6c4391345c: Download complete
+benchmark	UNKNOWN STEP	2025-12-22T13:20:23.0332876Z 0e0969fcaa82: Verifying Checksum
+benchmark	UNKNOWN STEP	2025-12-22T13:20:23.0335959Z 0e0969fcaa82: Download complete
+benchmark	UNKNOWN STEP	2025-12-22T13:20:23.1753415Z b3a561d23014: Verifying Checksum
+benchmark	UNKNOWN STEP	2025-12-22T13:20:23.1756095Z b3a561d23014: Download complete
+benchmark	UNKNOWN STEP	2025-12-22T13:20:23.4863661Z 46717352c8c1: Verifying Checksum
+benchmark	UNKNOWN STEP	2025-12-22T13:20:23.4867920Z 46717352c8c1: Download complete
+benchmark	UNKNOWN STEP	2025-12-22T13:20:23.7188672Z 4136c74b119e: Verifying Checksum
+benchmark	UNKNOWN STEP	2025-12-22T13:20:23.7189113Z 4136c74b119e: Download complete
+benchmark	UNKNOWN STEP	2025-12-22T13:20:24.4562045Z 0e0969fcaa82: Pull complete
+benchmark	UNKNOWN STEP	2025-12-22T13:20:27.3184499Z 46717352c8c1: Pull complete
+benchmark	UNKNOWN STEP	2025-12-22T13:20:27.3439099Z 7b6c4391345c: Pull complete
+benchmark	UNKNOWN STEP	2025-12-22T13:20:27.3577698Z b3a561d23014: Pull complete
+benchmark	UNKNOWN STEP	2025-12-22T13:20:28.0989339Z 4136c74b119e: Pull complete
+benchmark	UNKNOWN STEP	2025-12-22T13:20:28.1031532Z Digest: sha256:d9e2fb1ba398536e50d22ebc3d5d585baa086c1c0cf8e5b96bdc9e11e87e002a
+benchmark	UNKNOWN STEP	2025-12-22T13:20:28.1047849Z Status: Downloaded newer image for neo4j:5.15.0
+benchmark	UNKNOWN STEP	2025-12-22T13:20:28.1058894Z docker.io/library/neo4j:5.15.0
+benchmark	UNKNOWN STEP	2025-12-22T13:20:28.1121812Z ##[command]/usr/bin/docker create --name 893b9b3a7a0b48eeaf6acf7f212fa3c7_neo4j5150_8772e2 --label df425d --network github_network_3e32eed10ba8435596fdf631b2c79201 --network-alias neo4j -p 7474:7474 -p 7687:7687 --health-cmd "wget -q --spider http://localhost:7474 || exit 1" --health-interval 10s --health-timeout 10s --health-retries 10 --health-start-period 30s -e "NEO4J_AUTH=neo4j/password" -e "NEO4J_PLUGINS=[]" -e GITHUB_ACTIONS=true -e CI=true neo4j:5.15.0
+benchmark	UNKNOWN STEP	2025-12-22T13:20:28.1386000Z 8197c0c70c9e11228b095f41447b8ba1197a372c2634bc3e026b6bfad90025a7
+benchmark	UNKNOWN STEP	2025-12-22T13:20:28.1409880Z ##[command]/usr/bin/docker start 8197c0c70c9e11228b095f41447b8ba1197a372c2634bc3e026b6bfad90025a7
+benchmark	UNKNOWN STEP	2025-12-22T13:20:28.3468647Z 8197c0c70c9e11228b095f41447b8ba1197a372c2634bc3e026b6bfad90025a7
+benchmark	UNKNOWN STEP	2025-12-22T13:20:28.3488246Z ##[command]/usr/bin/docker ps --all --filter id=8197c0c70c9e11228b095f41447b8ba1197a372c2634bc3e026b6bfad90025a7 --filter status=running --no-trunc --format "{{.ID}} {{.Status}}"
+benchmark	UNKNOWN STEP	2025-12-22T13:20:28.3611376Z 8197c0c70c9e11228b095f41447b8ba1197a372c2634bc3e026b6bfad90025a7 Up Less than a second (health: starting)
+benchmark	UNKNOWN STEP	2025-12-22T13:20:28.3634124Z ##[command]/usr/bin/docker port 8197c0c70c9e11228b095f41447b8ba1197a372c2634bc3e026b6bfad90025a7
+benchmark	UNKNOWN STEP	2025-12-22T13:20:28.3764004Z 7474/tcp -> 0.0.0.0:7474
+benchmark	UNKNOWN STEP	2025-12-22T13:20:28.3764809Z 7474/tcp -> [::]:7474
+benchmark	UNKNOWN STEP	2025-12-22T13:20:28.3765074Z 7687/tcp -> 0.0.0.0:7687
+benchmark	UNKNOWN STEP	2025-12-22T13:20:28.3765311Z 7687/tcp -> [::]:7687
+benchmark	UNKNOWN STEP	2025-12-22T13:20:28.3811499Z ##[endgroup]
+benchmark	UNKNOWN STEP	2025-12-22T13:20:28.3820249Z ##[group]Waiting for all services to be ready
+benchmark	UNKNOWN STEP	2025-12-22T13:20:28.3835186Z ##[command]/usr/bin/docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" 8197c0c70c9e11228b095f41447b8ba1197a372c2634bc3e026b6bfad90025a7
+benchmark	UNKNOWN STEP	2025-12-22T13:20:28.3961667Z starting
+benchmark	UNKNOWN STEP	2025-12-22T13:20:28.3989538Z neo4j service is starting, waiting 2 seconds before checking again.
+benchmark	UNKNOWN STEP	2025-12-22T13:20:30.3990987Z ##[command]/usr/bin/docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" 8197c0c70c9e11228b095f41447b8ba1197a372c2634bc3e026b6bfad90025a7
+benchmark	UNKNOWN STEP	2025-12-22T13:20:30.4192745Z starting
+benchmark	UNKNOWN STEP	2025-12-22T13:20:30.4236021Z neo4j service is starting, waiting 3 seconds before checking again.
+benchmark	UNKNOWN STEP	2025-12-22T13:20:34.3346342Z ##[command]/usr/bin/docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" 8197c0c70c9e11228b095f41447b8ba1197a372c2634bc3e026b6bfad90025a7
+benchmark	UNKNOWN STEP	2025-12-22T13:20:34.3611612Z starting
+benchmark	UNKNOWN STEP	2025-12-22T13:20:34.3657121Z neo4j service is starting, waiting 9 seconds before checking again.
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.3943581Z ##[command]/usr/bin/docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" 8197c0c70c9e11228b095f41447b8ba1197a372c2634bc3e026b6bfad90025a7
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.4067176Z healthy
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.4083812Z neo4j service is healthy.
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.4084781Z ##[endgroup]
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.4418029Z ##[group]Run actions/checkout@v4
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.4418563Z with:
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.4418819Z   repository: linksplatform/Comparisons.Neo4jVSDoublets
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.4419242Z   token: ***
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.4419416Z   ssh-strict: true
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.4419585Z   ssh-user: git
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.4419773Z   persist-credentials: true
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.4419977Z   clean: true
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.4420164Z   sparse-checkout-cone-mode: true
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.4420383Z   fetch-depth: 1
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.4420549Z   fetch-tags: false
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.4420726Z   show-progress: true
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.4420898Z   lfs: false
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.4421074Z   submodules: false
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.4421246Z   set-safe-directory: true
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.4421605Z env:
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.4421776Z   toolchain: nightly-2024-01-01
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.4422091Z   GITHUB_TOKEN: ***
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.4422265Z ##[endgroup]
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.5566624Z Syncing repository: linksplatform/Comparisons.Neo4jVSDoublets
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.5568070Z ##[group]Getting Git version info
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.5568597Z Working directory is '/home/runner/work/Comparisons.Neo4jVSDoublets/Comparisons.Neo4jVSDoublets'
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.5569287Z [command]/usr/bin/git version
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.5636318Z git version 2.52.0
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.5663415Z ##[endgroup]
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.5677096Z Temporarily overriding HOME='/home/runner/work/_temp/85639040-4ccf-4f52-b38a-f0ff29f749b8' before making global git config changes
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.5678068Z Adding repository directory to the temporary git global config as a safe directory
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.5682814Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Comparisons.Neo4jVSDoublets/Comparisons.Neo4jVSDoublets
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.5721699Z Deleting the contents of '/home/runner/work/Comparisons.Neo4jVSDoublets/Comparisons.Neo4jVSDoublets'
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.5725161Z ##[group]Initializing the repository
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.5729518Z [command]/usr/bin/git init /home/runner/work/Comparisons.Neo4jVSDoublets/Comparisons.Neo4jVSDoublets
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.5824730Z hint: Using 'master' as the name for the initial branch. This default branch name
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.5825564Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.5826409Z hint: to use in all of your new repositories, which will suppress this warning,
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.5827088Z hint: call:
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.5827400Z hint:
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.5827853Z hint: 	git config --global init.defaultBranch <name>
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.5828425Z hint:
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.5828981Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.5829998Z hint: 'development'. The just-created branch can be renamed via this command:
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.5830632Z hint:
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.5830903Z hint: 	git branch -m <name>
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.5831174Z hint:
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.5831529Z hint: Disable this message with "git config set advice.defaultBranchName false"
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.5832294Z Initialized empty Git repository in /home/runner/work/Comparisons.Neo4jVSDoublets/Comparisons.Neo4jVSDoublets/.git/
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.5840776Z [command]/usr/bin/git remote add origin https://github.com/linksplatform/Comparisons.Neo4jVSDoublets
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.5875201Z ##[endgroup]
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.5875622Z ##[group]Disabling automatic garbage collection
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.5879417Z [command]/usr/bin/git config --local gc.auto 0
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.5907563Z ##[endgroup]
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.5907931Z ##[group]Setting up auth
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.5914900Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.5943532Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.6274496Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.6306868Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.6525063Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.6553754Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.6781329Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.6816133Z ##[endgroup]
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.6816804Z ##[group]Fetching the repository
+benchmark	UNKNOWN STEP	2025-12-22T13:20:43.6825460Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +ebc491788d6c784e9ae29b7d897d8657f9caf994:refs/remotes/pull/2/merge
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.0895937Z From https://github.com/linksplatform/Comparisons.Neo4jVSDoublets
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.0896897Z  * [new ref]         ebc491788d6c784e9ae29b7d897d8657f9caf994 -> pull/2/merge
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.0929447Z ##[endgroup]
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.0930019Z ##[group]Determining the checkout info
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.0932042Z ##[endgroup]
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.0938301Z [command]/usr/bin/git sparse-checkout disable
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.0998017Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1026942Z ##[group]Checking out the ref
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1031109Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/2/merge
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1107357Z Note: switching to 'refs/remotes/pull/2/merge'.
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1107895Z 
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1108329Z You are in 'detached HEAD' state. You can look around, make experimental
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1109038Z changes and commit them, and you can discard any commits you make in this
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1109795Z state without impacting any branches by switching back to a branch.
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1110208Z 
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1110472Z If you want to create a new branch to retain commits you create, you may
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1111116Z do so (now or later) by using -c with the switch command. Example:
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1111459Z 
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1111565Z   git switch -c <new-branch-name>
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1111721Z 
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1111809Z Or undo this operation with:
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1111950Z 
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1112027Z   git switch -
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1112273Z 
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1112607Z Turn off this advice by setting config variable advice.detachedHead to false
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1113086Z 
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1113603Z HEAD is now at ebc4917 Merge 0a8f9284213a76baf8a840ed92014dec20c1b8af into ebb2aee0a4fe1b2fc13dd109abfe5879f56fbaef
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1115940Z ##[endgroup]
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1154088Z [command]/usr/bin/git log -1 --format=%H
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1177186Z ebc491788d6c784e9ae29b7d897d8657f9caf994
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1435619Z ##[group]Run dtolnay/rust-toolchain@master
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1435902Z with:
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1436089Z   toolchain: nightly-2024-01-01
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1436318Z   components: rustfmt, clippy
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1436527Z env:
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1436693Z   toolchain: nightly-2024-01-01
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1437114Z   GITHUB_TOKEN: ***
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1437299Z ##[endgroup]
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1539347Z ##[group]Run : parse toolchain version
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1539680Z [36;1m: parse toolchain version[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1539931Z [36;1mif [[ -z $toolchain ]]; then[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1540422Z [36;1m  # GitHub does not enforce `required: true` inputs itself. https://github.com/actions/runner/issues/1070[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1541135Z [36;1m  echo "'toolchain' is a required input" >&2[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1541399Z [36;1m  exit 1[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1541697Z [36;1melif [[ $toolchain =~ ^stable' '[0-9]+' '(year|month|week|day)s?' 'ago$ ]]; then[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1542091Z [36;1m  if [[ Linux == macOS ]]; then[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1542527Z [36;1m    echo "toolchain=1.$((($(date -v-$(sed 's/stable \([0-9]*\) \(.\).*/\1\2/' <<< $toolchain) +%s)/60/60/24-16569)/7/6))" >> $GITHUB_OUTPUT[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1542937Z [36;1m  else[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1543280Z [36;1m    echo "toolchain=1.$((($(date --date "${toolchain#stable }" +%s)/60/60/24-16569)/7/6))" >> $GITHUB_OUTPUT[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1543650Z [36;1m  fi[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1543908Z [36;1melif [[ $toolchain =~ ^stable' 'minus' '[0-9]+' 'releases?$ ]]; then[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1544553Z [36;1m  echo "toolchain=1.$((($(date +%s)/60/60/24-16569)/7/6-${toolchain//[^0-9]/}))" >> $GITHUB_OUTPUT[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1544952Z [36;1melif [[ $toolchain =~ ^1\.[0-9]+$ ]]; then[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1545385Z [36;1m  echo "toolchain=1.$((i=${toolchain#1.}, c=($(date +%s)/60/60/24-16569)/7/6, i+9*i*(10*i<=c)+90*i*(100*i<=c)))" >> $GITHUB_OUTPUT[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1545790Z [36;1melse[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1546009Z [36;1m  echo "toolchain=$toolchain" >> $GITHUB_OUTPUT[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1546259Z [36;1mfi[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1583568Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1583883Z env:
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1584051Z   toolchain: nightly-2024-01-01
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1584647Z   GITHUB_TOKEN: ***
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1584830Z ##[endgroup]
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1721588Z ##[group]Run : construct rustup command line
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1721883Z [36;1m: construct rustup command line[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1722275Z [36;1mecho "targets=$(for t in ${targets//,/ }; do echo -n ' --target' $t; done)" >> $GITHUB_OUTPUT[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1722811Z [36;1mecho "components=$(for c in ${components//,/ }; do echo -n ' --component' $c; done)" >> $GITHUB_OUTPUT[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1723224Z [36;1mecho "downgrade=" >> $GITHUB_OUTPUT[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1756381Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1756703Z env:
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1756886Z   toolchain: nightly-2024-01-01
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1757303Z   GITHUB_TOKEN: ***
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1757480Z   targets: 
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1757733Z   components: rustfmt, clippy
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1757976Z ##[endgroup]
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1838901Z ##[group]Run : set $CARGO_HOME
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1839143Z [36;1m: set $CARGO_HOME[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1839444Z [36;1mecho CARGO_HOME=${CARGO_HOME:-"$HOME/.cargo"} >> $GITHUB_ENV[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1870995Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1871293Z env:
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1871474Z   toolchain: nightly-2024-01-01
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1871912Z   GITHUB_TOKEN: ***
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1872097Z ##[endgroup]
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1950165Z ##[group]Run : install rustup if needed
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1950442Z [36;1m: install rustup if needed[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1950692Z [36;1mif ! command -v rustup &>/dev/null; then[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1951532Z [36;1m  curl --proto '=https' --tlsv1.2 --retry 10 --retry-connrefused --location --silent --show-error --fail https://sh.rustup.rs | sh -s -- --default-toolchain none -y[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1952165Z [36;1m  echo "$CARGO_HOME/bin" >> $GITHUB_PATH[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1952411Z [36;1mfi[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1984441Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1984747Z env:
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1984915Z   toolchain: nightly-2024-01-01
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1985308Z   GITHUB_TOKEN: ***
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1985498Z   CARGO_HOME: /home/runner/.cargo
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.1985712Z ##[endgroup]
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.2061527Z ##[group]Run rustup toolchain install nightly-2024-01-01 --component rustfmt --component clippy --profile minimal --no-self-update
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.2062466Z [36;1mrustup toolchain install nightly-2024-01-01 --component rustfmt --component clippy --profile minimal --no-self-update[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.2093831Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.2094146Z env:
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.2094454Z   toolchain: nightly-2024-01-01
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.2094874Z   GITHUB_TOKEN: ***
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.2095065Z   CARGO_HOME: /home/runner/.cargo
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.2095308Z   RUSTUP_PERMIT_COPY_RENAME: 1
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.2095521Z ##[endgroup]
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.2621673Z info: syncing channel updates for 'nightly-2024-01-01-x86_64-unknown-linux-gnu'
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.4833505Z info: latest update on 2024-01-01, rust version 1.77.0-nightly (e51e98dde 2023-12-31)
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.4834123Z info: downloading component 'cargo'
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.5236076Z info: downloading component 'clippy'
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.5392008Z info: downloading component 'rust-std'
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.6511009Z info: downloading component 'rustc'
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.8737986Z info: downloading component 'rustfmt'
+benchmark	UNKNOWN STEP	2025-12-22T13:20:44.8945097Z info: installing component 'cargo'
+benchmark	UNKNOWN STEP	2025-12-22T13:20:45.5106349Z info: installing component 'clippy'
+benchmark	UNKNOWN STEP	2025-12-22T13:20:45.7433206Z info: installing component 'rust-std'
+benchmark	UNKNOWN STEP	2025-12-22T13:20:47.5515389Z info: installing component 'rustc'
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.4659550Z info: installing component 'rustfmt'
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.7527813Z 
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.7629693Z   nightly-2024-01-01-x86_64-unknown-linux-gnu installed - rustc 1.77.0-nightly (e51e98dde 2023-12-31)
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.7630200Z 
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.7681798Z ##[group]Run rustup default nightly-2024-01-01
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.7682113Z [36;1mrustup default nightly-2024-01-01[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.7713997Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.7714486Z env:
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.7714704Z   toolchain: nightly-2024-01-01
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.7715306Z   GITHUB_TOKEN: ***
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.7715513Z   CARGO_HOME: /home/runner/.cargo
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.7715736Z ##[endgroup]
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.7818220Z info: using existing install for 'nightly-2024-01-01-x86_64-unknown-linux-gnu'
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.8080914Z info: default toolchain set to 'nightly-2024-01-01-x86_64-unknown-linux-gnu'
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.8081382Z 
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.8177587Z   nightly-2024-01-01-x86_64-unknown-linux-gnu unchanged - rustc 1.77.0-nightly (e51e98dde 2023-12-31)
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.8179287Z info: note that the toolchain 'nightly-2022-08-22-x86_64-unknown-linux-gnu' is currently in use (overridden by '/home/runner/work/Comparisons.Neo4jVSDoublets/Comparisons.Neo4jVSDoublets/rust-toolchain.toml')
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.8180436Z 
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.8219857Z ##[group]Run : create cachekey
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.8220120Z [36;1m: create cachekey[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.8220627Z [36;1mDATE=$(rustc +nightly-2024-01-01 --version --verbose | sed -ne 's/^commit-date: \(20[0-9][0-9]\)-\([01][0-9]\)-\([0-3][0-9]\)$/\1\2\3/p')[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.8221308Z [36;1mHASH=$(rustc +nightly-2024-01-01 --version --verbose | sed -ne 's/^commit-hash: //p')[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.8221806Z [36;1mecho "cachekey=$(echo $DATE$HASH | head -c12)" >> $GITHUB_OUTPUT[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.8253644Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.8253951Z env:
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.8254134Z   toolchain: nightly-2024-01-01
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.8254706Z   GITHUB_TOKEN: ***
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.8254905Z   CARGO_HOME: /home/runner/.cargo
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.8255128Z ##[endgroup]
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.8658412Z ##[group]Run : disable incremental compilation
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.8658764Z [36;1m: disable incremental compilation[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.8659085Z [36;1mif [ -z "${CARGO_INCREMENTAL+set}" ]; then[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.8659389Z [36;1m  echo CARGO_INCREMENTAL=0 >> $GITHUB_ENV[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.8659640Z [36;1mfi[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.8692388Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.8692692Z env:
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.8692860Z   toolchain: nightly-2024-01-01
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.8693266Z   GITHUB_TOKEN: ***
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.8693480Z   CARGO_HOME: /home/runner/.cargo
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.8693702Z ##[endgroup]
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.8771236Z ##[group]Run : enable colors in Cargo output
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.8771740Z [36;1m: enable colors in Cargo output[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.8772212Z [36;1mif [ -z "${CARGO_TERM_COLOR+set}" ]; then[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.8772728Z [36;1m  echo CARGO_TERM_COLOR=always >> $GITHUB_ENV[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.8773160Z [36;1mfi[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.8814069Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.8814842Z env:
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.8815136Z   toolchain: nightly-2024-01-01
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.8815733Z   GITHUB_TOKEN: ***
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.8816074Z   CARGO_HOME: /home/runner/.cargo
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.8816469Z   CARGO_INCREMENTAL: 0
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.8816818Z ##[endgroup]
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.8911150Z ##[group]Run : enable Cargo sparse registry
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.8911658Z [36;1m: enable Cargo sparse registry[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.8912257Z [36;1m# implemented in 1.66, stabilized in 1.68, made default in 1.70[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.8913358Z [36;1mif [ -z "${CARGO_REGISTRIES_CRATES_IO_PROTOCOL+set}" -o -f "/home/runner/work/_temp"/.implicit_cargo_registries_crates_io_protocol ]; then[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.8914840Z [36;1m  if rustc +nightly-2024-01-01 --version --verbose | grep -q '^release: 1\.6[89]\.'; then[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.8915794Z [36;1m    touch "/home/runner/work/_temp"/.implicit_cargo_registries_crates_io_protocol || true[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.8916627Z [36;1m    echo CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse >> $GITHUB_ENV[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.8917476Z [36;1m  elif rustc +nightly-2024-01-01 --version --verbose | grep -q '^release: 1\.6[67]\.'; then[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.8918409Z [36;1m    touch "/home/runner/work/_temp"/.implicit_cargo_registries_crates_io_protocol || true[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.8919243Z [36;1m    echo CARGO_REGISTRIES_CRATES_IO_PROTOCOL=git >> $GITHUB_ENV[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.8919787Z [36;1m  fi[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.8920061Z [36;1mfi[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.8962241Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.8962738Z env:
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.8963040Z   toolchain: nightly-2024-01-01
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.8963674Z   GITHUB_TOKEN: ***
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.8964032Z   CARGO_HOME: /home/runner/.cargo
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.8964699Z   CARGO_INCREMENTAL: 0
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.8965042Z   CARGO_TERM_COLOR: always
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.8965391Z ##[endgroup]
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.9362850Z ##[group]Run : work around spurious network errors in curl 8.0
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.9363243Z [36;1m: work around spurious network errors in curl 8.0[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.9363736Z [36;1m# https://rust-lang.zulipchat.com/#narrow/stream/246057-t-cargo/topic/timeout.20investigation[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.9364588Z [36;1mif rustc +nightly-2024-01-01 --version --verbose | grep -q '^release: 1\.7[01]\.'; then[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.9365039Z [36;1m  echo CARGO_HTTP_MULTIPLEXING=false >> $GITHUB_ENV[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.9365310Z [36;1mfi[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.9397018Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.9397324Z env:
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.9397496Z   toolchain: nightly-2024-01-01
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.9397883Z   GITHUB_TOKEN: ***
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.9398080Z   CARGO_HOME: /home/runner/.cargo
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.9398302Z   CARGO_INCREMENTAL: 0
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.9398491Z   CARGO_TERM_COLOR: always
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.9398679Z ##[endgroup]
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.9619529Z ##[group]Run rustc +nightly-2024-01-01 --version --verbose
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.9619891Z [36;1mrustc +nightly-2024-01-01 --version --verbose[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.9649665Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.9649969Z env:
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.9650338Z   toolchain: nightly-2024-01-01
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.9650743Z   GITHUB_TOKEN: ***
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.9650950Z   CARGO_HOME: /home/runner/.cargo
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.9651184Z   CARGO_INCREMENTAL: 0
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.9651370Z   CARGO_TERM_COLOR: always
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.9651566Z ##[endgroup]
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.9835866Z rustc 1.77.0-nightly (e51e98dde 2023-12-31)
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.9836344Z binary: rustc
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.9836746Z commit-hash: e51e98dde6a60637b6a71b8105245b629ac3fe77
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.9837213Z commit-date: 2023-12-31
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.9837551Z host: x86_64-unknown-linux-gnu
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.9837892Z release: 1.77.0-nightly
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.9838201Z LLVM version: 17.0.6
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.9900058Z ##[group]Run echo "Waiting for Neo4j to be fully ready..."
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.9900464Z [36;1mecho "Waiting for Neo4j to be fully ready..."[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.9900739Z [36;1mfor i in {1..30}; do[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.9901027Z [36;1m  if curl -s http://localhost:7474 > /dev/null; then[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.9901339Z [36;1m    echo "Neo4j is ready!"[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.9901567Z [36;1m    break[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.9901742Z [36;1m  fi[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.9901948Z [36;1m  echo "Attempt $i: Neo4j not ready yet..."[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.9902199Z [36;1m  sleep 2[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.9902376Z [36;1mdone[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.9934454Z shell: /usr/bin/bash -e {0}
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.9934719Z env:
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.9934902Z   toolchain: nightly-2024-01-01
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.9935298Z   GITHUB_TOKEN: ***
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.9935498Z   CARGO_HOME: /home/runner/.cargo
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.9935726Z   CARGO_INCREMENTAL: 0
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.9935953Z   CARGO_TERM_COLOR: always
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.9936143Z ##[endgroup]
+benchmark	UNKNOWN STEP	2025-12-22T13:20:51.9985104Z Waiting for Neo4j to be fully ready...
+benchmark	UNKNOWN STEP	2025-12-22T13:20:52.0086800Z Neo4j is ready!
+benchmark	UNKNOWN STEP	2025-12-22T13:20:52.0110892Z ##[group]Run cargo build --release --all-features --manifest-path rust/Cargo.toml
+benchmark	UNKNOWN STEP	2025-12-22T13:20:52.0111441Z [36;1mcargo build --release --all-features --manifest-path rust/Cargo.toml[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:20:52.0140850Z shell: /usr/bin/bash -e {0}
+benchmark	UNKNOWN STEP	2025-12-22T13:20:52.0141060Z env:
+benchmark	UNKNOWN STEP	2025-12-22T13:20:52.0141225Z   toolchain: nightly-2024-01-01
+benchmark	UNKNOWN STEP	2025-12-22T13:20:52.0141609Z   GITHUB_TOKEN: ***
+benchmark	UNKNOWN STEP	2025-12-22T13:20:52.0141817Z   CARGO_HOME: /home/runner/.cargo
+benchmark	UNKNOWN STEP	2025-12-22T13:20:52.0142038Z   CARGO_INCREMENTAL: 0
+benchmark	UNKNOWN STEP	2025-12-22T13:20:52.0142234Z   CARGO_TERM_COLOR: always
+benchmark	UNKNOWN STEP	2025-12-22T13:20:52.0142425Z ##[endgroup]
+benchmark	UNKNOWN STEP	2025-12-22T13:20:52.0244231Z info: syncing channel updates for 'nightly-2022-08-22-x86_64-unknown-linux-gnu'
+benchmark	UNKNOWN STEP	2025-12-22T13:20:52.0689513Z info: latest update on 2022-08-22, rust version 1.65.0-nightly (c0941dfb5 2022-08-21)
+benchmark	UNKNOWN STEP	2025-12-22T13:20:52.0690621Z info: downloading component 'cargo'
+benchmark	UNKNOWN STEP	2025-12-22T13:20:52.0997301Z info: downloading component 'rust-std'
+benchmark	UNKNOWN STEP	2025-12-22T13:20:52.2005226Z info: downloading component 'rustc'
+benchmark	UNKNOWN STEP	2025-12-22T13:20:53.4301183Z info: installing component 'cargo'
+benchmark	UNKNOWN STEP	2025-12-22T13:20:53.9237262Z info: installing component 'rust-std'
+benchmark	UNKNOWN STEP	2025-12-22T13:20:55.9921305Z info: installing component 'rustc'
+benchmark	UNKNOWN STEP	2025-12-22T13:20:59.5874568Z [0m[0m[1m[32m    Updating[0m git repository `https://github.com/linksplatform/doublets-rs.git`
+benchmark	UNKNOWN STEP	2025-12-22T13:20:59.9852875Z [0m[0m[1m[32m    Updating[0m git submodule `https://github.com/linksplatform/data-rs`
+benchmark	UNKNOWN STEP	2025-12-22T13:21:00.2998131Z [0m[0m[1m[32m    Updating[0m git submodule `https://github.com/linksplatform/mem-rs`
+benchmark	UNKNOWN STEP	2025-12-22T13:21:00.6721448Z [0m[0m[1m[32m    Updating[0m git submodule `https://github.com/linksplatform/trees-rs`
+benchmark	UNKNOWN STEP	2025-12-22T13:21:00.9918730Z [0m[0m[1m[32m    Updating[0m crates.io index
+benchmark	UNKNOWN STEP	2025-12-22T13:26:27.4598403Z [0m[0m[1m[32m Downloading[0m crates ...
+benchmark	UNKNOWN STEP	2025-12-22T13:26:27.5170098Z [0m[0m[1m[32m  Downloaded[0m beef v0.5.2
+benchmark	UNKNOWN STEP	2025-12-22T13:26:27.5193194Z [0m[0m[1m[32m  Downloaded[0m quote v1.0.35
+benchmark	UNKNOWN STEP	2025-12-22T13:26:27.5221772Z [0m[0m[1m[32m  Downloaded[0m ryu v1.0.17
+benchmark	UNKNOWN STEP	2025-12-22T13:26:27.5256772Z [0m[0m[1m[32m  Downloaded[0m leak_slice v0.2.0
+benchmark	UNKNOWN STEP	2025-12-22T13:26:27.5267271Z [0m[0m[1m[32m  Downloaded[0m itoa v1.0.11
+benchmark	UNKNOWN STEP	2025-12-22T13:26:27.5281419Z [0m[0m[1m[32m  Downloaded[0m delegate v0.7.0
+benchmark	UNKNOWN STEP	2025-12-22T13:26:27.5289835Z [0m[0m[1m[32m  Downloaded[0m thiserror-impl v1.0.58
+benchmark	UNKNOWN STEP	2025-12-22T13:26:27.5303415Z [0m[0m[1m[32m  Downloaded[0m tap v1.0.1
+benchmark	UNKNOWN STEP	2025-12-22T13:26:27.5313870Z [0m[0m[1m[32m  Downloaded[0m errno v0.3.14
+benchmark	UNKNOWN STEP	2025-12-22T13:26:27.5330145Z [0m[0m[1m[32m  Downloaded[0m funty v2.0.0
+benchmark	UNKNOWN STEP	2025-12-22T13:26:27.5338951Z [0m[0m[1m[32m  Downloaded[0m fastrand v2.3.0
+benchmark	UNKNOWN STEP	2025-12-22T13:26:27.5353220Z [0m[0m[1m[32m  Downloaded[0m cfg-if v1.0.4
+benchmark	UNKNOWN STEP	2025-12-22T13:26:27.5367140Z [0m[0m[1m[32m  Downloaded[0m bitflags v2.10.0
+benchmark	UNKNOWN STEP	2025-12-22T13:26:27.5436104Z [0m[0m[1m[32m  Downloaded[0m thiserror v1.0.58
+benchmark	UNKNOWN STEP	2025-12-22T13:26:27.5493481Z [0m[0m[1m[32m  Downloaded[0m unicode-ident v1.0.22
+benchmark	UNKNOWN STEP	2025-12-22T13:26:27.5525737Z [0m[0m[1m[32m  Downloaded[0m memmap2 v0.5.10
+benchmark	UNKNOWN STEP	2025-12-22T13:26:27.5542920Z [0m[0m[1m[32m  Downloaded[0m once_cell v1.21.3
+benchmark	UNKNOWN STEP	2025-12-22T13:26:27.5571413Z [0m[0m[1m[32m  Downloaded[0m proc-macro2 v1.0.103
+benchmark	UNKNOWN STEP	2025-12-22T13:26:27.5607893Z [0m[0m[1m[32m  Downloaded[0m tempfile v3.23.0
+benchmark	UNKNOWN STEP	2025-12-22T13:26:27.5640242Z [0m[0m[1m[32m  Downloaded[0m serde_derive v1.0.152
+benchmark	UNKNOWN STEP	2025-12-22T13:26:27.5669222Z [0m[0m[1m[32m  Downloaded[0m getrandom v0.3.4
+benchmark	UNKNOWN STEP	2025-12-22T13:26:27.5706834Z [0m[0m[1m[32m  Downloaded[0m bumpalo v3.11.1
+benchmark	UNKNOWN STEP	2025-12-22T13:26:27.5736104Z [0m[0m[1m[32m  Downloaded[0m serde v1.0.152
+benchmark	UNKNOWN STEP	2025-12-22T13:26:27.5776437Z [0m[0m[1m[32m  Downloaded[0m serde_json v1.0.91
+benchmark	UNKNOWN STEP	2025-12-22T13:26:27.5862172Z [0m[0m[1m[32m  Downloaded[0m syn v1.0.109
+benchmark	UNKNOWN STEP	2025-12-22T13:26:27.5973628Z [0m[0m[1m[32m  Downloaded[0m syn v2.0.58
+benchmark	UNKNOWN STEP	2025-12-22T13:26:27.6092486Z [0m[0m[1m[32m  Downloaded[0m rustix v1.1.2
+benchmark	UNKNOWN STEP	2025-12-22T13:26:27.6410804Z [0m[0m[1m[32m  Downloaded[0m libc v0.2.178
+benchmark	UNKNOWN STEP	2025-12-22T13:26:27.6833131Z [0m[0m[1m[32m  Downloaded[0m linux-raw-sys v0.11.0
+benchmark	UNKNOWN STEP	2025-12-22T13:26:27.8060400Z [0m[0m[1m[32m   Compiling[0m proc-macro2 v1.0.103
+benchmark	UNKNOWN STEP	2025-12-22T13:26:27.8061273Z [0m[0m[1m[32m   Compiling[0m unicode-ident v1.0.22
+benchmark	UNKNOWN STEP	2025-12-22T13:26:27.8062257Z [0m[0m[1m[32m   Compiling[0m syn v1.0.109
+benchmark	UNKNOWN STEP	2025-12-22T13:26:27.8062918Z [0m[0m[1m[32m   Compiling[0m libc v0.2.178
+benchmark	UNKNOWN STEP	2025-12-22T13:26:27.9355749Z [0m[0m[1m[32m   Compiling[0m thiserror v1.0.58
+benchmark	UNKNOWN STEP	2025-12-22T13:26:28.1801708Z [0m[0m[1m[32m   Compiling[0m rustix v1.1.2
+benchmark	UNKNOWN STEP	2025-12-22T13:26:28.2046941Z [0m[0m[1m[32m   Compiling[0m getrandom v0.3.4
+benchmark	UNKNOWN STEP	2025-12-22T13:26:28.2673233Z [0m[0m[1m[32m   Compiling[0m linux-raw-sys v0.11.0
+benchmark	UNKNOWN STEP	2025-12-22T13:26:28.2765889Z [0m[0m[1m[32m   Compiling[0m cfg-if v1.0.4
+benchmark	UNKNOWN STEP	2025-12-22T13:26:28.3577390Z [0m[0m[1m[32m   Compiling[0m serde_derive v1.0.152
+benchmark	UNKNOWN STEP	2025-12-22T13:26:28.5706047Z [0m[0m[1m[32m   Compiling[0m bitflags v2.10.0
+benchmark	UNKNOWN STEP	2025-12-22T13:26:28.5926938Z [0m[0m[1m[32m   Compiling[0m fastrand v2.3.0
+benchmark	UNKNOWN STEP	2025-12-22T13:26:28.6840329Z [0m[0m[1m[32m   Compiling[0m serde v1.0.152
+benchmark	UNKNOWN STEP	2025-12-22T13:26:28.9507020Z [0m[0m[1m[32m   Compiling[0m beef v0.5.2
+benchmark	UNKNOWN STEP	2025-12-22T13:26:29.0338994Z [0m[0m[1m[32m   Compiling[0m once_cell v1.21.3
+benchmark	UNKNOWN STEP	2025-12-22T13:26:29.0578518Z [0m[0m[1m[32m   Compiling[0m funty v2.0.0
+benchmark	UNKNOWN STEP	2025-12-22T13:26:29.1162073Z [0m[0m[1m[32m   Compiling[0m tap v1.0.1
+benchmark	UNKNOWN STEP	2025-12-22T13:26:29.2444135Z [0m[0m[1m[32m   Compiling[0m serde_json v1.0.91
+benchmark	UNKNOWN STEP	2025-12-22T13:26:29.3570008Z [0m[0m[1m[32m   Compiling[0m itoa v1.0.11
+benchmark	UNKNOWN STEP	2025-12-22T13:26:29.3689704Z [0m[0m[1m[32m   Compiling[0m bumpalo v3.11.1
+benchmark	UNKNOWN STEP	2025-12-22T13:26:29.5195986Z [0m[0m[1m[32m   Compiling[0m ryu v1.0.17
+benchmark	UNKNOWN STEP	2025-12-22T13:26:29.5905403Z [0m[0m[1m[32m   Compiling[0m leak_slice v0.2.0
+benchmark	UNKNOWN STEP	2025-12-22T13:26:30.7639692Z [0m[0m[1m[32m   Compiling[0m quote v1.0.35
+benchmark	UNKNOWN STEP	2025-12-22T13:26:31.1797089Z [0m[0m[1m[32m   Compiling[0m syn v2.0.58
+benchmark	UNKNOWN STEP	2025-12-22T13:26:33.5341463Z [0m[0m[1m[32m   Compiling[0m memmap2 v0.5.10
+benchmark	UNKNOWN STEP	2025-12-22T13:26:33.9329448Z [0m[0m[1m[32m   Compiling[0m tempfile v3.23.0
+benchmark	UNKNOWN STEP	2025-12-22T13:26:34.7737446Z [0m[0m[1m[32m   Compiling[0m thiserror-impl v1.0.58
+benchmark	UNKNOWN STEP	2025-12-22T13:26:35.9920543Z [0m[0m[1m[32m   Compiling[0m delegate v0.7.0
+benchmark	UNKNOWN STEP	2025-12-22T13:26:36.4866133Z [0m[0m[1m[32m   Compiling[0m platform-data v0.1.0-beta.3 (https://github.com/linksplatform/doublets-rs.git#5522d91c)
+benchmark	UNKNOWN STEP	2025-12-22T13:26:36.6203631Z [0m[0m[1m[32m   Compiling[0m platform-mem v0.1.0-pre+beta.2 (https://github.com/linksplatform/doublets-rs.git#5522d91c)
+benchmark	UNKNOWN STEP	2025-12-22T13:26:36.8112703Z [0m[0m[1m[32m   Compiling[0m platform-trees v0.1.0-beta.1 (https://github.com/linksplatform/doublets-rs.git#5522d91c)
+benchmark	UNKNOWN STEP	2025-12-22T13:26:36.9845765Z [0m[0m[1m[32m   Compiling[0m doublets v0.1.0-pre+beta.15 (https://github.com/linksplatform/doublets-rs.git#5522d91c)
+benchmark	UNKNOWN STEP	2025-12-22T13:26:41.4494148Z [0m[0m[1m[32m   Compiling[0m linksneo4j v0.1.0 (/home/runner/work/Comparisons.Neo4jVSDoublets/Comparisons.Neo4jVSDoublets/rust)
+benchmark	UNKNOWN STEP	2025-12-22T13:26:42.4260182Z [0m[0m[1m[32m    Finished[0m release [optimized] target(s) in 5m 42s
+benchmark	UNKNOWN STEP	2025-12-22T13:26:42.4614720Z ##[group]Run cargo bench --bench bench -- --output-format bencher | tee out.txt
+benchmark	UNKNOWN STEP	2025-12-22T13:26:42.4615372Z [36;1mcargo bench --bench bench -- --output-format bencher | tee out.txt[0m
+benchmark	UNKNOWN STEP	2025-12-22T13:26:42.4647302Z shell: /usr/bin/bash -e {0}
+benchmark	UNKNOWN STEP	2025-12-22T13:26:42.4647531Z env:
+benchmark	UNKNOWN STEP	2025-12-22T13:26:42.4647725Z   toolchain: nightly-2024-01-01
+benchmark	UNKNOWN STEP	2025-12-22T13:26:42.4648196Z   GITHUB_TOKEN: ***
+benchmark	UNKNOWN STEP	2025-12-22T13:26:42.4648432Z   CARGO_HOME: /home/runner/.cargo
+benchmark	UNKNOWN STEP	2025-12-22T13:26:42.4648696Z   CARGO_INCREMENTAL: 0
+benchmark	UNKNOWN STEP	2025-12-22T13:26:42.4648923Z   CARGO_TERM_COLOR: always
+benchmark	UNKNOWN STEP	2025-12-22T13:26:42.4649176Z   NEO4J_URI: bolt://localhost:7687
+benchmark	UNKNOWN STEP	2025-12-22T13:26:42.4649444Z   NEO4J_USER: neo4j
+benchmark	UNKNOWN STEP	2025-12-22T13:26:42.4649673Z   NEO4J_PASSWORD: password
+benchmark	UNKNOWN STEP	2025-12-22T13:26:42.4649909Z ##[endgroup]
+benchmark	UNKNOWN STEP	2025-12-22T13:26:42.5363875Z [0m[0m[1m[32m Downloading[0m crates ...
+benchmark	UNKNOWN STEP	2025-12-22T13:26:42.5690475Z [0m[0m[1m[32m  Downloaded[0m criterion-plot v0.5.0
+benchmark	UNKNOWN STEP	2025-12-22T13:26:42.5711671Z [0m[0m[1m[32m  Downloaded[0m ciborium-ll v0.2.2
+benchmark	UNKNOWN STEP	2025-12-22T13:26:42.5725781Z [0m[0m[1m[32m  Downloaded[0m cast v0.3.0
+benchmark	UNKNOWN STEP	2025-12-22T13:26:42.5740769Z [0m[0m[1m[32m  Downloaded[0m atty v0.2.14
+benchmark	UNKNOWN STEP	2025-12-22T13:26:42.5757999Z [0m[0m[1m[32m  Downloaded[0m ciborium-io v0.2.2
+benchmark	UNKNOWN STEP	2025-12-22T13:26:42.5767105Z [0m[0m[1m[32m  Downloaded[0m lazy_static v1.5.0
+benchmark	UNKNOWN STEP	2025-12-22T13:26:42.5786829Z [0m[0m[1m[32m  Downloaded[0m plotters-svg v0.3.7
+benchmark	UNKNOWN STEP	2025-12-22T13:26:42.5797086Z [0m[0m[1m[32m  Downloaded[0m indexmap v1.9.3
+benchmark	UNKNOWN STEP	2025-12-22T13:26:42.5833462Z [0m[0m[1m[32m  Downloaded[0m anes v0.1.6
+benchmark	UNKNOWN STEP	2025-12-22T13:26:42.5865886Z [0m[0m[1m[32m  Downloaded[0m same-file v1.0.6
+benchmark	UNKNOWN STEP	2025-12-22T13:26:42.5881405Z [0m[0m[1m[32m  Downloaded[0m clap_lex v0.2.4
+benchmark	UNKNOWN STEP	2025-12-22T13:26:42.5892941Z [0m[0m[1m[32m  Downloaded[0m plotters-backend v0.3.7
+benchmark	UNKNOWN STEP	2025-12-22T13:26:42.5907521Z [0m[0m[1m[32m  Downloaded[0m walkdir v2.5.0
+benchmark	UNKNOWN STEP	2025-12-22T13:26:42.5927723Z [0m[0m[1m[32m  Downloaded[0m crossbeam-deque v0.8.6
+benchmark	UNKNOWN STEP	2025-12-22T13:26:42.5944563Z [0m[0m[1m[32m  Downloaded[0m ciborium v0.2.2
+benchmark	UNKNOWN STEP	2025-12-22T13:26:42.5971268Z [0m[0m[1m[32m  Downloaded[0m bitflags v1.3.2
+benchmark	UNKNOWN STEP	2025-12-22T13:26:42.6006332Z [0m[0m[1m[32m  Downloaded[0m oorandom v11.1.5
+benchmark	UNKNOWN STEP	2025-12-22T13:26:42.6017786Z [0m[0m[1m[32m  Downloaded[0m autocfg v1.5.0
+benchmark	UNKNOWN STEP	2025-12-22T13:26:42.6040131Z [0m[0m[1m[32m  Downloaded[0m os_str_bytes v6.6.1
+benchmark	UNKNOWN STEP	2025-12-22T13:26:42.6063544Z [0m[0m[1m[32m  Downloaded[0m tinytemplate v1.2.1
+benchmark	UNKNOWN STEP	2025-12-22T13:26:42.6082537Z [0m[0m[1m[32m  Downloaded[0m half v2.2.1
+benchmark	UNKNOWN STEP	2025-12-22T13:26:42.6112497Z [0m[0m[1m[32m  Downloaded[0m either v1.15.0
+benchmark	UNKNOWN STEP	2025-12-22T13:26:42.6137792Z [0m[0m[1m[32m  Downloaded[0m crossbeam-utils v0.8.21
+benchmark	UNKNOWN STEP	2025-12-22T13:26:42.6170842Z [0m[0m[1m[32m  Downloaded[0m textwrap v0.16.1
+benchmark	UNKNOWN STEP	2025-12-22T13:26:42.6199714Z [0m[0m[1m[32m  Downloaded[0m crossbeam-epoch v0.9.18
+benchmark	UNKNOWN STEP	2025-12-22T13:26:42.6235675Z [0m[0m[1m[32m  Downloaded[0m criterion v0.4.0
+benchmark	UNKNOWN STEP	2025-12-22T13:26:42.6320479Z [0m[0m[1m[32m  Downloaded[0m num-traits v0.2.19
+benchmark	UNKNOWN STEP	2025-12-22T13:26:42.6353578Z [0m[0m[1m[32m  Downloaded[0m rayon-core v1.12.1
+benchmark	UNKNOWN STEP	2025-12-22T13:26:42.6395996Z [0m[0m[1m[32m  Downloaded[0m aho-corasick v1.1.4
+benchmark	UNKNOWN STEP	2025-12-22T13:26:42.6463583Z [0m[0m[1m[32m  Downloaded[0m itertools v0.10.5
+benchmark	UNKNOWN STEP	2025-12-22T13:26:42.6534882Z [0m[0m[1m[32m  Downloaded[0m memchr v2.7.6
+benchmark	UNKNOWN STEP	2025-12-22T13:26:42.6597952Z [0m[0m[1m[32m  Downloaded[0m hashbrown v0.12.3
+benchmark	UNKNOWN STEP	2025-12-22T13:26:42.6646986Z [0m[0m[1m[32m  Downloaded[0m rayon v1.10.0
+benchmark	UNKNOWN STEP	2025-12-22T13:26:42.6756700Z [0m[0m[1m[32m  Downloaded[0m plotters v0.3.5
+benchmark	UNKNOWN STEP	2025-12-22T13:26:42.6860108Z [0m[0m[1m[32m  Downloaded[0m regex v1.12.2
+benchmark	UNKNOWN STEP	2025-12-22T13:26:42.6935290Z [0m[0m[1m[32m  Downloaded[0m clap v3.2.25
+benchmark	UNKNOWN STEP	2025-12-22T13:26:42.7088919Z [0m[0m[1m[32m  Downloaded[0m regex-syntax v0.8.8
+benchmark	UNKNOWN STEP	2025-12-22T13:26:42.7180493Z [0m[0m[1m[32m  Downloaded[0m regex-automata v0.4.13
+benchmark	UNKNOWN STEP	2025-12-22T13:26:42.7469023Z [0m[0m[1m[32m   Compiling[0m autocfg v1.5.0
+benchmark	UNKNOWN STEP	2025-12-22T13:26:42.7470290Z [0m[0m[1m[32m   Compiling[0m crossbeam-utils v0.8.21
+benchmark	UNKNOWN STEP	2025-12-22T13:26:42.7472126Z [0m[0m[1m[32m   Compiling[0m serde v1.0.152
+benchmark	UNKNOWN STEP	2025-12-22T13:26:42.7493899Z [0m[0m[1m[32m   Compiling[0m either v1.15.0
+benchmark	UNKNOWN STEP	2025-12-22T13:26:43.0867957Z [0m[0m[1m[32m   Compiling[0m rayon-core v1.12.1
+benchmark	UNKNOWN STEP	2025-12-22T13:26:43.2031445Z [0m[0m[1m[32m   Compiling[0m half v2.2.1
+benchmark	UNKNOWN STEP	2025-12-22T13:26:43.2326178Z [0m[0m[1m[32m   Compiling[0m plotters-backend v0.3.7
+benchmark	UNKNOWN STEP	2025-12-22T13:26:43.3171737Z [0m[0m[1m[32m   Compiling[0m hashbrown v0.12.3
+benchmark	UNKNOWN STEP	2025-12-22T13:26:43.3448697Z [0m[0m[1m[32m   Compiling[0m os_str_bytes v6.6.1
+benchmark	UNKNOWN STEP	2025-12-22T13:26:43.7827482Z [0m[0m[1m[32m   Compiling[0m regex-syntax v0.8.8
+benchmark	UNKNOWN STEP	2025-12-22T13:26:43.7975571Z [0m[0m[1m[32m   Compiling[0m ciborium-io v0.2.2
+benchmark	UNKNOWN STEP	2025-12-22T13:26:43.8921735Z [0m[0m[1m[32m   Compiling[0m bitflags v1.3.2
+benchmark	UNKNOWN STEP	2025-12-22T13:26:43.8983523Z [0m[0m[1m[32m   Compiling[0m cast v0.3.0
+benchmark	UNKNOWN STEP	2025-12-22T13:26:43.9816690Z [0m[0m[1m[32m   Compiling[0m same-file v1.0.6
+benchmark	UNKNOWN STEP	2025-12-22T13:26:44.0615642Z [0m[0m[1m[32m   Compiling[0m textwrap v0.16.1
+benchmark	UNKNOWN STEP	2025-12-22T13:26:44.1197552Z [0m[0m[1m[32m   Compiling[0m lazy_static v1.5.0
+benchmark	UNKNOWN STEP	2025-12-22T13:26:44.1954232Z [0m[0m[1m[32m   Compiling[0m anes v0.1.6
+benchmark	UNKNOWN STEP	2025-12-22T13:26:44.2213654Z [0m[0m[1m[32m   Compiling[0m oorandom v11.1.5
+benchmark	UNKNOWN STEP	2025-12-22T13:26:44.3816204Z [0m[0m[1m[32m   Compiling[0m itertools v0.10.5
+benchmark	UNKNOWN STEP	2025-12-22T13:26:44.6627582Z [0m[0m[1m[32m   Compiling[0m indexmap v1.9.3
+benchmark	UNKNOWN STEP	2025-12-22T13:26:44.8988820Z [0m[0m[1m[32m   Compiling[0m num-traits v0.2.19
+benchmark	UNKNOWN STEP	2025-12-22T13:26:45.1401436Z [0m[0m[1m[32m   Compiling[0m plotters-svg v0.3.7
+benchmark	UNKNOWN STEP	2025-12-22T13:26:45.6333778Z [0m[0m[1m[32m   Compiling[0m clap_lex v0.2.4
+benchmark	UNKNOWN STEP	2025-12-22T13:26:45.8063687Z [0m[0m[1m[32m   Compiling[0m ciborium-ll v0.2.2
+benchmark	UNKNOWN STEP	2025-12-22T13:26:46.1842855Z [0m[0m[1m[32m   Compiling[0m walkdir v2.5.0
+benchmark	UNKNOWN STEP	2025-12-22T13:26:46.4409153Z [0m[0m[1m[32m   Compiling[0m regex-automata v0.4.13
+benchmark	UNKNOWN STEP	2025-12-22T13:26:47.5066400Z [0m[0m[1m[32m   Compiling[0m criterion-plot v0.5.0
+benchmark	UNKNOWN STEP	2025-12-22T13:26:47.7366160Z [0m[0m[1m[32m   Compiling[0m atty v0.2.14
+benchmark	UNKNOWN STEP	2025-12-22T13:26:48.4071409Z [0m[0m[1m[32m   Compiling[0m crossbeam-epoch v0.9.18
+benchmark	UNKNOWN STEP	2025-12-22T13:26:49.3598355Z [0m[0m[1m[32m   Compiling[0m regex v1.12.2
+benchmark	UNKNOWN STEP	2025-12-22T13:26:50.4179040Z [0m[0m[1m[32m   Compiling[0m clap v3.2.25
+benchmark	UNKNOWN STEP	2025-12-22T13:26:51.7894186Z [0m[0m[1m[32m   Compiling[0m crossbeam-deque v0.8.6
+benchmark	UNKNOWN STEP	2025-12-22T13:26:52.0267074Z [0m[0m[1m[32m   Compiling[0m plotters v0.3.5
+benchmark	UNKNOWN STEP	2025-12-22T13:26:56.4889761Z [0m[0m[1m[32m   Compiling[0m rayon v1.10.0
+benchmark	UNKNOWN STEP	2025-12-22T13:26:57.8577613Z [0m[0m[1m[32m   Compiling[0m serde_json v1.0.91
+benchmark	UNKNOWN STEP	2025-12-22T13:26:58.0669947Z [0m[0m[1m[32m   Compiling[0m ciborium v0.2.2
+benchmark	UNKNOWN STEP	2025-12-22T13:26:59.5817245Z [0m[0m[1m[32m   Compiling[0m tinytemplate v1.2.1
+benchmark	UNKNOWN STEP	2025-12-22T13:26:59.7418825Z [0m[0m[1m[32m   Compiling[0m linksneo4j v0.1.0 (/home/runner/work/Comparisons.Neo4jVSDoublets/Comparisons.Neo4jVSDoublets/rust)
+benchmark	UNKNOWN STEP	2025-12-22T13:27:00.5186227Z [0m[0m[1m[32m   Compiling[0m criterion v0.4.0
+benchmark	UNKNOWN STEP	2025-12-22T13:27:18.4982928Z [0m[0m[1m[32m    Finished[0m bench [optimized] target(s) in 35.99s
+benchmark	UNKNOWN STEP	2025-12-22T13:27:18.5027212Z [0m[0m[1m[32m     Running[0m benches/bench.rs (target/release/deps/bench-b61b7197f49d9492)
+benchmark	UNKNOWN STEP	2025-12-22T13:27:42.9711308Z 
+benchmark	UNKNOWN STEP	2025-12-22T13:27:42.9712512Z Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 2235.3s, or reduce sample count to 10.
+benchmark	UNKNOWN STEP	2025-12-22T13:48:20.9571953Z test Create/Neo4j_NonTransaction ... bench:  3058033369 ns/iter (+/- 180111472)
+benchmark	UNKNOWN STEP	2025-12-22T13:48:29.4718871Z test Create/Neo4j_Transaction ... bench:       31754 ns/iter (+/- 209)
+benchmark	UNKNOWN STEP	2025-12-22T13:48:42.7483913Z test Create/Doublets_United_Volatile ... bench:       98053 ns/iter (+/- 1023)
+benchmark	UNKNOWN STEP	2025-12-22T13:48:55.9750978Z test Create/Doublets_United_NonVolatile ... bench:      100783 ns/iter (+/- 902)
+benchmark	UNKNOWN STEP	2025-12-22T13:49:07.6942205Z test Create/Doublets_Split_Volatile ... bench:       84684 ns/iter (+/- 505)
+benchmark	UNKNOWN STEP	2025-12-22T13:49:19.6998419Z test Create/Doublets_Split_NonVolatile ... bench:       83204 ns/iter (+/- 987)
+benchmark	UNKNOWN STEP	2025-12-22T13:49:19.7005967Z 
+benchmark	UNKNOWN STEP	2025-12-22T13:49:33.5668979Z 
+benchmark	UNKNOWN STEP	2025-12-22T13:49:33.5669857Z Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 1386.1s, or reduce sample count to 10.
+benchmark	UNKNOWN STEP	2025-12-22T14:12:40.3205893Z test Delete/Neo4j_NonTransaction ... bench:  1875685726 ns/iter (+/- 21748817)
+benchmark	UNKNOWN STEP	2025-12-22T14:12:40.3268023Z thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: NotExists(4000)', benches/benchmarks/delete.rs:23:9
+benchmark	UNKNOWN STEP	2025-12-22T14:12:40.3268937Z note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+benchmark	UNKNOWN STEP	2025-12-22T14:12:40.3269766Z [0m[0m[1m[31merror[0m[1m:[0m bench failed
+benchmark	UNKNOWN STEP	2025-12-22T14:12:40.3270052Z 
+benchmark	UNKNOWN STEP	2025-12-22T14:12:40.3309814Z ##[group]Run git config --global user.email "linksplatform@gmail.com"
+benchmark	UNKNOWN STEP	2025-12-22T14:12:40.3310298Z [36;1mgit config --global user.email "linksplatform@gmail.com"[0m
+benchmark	UNKNOWN STEP	2025-12-22T14:12:40.3310685Z [36;1mgit config --global user.name "LinksPlatformBencher"[0m
+benchmark	UNKNOWN STEP	2025-12-22T14:12:40.3310972Z [36;1mcd rust[0m
+benchmark	UNKNOWN STEP	2025-12-22T14:12:40.3311180Z [36;1mpip install numpy matplotlib[0m
+benchmark	UNKNOWN STEP	2025-12-22T14:12:40.3311422Z [36;1mpython3 out.py[0m
+benchmark	UNKNOWN STEP	2025-12-22T14:12:40.3311618Z [36;1mcd ..[0m
+benchmark	UNKNOWN STEP	2025-12-22T14:12:40.3311776Z [36;1m[0m
+benchmark	UNKNOWN STEP	2025-12-22T14:12:40.3311973Z [36;1m# Create Docs directory if it doesn't exist[0m
+benchmark	UNKNOWN STEP	2025-12-22T14:12:40.3312233Z [36;1mmkdir -p Docs[0m
+benchmark	UNKNOWN STEP	2025-12-22T14:12:40.3312415Z [36;1m[0m
+benchmark	UNKNOWN STEP	2025-12-22T14:12:40.3312578Z [36;1m# Copy generated images[0m
+benchmark	UNKNOWN STEP	2025-12-22T14:12:40.3312815Z [36;1mcp -f rust/bench_rust.png Docs/[0m
+benchmark	UNKNOWN STEP	2025-12-22T14:12:40.3313092Z [36;1mcp -f rust/bench_rust_log_scale.png Docs/[0m
+benchmark	UNKNOWN STEP	2025-12-22T14:12:40.3313335Z [36;1m[0m
+benchmark	UNKNOWN STEP	2025-12-22T14:12:40.3313537Z [36;1m# Update README with latest results[0m
+benchmark	UNKNOWN STEP	2025-12-22T14:12:40.3313796Z [36;1mif [ -f rust/results.md ]; then[0m
+benchmark	UNKNOWN STEP	2025-12-22T14:12:40.3314061Z [36;1m  # Replace the results section in README.md[0m
+benchmark	UNKNOWN STEP	2025-12-22T14:12:40.3314617Z [36;1m  python3 -c "[0m
+benchmark	UNKNOWN STEP	2025-12-22T14:12:40.3314826Z [36;1mimport re[0m
+benchmark	UNKNOWN STEP	2025-12-22T14:12:40.3315001Z [36;1m[0m
+benchmark	UNKNOWN STEP	2025-12-22T14:12:40.3315195Z [36;1mwith open('rust/results.md', 'r') as f:[0m
+benchmark	UNKNOWN STEP	2025-12-22T14:12:40.3315449Z [36;1m    results = f.read()[0m
+benchmark	UNKNOWN STEP	2025-12-22T14:12:40.3315653Z [36;1m[0m
+benchmark	UNKNOWN STEP	2025-12-22T14:12:40.3315821Z [36;1mwith open('README.md', 'r') as f:[0m
+benchmark	UNKNOWN STEP	2025-12-22T14:12:40.3316060Z [36;1m    readme = f.read()[0m
+benchmark	UNKNOWN STEP	2025-12-22T14:12:40.3316253Z [36;1m[0m
+benchmark	UNKNOWN STEP	2025-12-22T14:12:40.3316450Z [36;1m# Pattern to find and replace the results table[0m
+benchmark	UNKNOWN STEP	2025-12-22T14:12:40.3316776Z [36;1mpattern = r'(\| Operation.*?\n\|[-|]+\n(?:\|.*?\n)*)'[0m
+benchmark	UNKNOWN STEP	2025-12-22T14:12:40.3317067Z [36;1mif re.search(pattern, readme):[0m
+benchmark	UNKNOWN STEP	2025-12-22T14:12:40.3317375Z [36;1m    readme = re.sub(pattern, results.strip() + '\n', readme)[0m
+benchmark	UNKNOWN STEP	2025-12-22T14:12:40.3317656Z [36;1m[0m
+benchmark	UNKNOWN STEP	2025-12-22T14:12:40.3317827Z [36;1mwith open('README.md', 'w') as f:[0m
+benchmark	UNKNOWN STEP	2025-12-22T14:12:40.3318063Z [36;1m    f.write(readme)[0m
+benchmark	UNKNOWN STEP	2025-12-22T14:12:40.3318251Z [36;1m"[0m
+benchmark	UNKNOWN STEP	2025-12-22T14:12:40.3318399Z [36;1mfi[0m
+benchmark	UNKNOWN STEP	2025-12-22T14:12:40.3318545Z [36;1m[0m
+benchmark	UNKNOWN STEP	2025-12-22T14:12:40.3318896Z [36;1m# Commit changes if any[0m
+benchmark	UNKNOWN STEP	2025-12-22T14:12:40.3319115Z [36;1mgit add Docs README.md[0m
+benchmark	UNKNOWN STEP	2025-12-22T14:12:40.3319353Z [36;1mif git diff --staged --quiet; then[0m
+benchmark	UNKNOWN STEP	2025-12-22T14:12:40.3319600Z [36;1m  echo "No changes to commit"[0m
+benchmark	UNKNOWN STEP	2025-12-22T14:12:40.3319819Z [36;1melse[0m
+benchmark	UNKNOWN STEP	2025-12-22T14:12:40.3320020Z [36;1m  git commit -m "Update benchmark results"[0m
+benchmark	UNKNOWN STEP	2025-12-22T14:12:40.3320281Z [36;1m  git push origin HEAD[0m
+benchmark	UNKNOWN STEP	2025-12-22T14:12:40.3320482Z [36;1mfi[0m
+benchmark	UNKNOWN STEP	2025-12-22T14:12:40.3351988Z shell: /usr/bin/bash -e {0}
+benchmark	UNKNOWN STEP	2025-12-22T14:12:40.3352206Z env:
+benchmark	UNKNOWN STEP	2025-12-22T14:12:40.3352373Z   toolchain: nightly-2024-01-01
+benchmark	UNKNOWN STEP	2025-12-22T14:12:40.3352778Z   GITHUB_TOKEN: ***
+benchmark	UNKNOWN STEP	2025-12-22T14:12:40.3352982Z   CARGO_HOME: /home/runner/.cargo
+benchmark	UNKNOWN STEP	2025-12-22T14:12:40.3353202Z   CARGO_INCREMENTAL: 0
+benchmark	UNKNOWN STEP	2025-12-22T14:12:40.3353395Z   CARGO_TERM_COLOR: always
+benchmark	UNKNOWN STEP	2025-12-22T14:12:40.3353584Z ##[endgroup]
+benchmark	UNKNOWN STEP	2025-12-22T14:12:41.4231024Z Defaulting to user installation because normal site-packages is not writeable
+benchmark	UNKNOWN STEP	2025-12-22T14:12:42.1382525Z Collecting numpy
+benchmark	UNKNOWN STEP	2025-12-22T14:12:42.1690021Z   Downloading numpy-2.4.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (6.6 kB)
+benchmark	UNKNOWN STEP	2025-12-22T14:12:42.3212386Z Collecting matplotlib
+benchmark	UNKNOWN STEP	2025-12-22T14:12:42.3240887Z   Downloading matplotlib-3.10.8-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (52 kB)
+benchmark	UNKNOWN STEP	2025-12-22T14:12:42.3324614Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 52.8/52.8 kB 7.1 MB/s eta 0:00:00
+benchmark	UNKNOWN STEP	2025-12-22T14:12:42.4223852Z Collecting contourpy>=1.0.1 (from matplotlib)
+benchmark	UNKNOWN STEP	2025-12-22T14:12:42.4252612Z   Downloading contourpy-1.3.3-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (5.5 kB)
+benchmark	UNKNOWN STEP	2025-12-22T14:12:42.4409046Z Collecting cycler>=0.10 (from matplotlib)
+benchmark	UNKNOWN STEP	2025-12-22T14:12:42.4435419Z   Downloading cycler-0.12.1-py3-none-any.whl.metadata (3.8 kB)
+benchmark	UNKNOWN STEP	2025-12-22T14:12:42.6282763Z Collecting fonttools>=4.22.0 (from matplotlib)
+benchmark	UNKNOWN STEP	2025-12-22T14:12:42.6310087Z   Downloading fonttools-4.61.1-cp312-cp312-manylinux1_x86_64.manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_5_x86_64.whl.metadata (114 kB)
+benchmark	UNKNOWN STEP	2025-12-22T14:12:42.6372976Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 114.2/114.2 kB 24.5 MB/s eta 0:00:00
+benchmark	UNKNOWN STEP	2025-12-22T14:12:42.7090156Z Collecting kiwisolver>=1.3.1 (from matplotlib)
+benchmark	UNKNOWN STEP	2025-12-22T14:12:42.7117744Z   Downloading kiwisolver-1.4.9-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (6.3 kB)
+benchmark	UNKNOWN STEP	2025-12-22T14:12:42.7215076Z Requirement already satisfied: packaging>=20.0 in /usr/lib/python3/dist-packages (from matplotlib) (24.0)
+benchmark	UNKNOWN STEP	2025-12-22T14:12:42.9467301Z Collecting pillow>=8 (from matplotlib)
+benchmark	UNKNOWN STEP	2025-12-22T14:12:42.9492308Z   Downloading pillow-12.0.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (8.8 kB)
+benchmark	UNKNOWN STEP	2025-12-22T14:12:42.9536450Z Requirement already satisfied: pyparsing>=3 in /usr/lib/python3/dist-packages (from matplotlib) (3.1.1)
+benchmark	UNKNOWN STEP	2025-12-22T14:12:42.9547706Z Requirement already satisfied: python-dateutil>=2.7 in /usr/lib/python3/dist-packages (from matplotlib) (2.8.2)
+benchmark	UNKNOWN STEP	2025-12-22T14:12:43.0159783Z Downloading numpy-2.4.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (16.4 MB)
+benchmark	UNKNOWN STEP	2025-12-22T14:12:43.1075388Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 16.4/16.4 MB 164.6 MB/s eta 0:00:00
+benchmark	UNKNOWN STEP	2025-12-22T14:12:43.1132251Z Downloading matplotlib-3.10.8-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (8.7 MB)
+benchmark	UNKNOWN STEP	2025-12-22T14:12:43.1621216Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 8.7/8.7 MB 185.1 MB/s eta 0:00:00
+benchmark	UNKNOWN STEP	2025-12-22T14:12:43.1686648Z Downloading contourpy-1.3.3-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (362 kB)
+benchmark	UNKNOWN STEP	2025-12-22T14:12:43.1742364Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 362.6/362.6 kB 90.6 MB/s eta 0:00:00
+benchmark	UNKNOWN STEP	2025-12-22T14:12:43.1764804Z Downloading cycler-0.12.1-py3-none-any.whl (8.3 kB)
+benchmark	UNKNOWN STEP	2025-12-22T14:12:43.1803561Z Downloading fonttools-4.61.1-cp312-cp312-manylinux1_x86_64.manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_5_x86_64.whl (5.0 MB)
+benchmark	UNKNOWN STEP	2025-12-22T14:12:43.2130191Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.0/5.0 MB 174.1 MB/s eta 0:00:00
+benchmark	UNKNOWN STEP	2025-12-22T14:12:43.2155161Z Downloading kiwisolver-1.4.9-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (1.5 MB)
+benchmark	UNKNOWN STEP	2025-12-22T14:12:43.2265482Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.5/1.5 MB 156.1 MB/s eta 0:00:00
+benchmark	UNKNOWN STEP	2025-12-22T14:12:43.2289279Z Downloading pillow-12.0.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (7.0 MB)
+benchmark	UNKNOWN STEP	2025-12-22T14:12:43.2709443Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 7.0/7.0 MB 181.0 MB/s eta 0:00:00
+benchmark	UNKNOWN STEP	2025-12-22T14:12:43.6340361Z Installing collected packages: pillow, numpy, kiwisolver, fonttools, cycler, contourpy, matplotlib
+benchmark	UNKNOWN STEP	2025-12-22T14:12:47.8655651Z Successfully installed contourpy-1.3.3 cycler-0.12.1 fonttools-4.61.1 kiwisolver-1.4.9 matplotlib-3.10.8 numpy-2.4.0 pillow-12.0.0
+benchmark	UNKNOWN STEP	2025-12-22T14:12:49.4671107Z Loaded out.txt, length: 549 characters
+benchmark	UNKNOWN STEP	2025-12-22T14:12:49.4672864Z Pattern test\s+(\w+)/(Neo4j)_(\w+)\s+\.\.\.\s+bench:\s+(\d+)\s+ns/iter\s+\(\+/-\s+\d+\) matched 3 entries
+benchmark	UNKNOWN STEP	2025-12-22T14:12:49.4673749Z Neo4j Create - NonTransaction: 3058033369 ns
+benchmark	UNKNOWN STEP	2025-12-22T14:12:49.4674229Z Neo4j Create - Transaction: 31754 ns
+benchmark	UNKNOWN STEP	2025-12-22T14:12:49.4674899Z Neo4j Delete - NonTransaction: 1875685726 ns
+benchmark	UNKNOWN STEP	2025-12-22T14:12:49.4677299Z Pattern test\s+(\w+)/(Doublets)_(\w+)_(\w+)\s+\.\.\.\s+bench:\s+(\d+)\s+ns/iter\s+\(\+/-\s+\d+\) matched 4 entries
+benchmark	UNKNOWN STEP	2025-12-22T14:12:49.4678103Z Doublets Create - United Volatile: 98053 ns
+benchmark	UNKNOWN STEP	2025-12-22T14:12:49.4678625Z Doublets Create - United NonVolatile: 100783 ns
+benchmark	UNKNOWN STEP	2025-12-22T14:12:49.4679147Z Doublets Create - Split Volatile: 84684 ns
+benchmark	UNKNOWN STEP	2025-12-22T14:12:49.4679648Z Doublets Create - Split NonVolatile: 83204 ns
+benchmark	UNKNOWN STEP	2025-12-22T14:12:49.4679974Z 
+benchmark	UNKNOWN STEP	2025-12-22T14:12:49.4680637Z Final dictionaries (after parsing):
+benchmark	UNKNOWN STEP	2025-12-22T14:12:49.4681100Z Neo4j_Transaction: {'Create': 31754}
+benchmark	UNKNOWN STEP	2025-12-22T14:12:49.4681631Z Neo4j_NonTransaction: {'Create': 3058033369, 'Delete': 1875685726}
+benchmark	UNKNOWN STEP	2025-12-22T14:12:49.4682218Z Doublets_United_Volatile: {'Create': 98053}
+benchmark	UNKNOWN STEP	2025-12-22T14:12:49.4682671Z Doublets_United_NonVolatile: {'Create': 100783}
+benchmark	UNKNOWN STEP	2025-12-22T14:12:49.4683129Z Doublets_Split_Volatile: {'Create': 84684}
+benchmark	UNKNOWN STEP	2025-12-22T14:12:49.4683558Z Doublets_Split_NonVolatile: {'Create': 83204}
+benchmark	UNKNOWN STEP	2025-12-22T14:12:49.4683898Z 
+benchmark	UNKNOWN STEP	2025-12-22T14:12:49.4684033Z Generated Markdown Table:
+benchmark	UNKNOWN STEP	2025-12-22T14:12:49.4685331Z | Operation     | Doublets United Volatile | Doublets United NonVolatile | Doublets Split Volatile | Doublets Split NonVolatile | Neo4j NonTransaction | Neo4j Transaction |
+benchmark	UNKNOWN STEP	2025-12-22T14:12:49.4686554Z |---------------|--------------------------|-----------------------------|-------------------------|----------------------------|----------------------|-------------------|
+benchmark	UNKNOWN STEP	2025-12-22T14:12:49.4687531Z | Create        | 98053 (0.3x faster)      | 100783 (0.3x faster)        | 84684 (0.4x faster)     | 83204 (0.4x faster)        | 3058033369           | 31754             |
+benchmark	UNKNOWN STEP	2025-12-22T14:12:49.4688329Z | Update        | N/A                      | N/A                         | N/A                     | N/A                        | N/A                  | N/A               |
+benchmark	UNKNOWN STEP	2025-12-22T14:12:49.4689006Z | Delete        | N/A                      | N/A                         | N/A                     | N/A                        | 1875685726           | N/A               |
+benchmark	UNKNOWN STEP	2025-12-22T14:12:49.4689645Z | Each All      | N/A                      | N/A                         | N/A                     | N/A                        | N/A                  | N/A               |
+benchmark	UNKNOWN STEP	2025-12-22T14:12:49.4690323Z | Each Identity | N/A                      | N/A                         | N/A                     | N/A                        | N/A                  | N/A               |
+benchmark	UNKNOWN STEP	2025-12-22T14:12:49.4691043Z | Each Concrete | N/A                      | N/A                         | N/A                     | N/A                        | N/A                  | N/A               |
+benchmark	UNKNOWN STEP	2025-12-22T14:12:49.4691702Z | Each Outgoing | N/A                      | N/A                         | N/A                     | N/A                        | N/A                  | N/A               |
+benchmark	UNKNOWN STEP	2025-12-22T14:12:49.4692629Z | Each Incoming | N/A                      | N/A                         | N/A                     | N/A                        | N/A                  | N/A               |
+benchmark	UNKNOWN STEP	2025-12-22T14:12:49.6779475Z bench_rust.png saved.
+benchmark	UNKNOWN STEP	2025-12-22T14:12:50.0324117Z bench_rust_log_scale.png saved.
+benchmark	UNKNOWN STEP	2025-12-22T14:12:50.0325749Z | Operation     | Doublets United Volatile | Doublets United NonVolatile | Doublets Split Volatile | Doublets Split NonVolatile | Neo4j NonTransaction | Neo4j Transaction |
+benchmark	UNKNOWN STEP	2025-12-22T14:12:50.0327007Z |---------------|--------------------------|-----------------------------|-------------------------|----------------------------|----------------------|-------------------|
+benchmark	UNKNOWN STEP	2025-12-22T14:12:50.0327934Z | Create        | 98053 (0.3x faster)      | 100783 (0.3x faster)        | 84684 (0.4x faster)     | 83204 (0.4x faster)        | 3058033369           | 31754             |
+benchmark	UNKNOWN STEP	2025-12-22T14:12:50.0328728Z | Update        | N/A                      | N/A                         | N/A                     | N/A                        | N/A                  | N/A               |
+benchmark	UNKNOWN STEP	2025-12-22T14:12:50.0329358Z | Delete        | N/A                      | N/A                         | N/A                     | N/A                        | 1875685726           | N/A               |
+benchmark	UNKNOWN STEP	2025-12-22T14:12:50.0329944Z | Each All      | N/A                      | N/A                         | N/A                     | N/A                        | N/A                  | N/A               |
+benchmark	UNKNOWN STEP	2025-12-22T14:12:50.0330976Z | Each Identity | N/A                      | N/A                         | N/A                     | N/A                        | N/A                  | N/A               |
+benchmark	UNKNOWN STEP	2025-12-22T14:12:50.0331655Z | Each Concrete | N/A                      | N/A                         | N/A                     | N/A                        | N/A                  | N/A               |
+benchmark	UNKNOWN STEP	2025-12-22T14:12:50.0332309Z | Each Outgoing | N/A                      | N/A                         | N/A                     | N/A                        | N/A                  | N/A               |
+benchmark	UNKNOWN STEP	2025-12-22T14:12:50.0332952Z | Each Incoming | N/A                      | N/A                         | N/A                     | N/A                        | N/A                  | N/A               |
+benchmark	UNKNOWN STEP	2025-12-22T14:12:50.1419131Z [detached HEAD ae770c9] Update benchmark results
+benchmark	UNKNOWN STEP	2025-12-22T14:12:50.1419724Z  3 files changed, 2 insertions(+), 2 deletions(-)
+benchmark	UNKNOWN STEP	2025-12-22T14:12:50.3571881Z error: The destination you provided is not a full refname (i.e.,
+benchmark	UNKNOWN STEP	2025-12-22T14:12:50.3572890Z starting with "refs/"). We tried to guess what you meant by:
+benchmark	UNKNOWN STEP	2025-12-22T14:12:50.3573398Z 
+benchmark	UNKNOWN STEP	2025-12-22T14:12:50.3573711Z - Looking for a ref that matches 'HEAD' on the remote side.
+benchmark	UNKNOWN STEP	2025-12-22T14:12:50.3574912Z - Checking if the <src> being pushed ('HEAD')
+benchmark	UNKNOWN STEP	2025-12-22T14:12:50.3575697Z   is a ref in "refs/{heads,tags}/". If so we add a corresponding
+benchmark	UNKNOWN STEP	2025-12-22T14:12:50.3576511Z   refs/{heads,tags}/ prefix on the remote side.
+benchmark	UNKNOWN STEP	2025-12-22T14:12:50.3576978Z 
+benchmark	UNKNOWN STEP	2025-12-22T14:12:50.3577383Z Neither worked, so we gave up. You must fully qualify the ref.
+benchmark	UNKNOWN STEP	2025-12-22T14:12:50.3578300Z hint: The <src> part of the refspec is a commit object.
+benchmark	UNKNOWN STEP	2025-12-22T14:12:50.3579135Z hint: Did you mean to create a new branch by pushing to
+benchmark	UNKNOWN STEP	2025-12-22T14:12:50.3579867Z hint: 'HEAD:refs/heads/HEAD'?
+benchmark	UNKNOWN STEP	2025-12-22T14:12:50.3580861Z error: failed to push some refs to 'https://github.com/linksplatform/Comparisons.Neo4jVSDoublets'
+benchmark	UNKNOWN STEP	2025-12-22T14:12:50.3624766Z ##[error]Process completed with exit code 1.
+benchmark	UNKNOWN STEP	2025-12-22T14:12:50.3699315Z Post job cleanup.
+benchmark	UNKNOWN STEP	2025-12-22T14:12:50.4632592Z [command]/usr/bin/git version
+benchmark	UNKNOWN STEP	2025-12-22T14:12:50.4676603Z git version 2.52.0
+benchmark	UNKNOWN STEP	2025-12-22T14:12:50.4715139Z Copying '/home/runner/.gitconfig' to '/home/runner/work/_temp/e7b3391c-03c7-4815-9df2-75c196c60dc9/.gitconfig'
+benchmark	UNKNOWN STEP	2025-12-22T14:12:50.4725089Z Temporarily overriding HOME='/home/runner/work/_temp/e7b3391c-03c7-4815-9df2-75c196c60dc9' before making global git config changes
+benchmark	UNKNOWN STEP	2025-12-22T14:12:50.4726341Z Adding repository directory to the temporary git global config as a safe directory
+benchmark	UNKNOWN STEP	2025-12-22T14:12:50.4731785Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Comparisons.Neo4jVSDoublets/Comparisons.Neo4jVSDoublets
+benchmark	UNKNOWN STEP	2025-12-22T14:12:50.4766579Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+benchmark	UNKNOWN STEP	2025-12-22T14:12:50.4798674Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+benchmark	UNKNOWN STEP	2025-12-22T14:12:50.5037573Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+benchmark	UNKNOWN STEP	2025-12-22T14:12:50.5060498Z http.https://github.com/.extraheader
+benchmark	UNKNOWN STEP	2025-12-22T14:12:50.5074892Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+benchmark	UNKNOWN STEP	2025-12-22T14:12:50.5105955Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+benchmark	UNKNOWN STEP	2025-12-22T14:12:50.5331061Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+benchmark	UNKNOWN STEP	2025-12-22T14:12:50.5362704Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+benchmark	UNKNOWN STEP	2025-12-22T14:12:50.5681002Z Print service container logs: 893b9b3a7a0b48eeaf6acf7f212fa3c7_neo4j5150_8772e2
+benchmark	UNKNOWN STEP	2025-12-22T14:12:50.5686123Z ##[command]/usr/bin/docker logs --details 8197c0c70c9e11228b095f41447b8ba1197a372c2634bc3e026b6bfad90025a7
+benchmark	UNKNOWN STEP	2025-12-22T14:12:50.5810746Z  Changed password for user 'neo4j'. IMPORTANT: this change will only take effect if performed before the database is started for the first time.
+benchmark	UNKNOWN STEP	2025-12-22T14:12:50.5812029Z  2025-12-22 13:20:32.891+0000 INFO  Logging config in use: File '/var/lib/neo4j/conf/user-logs.xml'
+benchmark	UNKNOWN STEP	2025-12-22T14:12:50.5812765Z  2025-12-22 13:20:32.906+0000 INFO  Starting...
+benchmark	UNKNOWN STEP	2025-12-22T14:12:50.5813470Z  2025-12-22 13:20:33.809+0000 INFO  This instance is ServerId{d94b0430} (d94b0430-ccc6-438b-a4e4-34209f095789)
+benchmark	UNKNOWN STEP	2025-12-22T14:12:50.5814476Z  2025-12-22 13:20:34.493+0000 INFO  ======== Neo4j 5.15.0 ========
+benchmark	UNKNOWN STEP	2025-12-22T14:12:50.5815060Z  2025-12-22 13:20:36.011+0000 INFO  Bolt enabled on 0.0.0.0:7687.
+benchmark	UNKNOWN STEP	2025-12-22T14:12:50.5815680Z  2025-12-22 13:20:36.609+0000 INFO  HTTP enabled on 0.0.0.0:7474.
+benchmark	UNKNOWN STEP	2025-12-22T14:12:50.5816392Z  2025-12-22 13:20:36.610+0000 INFO  Remote interface available at http://localhost:7474/
+benchmark	UNKNOWN STEP	2025-12-22T14:12:50.5817263Z  2025-12-22 13:20:36.612+0000 INFO  id: B31363D3EC88B327532C3A081FB6CC5767CFFE0360DF3DFFEA3A27707CFF51E9
+benchmark	UNKNOWN STEP	2025-12-22T14:12:50.5817965Z  2025-12-22 13:20:36.613+0000 INFO  name: system
+benchmark	UNKNOWN STEP	2025-12-22T14:12:50.5818492Z  2025-12-22 13:20:36.613+0000 INFO  creationDate: 2025-12-22T13:20:35Z
+benchmark	UNKNOWN STEP	2025-12-22T14:12:50.5819124Z  2025-12-22 13:20:36.613+0000 INFO  Started.
+benchmark	UNKNOWN STEP	2025-12-22T14:12:50.5832294Z Stop and remove container: 893b9b3a7a0b48eeaf6acf7f212fa3c7_neo4j5150_8772e2
+benchmark	UNKNOWN STEP	2025-12-22T14:12:50.5837610Z ##[command]/usr/bin/docker rm --force 8197c0c70c9e11228b095f41447b8ba1197a372c2634bc3e026b6bfad90025a7
+benchmark	UNKNOWN STEP	2025-12-22T14:12:51.4161908Z 8197c0c70c9e11228b095f41447b8ba1197a372c2634bc3e026b6bfad90025a7
+benchmark	UNKNOWN STEP	2025-12-22T14:12:51.4189709Z Remove container network: github_network_3e32eed10ba8435596fdf631b2c79201
+benchmark	UNKNOWN STEP	2025-12-22T14:12:51.4193805Z ##[command]/usr/bin/docker network rm github_network_3e32eed10ba8435596fdf631b2c79201
+benchmark	UNKNOWN STEP	2025-12-22T14:12:51.5542372Z github_network_3e32eed10ba8435596fdf631b2c79201
+benchmark	UNKNOWN STEP	2025-12-22T14:12:51.5603264Z Cleaning up orphan processes

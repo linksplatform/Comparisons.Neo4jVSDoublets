@@ -1,0 +1,793 @@
+benchmark	Set up job	﻿2025-12-22T16:06:36.9865493Z Current runner version: '2.330.0'
+benchmark	Set up job	2025-12-22T16:06:36.9891807Z ##[group]Runner Image Provisioner
+benchmark	Set up job	2025-12-22T16:06:36.9892780Z Hosted Compute Agent
+benchmark	Set up job	2025-12-22T16:06:36.9893384Z Version: 20251211.462
+benchmark	Set up job	2025-12-22T16:06:36.9894069Z Commit: 6cbad8c2bb55d58165063d031ccabf57e2d2db61
+benchmark	Set up job	2025-12-22T16:06:36.9894779Z Build Date: 2025-12-11T16:28:49Z
+benchmark	Set up job	2025-12-22T16:06:36.9895957Z Worker ID: {97c81c16-b9e5-4c57-978c-038de4c68138}
+benchmark	Set up job	2025-12-22T16:06:36.9896691Z ##[endgroup]
+benchmark	Set up job	2025-12-22T16:06:36.9897182Z ##[group]Operating System
+benchmark	Set up job	2025-12-22T16:06:36.9897824Z Ubuntu
+benchmark	Set up job	2025-12-22T16:06:36.9898279Z 24.04.3
+benchmark	Set up job	2025-12-22T16:06:36.9898767Z LTS
+benchmark	Set up job	2025-12-22T16:06:36.9899175Z ##[endgroup]
+benchmark	Set up job	2025-12-22T16:06:36.9899740Z ##[group]Runner Image
+benchmark	Set up job	2025-12-22T16:06:36.9900281Z Image: ubuntu-24.04
+benchmark	Set up job	2025-12-22T16:06:36.9900743Z Version: 20251215.174.1
+benchmark	Set up job	2025-12-22T16:06:36.9901978Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20251215.174/images/ubuntu/Ubuntu2404-Readme.md
+benchmark	Set up job	2025-12-22T16:06:36.9903356Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20251215.174
+benchmark	Set up job	2025-12-22T16:06:36.9904606Z ##[endgroup]
+benchmark	Set up job	2025-12-22T16:06:36.9907099Z ##[group]GITHUB_TOKEN Permissions
+benchmark	Set up job	2025-12-22T16:06:36.9909394Z Actions: write
+benchmark	Set up job	2025-12-22T16:06:36.9909991Z ArtifactMetadata: write
+benchmark	Set up job	2025-12-22T16:06:36.9910516Z Attestations: write
+benchmark	Set up job	2025-12-22T16:06:36.9911131Z Checks: write
+benchmark	Set up job	2025-12-22T16:06:36.9911866Z Contents: write
+benchmark	Set up job	2025-12-22T16:06:36.9912444Z Deployments: write
+benchmark	Set up job	2025-12-22T16:06:36.9913073Z Discussions: write
+benchmark	Set up job	2025-12-22T16:06:36.9913557Z Issues: write
+benchmark	Set up job	2025-12-22T16:06:36.9914053Z Metadata: read
+benchmark	Set up job	2025-12-22T16:06:36.9914542Z Models: read
+benchmark	Set up job	2025-12-22T16:06:36.9915058Z Packages: write
+benchmark	Set up job	2025-12-22T16:06:36.9915536Z Pages: write
+benchmark	Set up job	2025-12-22T16:06:36.9916106Z PullRequests: write
+benchmark	Set up job	2025-12-22T16:06:36.9916790Z RepositoryProjects: write
+benchmark	Set up job	2025-12-22T16:06:36.9917339Z SecurityEvents: write
+benchmark	Set up job	2025-12-22T16:06:36.9917907Z Statuses: write
+benchmark	Set up job	2025-12-22T16:06:36.9918396Z ##[endgroup]
+benchmark	Set up job	2025-12-22T16:06:36.9920430Z Secret source: Actions
+benchmark	Set up job	2025-12-22T16:06:36.9921427Z Prepare workflow directory
+benchmark	Set up job	2025-12-22T16:06:37.0494316Z Prepare all required actions
+benchmark	Set up job	2025-12-22T16:06:37.0532846Z Getting action download info
+benchmark	Set up job	2025-12-22T16:06:37.3809388Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+benchmark	Set up job	2025-12-22T16:06:37.4962982Z Download action repository 'dtolnay/rust-toolchain@master' (SHA:f7ccc83f9ed1e5b9c81d8a67d7ad1a747e22a561)
+benchmark	Set up job	2025-12-22T16:06:37.7327756Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+benchmark	Set up job	2025-12-22T16:06:37.9638095Z Complete job name: benchmark
+benchmark	Initialize containers	﻿2025-12-22T16:06:38.0081236Z ##[group]Checking docker version
+benchmark	Initialize containers	2025-12-22T16:06:38.0094256Z ##[command]/usr/bin/docker version --format '{{.Server.APIVersion}}'
+benchmark	Initialize containers	2025-12-22T16:06:38.0971906Z '1.48'
+benchmark	Initialize containers	2025-12-22T16:06:38.0984132Z Docker daemon API version: '1.48'
+benchmark	Initialize containers	2025-12-22T16:06:38.0984873Z ##[command]/usr/bin/docker version --format '{{.Client.APIVersion}}'
+benchmark	Initialize containers	2025-12-22T16:06:38.1147022Z '1.48'
+benchmark	Initialize containers	2025-12-22T16:06:38.1160479Z Docker client API version: '1.48'
+benchmark	Initialize containers	2025-12-22T16:06:38.1166519Z ##[endgroup]
+benchmark	Initialize containers	2025-12-22T16:06:38.1169986Z ##[group]Clean up resources from previous jobs
+benchmark	Initialize containers	2025-12-22T16:06:38.1175683Z ##[command]/usr/bin/docker ps --all --quiet --no-trunc --filter "label=e7abe0"
+benchmark	Initialize containers	2025-12-22T16:06:38.1321350Z ##[command]/usr/bin/docker network prune --force --filter "label=e7abe0"
+benchmark	Initialize containers	2025-12-22T16:06:38.1448833Z ##[endgroup]
+benchmark	Initialize containers	2025-12-22T16:06:38.1449374Z ##[group]Create local container network
+benchmark	Initialize containers	2025-12-22T16:06:38.1459344Z ##[command]/usr/bin/docker network create --label e7abe0 github_network_b908c7bcc79b45949467e7b1e3d11205
+benchmark	Initialize containers	2025-12-22T16:06:38.1993510Z 595c4cf54745baca888da613ae17312734a1b3cc02f57ea91bab7759484d1782
+benchmark	Initialize containers	2025-12-22T16:06:38.2012092Z ##[endgroup]
+benchmark	Initialize containers	2025-12-22T16:06:38.2037154Z ##[group]Starting neo4j service container
+benchmark	Initialize containers	2025-12-22T16:06:38.2056640Z ##[command]/usr/bin/docker pull neo4j:5.15.0
+benchmark	Initialize containers	2025-12-22T16:06:38.6370439Z 5.15.0: Pulling from library/neo4j
+benchmark	Initialize containers	2025-12-22T16:06:38.7653145Z 0e0969fcaa82: Pulling fs layer
+benchmark	Initialize containers	2025-12-22T16:06:38.7654871Z 46717352c8c1: Pulling fs layer
+benchmark	Initialize containers	2025-12-22T16:06:38.7655989Z 7b6c4391345c: Pulling fs layer
+benchmark	Initialize containers	2025-12-22T16:06:38.7657008Z b3a561d23014: Pulling fs layer
+benchmark	Initialize containers	2025-12-22T16:06:38.7657933Z 4136c74b119e: Pulling fs layer
+benchmark	Initialize containers	2025-12-22T16:06:38.7658612Z b3a561d23014: Waiting
+benchmark	Initialize containers	2025-12-22T16:06:38.7659225Z 4136c74b119e: Waiting
+benchmark	Initialize containers	2025-12-22T16:06:38.8922267Z 7b6c4391345c: Verifying Checksum
+benchmark	Initialize containers	2025-12-22T16:06:38.8924527Z 7b6c4391345c: Download complete
+benchmark	Initialize containers	2025-12-22T16:06:39.0012196Z b3a561d23014: Download complete
+benchmark	Initialize containers	2025-12-22T16:06:39.2947097Z 0e0969fcaa82: Verifying Checksum
+benchmark	Initialize containers	2025-12-22T16:06:39.2948059Z 0e0969fcaa82: Download complete
+benchmark	Initialize containers	2025-12-22T16:06:40.6346012Z 0e0969fcaa82: Pull complete
+benchmark	Initialize containers	2025-12-22T16:06:40.9658725Z 4136c74b119e: Verifying Checksum
+benchmark	Initialize containers	2025-12-22T16:06:40.9659550Z 4136c74b119e: Download complete
+benchmark	Initialize containers	2025-12-22T16:06:42.6333645Z 46717352c8c1: Verifying Checksum
+benchmark	Initialize containers	2025-12-22T16:06:42.6334475Z 46717352c8c1: Download complete
+benchmark	Initialize containers	2025-12-22T16:06:45.1325475Z 46717352c8c1: Pull complete
+benchmark	Initialize containers	2025-12-22T16:06:45.1609872Z 7b6c4391345c: Pull complete
+benchmark	Initialize containers	2025-12-22T16:06:45.1720151Z b3a561d23014: Pull complete
+benchmark	Initialize containers	2025-12-22T16:06:45.9281928Z 4136c74b119e: Pull complete
+benchmark	Initialize containers	2025-12-22T16:06:45.9328386Z Digest: sha256:d9e2fb1ba398536e50d22ebc3d5d585baa086c1c0cf8e5b96bdc9e11e87e002a
+benchmark	Initialize containers	2025-12-22T16:06:45.9341490Z Status: Downloaded newer image for neo4j:5.15.0
+benchmark	Initialize containers	2025-12-22T16:06:45.9351485Z docker.io/library/neo4j:5.15.0
+benchmark	Initialize containers	2025-12-22T16:06:45.9413180Z ##[command]/usr/bin/docker create --name e1de33f50de84c378015e86f58034638_neo4j5150_e6d3e7 --label e7abe0 --network github_network_b908c7bcc79b45949467e7b1e3d11205 --network-alias neo4j -p 7474:7474 -p 7687:7687 --health-cmd "wget -q --spider http://localhost:7474 || exit 1" --health-interval 10s --health-timeout 10s --health-retries 10 --health-start-period 30s -e "NEO4J_AUTH=neo4j/password" -e "NEO4J_PLUGINS=[]" -e GITHUB_ACTIONS=true -e CI=true neo4j:5.15.0
+benchmark	Initialize containers	2025-12-22T16:06:45.9673733Z f6af5097f7dcb81c148de41c697c3355136b0014bd505d8e446e2f6eb878e013
+benchmark	Initialize containers	2025-12-22T16:06:45.9698628Z ##[command]/usr/bin/docker start f6af5097f7dcb81c148de41c697c3355136b0014bd505d8e446e2f6eb878e013
+benchmark	Initialize containers	2025-12-22T16:06:46.1910936Z f6af5097f7dcb81c148de41c697c3355136b0014bd505d8e446e2f6eb878e013
+benchmark	Initialize containers	2025-12-22T16:06:46.1946832Z ##[command]/usr/bin/docker ps --all --filter id=f6af5097f7dcb81c148de41c697c3355136b0014bd505d8e446e2f6eb878e013 --filter status=running --no-trunc --format "{{.ID}} {{.Status}}"
+benchmark	Initialize containers	2025-12-22T16:06:46.2078478Z f6af5097f7dcb81c148de41c697c3355136b0014bd505d8e446e2f6eb878e013 Up Less than a second (health: starting)
+benchmark	Initialize containers	2025-12-22T16:06:46.2098547Z ##[command]/usr/bin/docker port f6af5097f7dcb81c148de41c697c3355136b0014bd505d8e446e2f6eb878e013
+benchmark	Initialize containers	2025-12-22T16:06:46.2277434Z 7474/tcp -> 0.0.0.0:7474
+benchmark	Initialize containers	2025-12-22T16:06:46.2278013Z 7474/tcp -> [::]:7474
+benchmark	Initialize containers	2025-12-22T16:06:46.2278885Z 7687/tcp -> 0.0.0.0:7687
+benchmark	Initialize containers	2025-12-22T16:06:46.2279110Z 7687/tcp -> [::]:7687
+benchmark	Initialize containers	2025-12-22T16:06:46.2328397Z ##[endgroup]
+benchmark	Initialize containers	2025-12-22T16:06:46.2337143Z ##[group]Waiting for all services to be ready
+benchmark	Initialize containers	2025-12-22T16:06:46.2350892Z ##[command]/usr/bin/docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" f6af5097f7dcb81c148de41c697c3355136b0014bd505d8e446e2f6eb878e013
+benchmark	Initialize containers	2025-12-22T16:06:46.2476803Z starting
+benchmark	Initialize containers	2025-12-22T16:06:46.2501989Z neo4j service is starting, waiting 2 seconds before checking again.
+benchmark	Initialize containers	2025-12-22T16:06:48.2518898Z ##[command]/usr/bin/docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" f6af5097f7dcb81c148de41c697c3355136b0014bd505d8e446e2f6eb878e013
+benchmark	Initialize containers	2025-12-22T16:06:48.2723442Z starting
+benchmark	Initialize containers	2025-12-22T16:06:48.2751204Z neo4j service is starting, waiting 4 seconds before checking again.
+benchmark	Initialize containers	2025-12-22T16:06:52.3805837Z ##[command]/usr/bin/docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" f6af5097f7dcb81c148de41c697c3355136b0014bd505d8e446e2f6eb878e013
+benchmark	Initialize containers	2025-12-22T16:06:52.4016675Z starting
+benchmark	Initialize containers	2025-12-22T16:06:52.4077757Z neo4j service is starting, waiting 8 seconds before checking again.
+benchmark	Initialize containers	2025-12-22T16:07:00.5844402Z ##[command]/usr/bin/docker inspect --format="{{if .Config.Healthcheck}}{{print .State.Health.Status}}{{end}}" f6af5097f7dcb81c148de41c697c3355136b0014bd505d8e446e2f6eb878e013
+benchmark	Initialize containers	2025-12-22T16:07:00.5966778Z healthy
+benchmark	Initialize containers	2025-12-22T16:07:00.5984220Z neo4j service is healthy.
+benchmark	Initialize containers	2025-12-22T16:07:00.5985062Z ##[endgroup]
+benchmark	Checkout repository	﻿2025-12-22T16:07:00.6226877Z ##[group]Run actions/checkout@v4
+benchmark	Checkout repository	2025-12-22T16:07:00.6227442Z with:
+benchmark	Checkout repository	2025-12-22T16:07:00.6227692Z   repository: linksplatform/Comparisons.Neo4jVSDoublets
+benchmark	Checkout repository	2025-12-22T16:07:00.6228201Z   token: ***
+benchmark	Checkout repository	2025-12-22T16:07:00.6228379Z   ssh-strict: true
+benchmark	Checkout repository	2025-12-22T16:07:00.6228554Z   ssh-user: git
+benchmark	Checkout repository	2025-12-22T16:07:00.6228743Z   persist-credentials: true
+benchmark	Checkout repository	2025-12-22T16:07:00.6228949Z   clean: true
+benchmark	Checkout repository	2025-12-22T16:07:00.6229145Z   sparse-checkout-cone-mode: true
+benchmark	Checkout repository	2025-12-22T16:07:00.6229376Z   fetch-depth: 1
+benchmark	Checkout repository	2025-12-22T16:07:00.6229551Z   fetch-tags: false
+benchmark	Checkout repository	2025-12-22T16:07:00.6229726Z   show-progress: true
+benchmark	Checkout repository	2025-12-22T16:07:00.6229914Z   lfs: false
+benchmark	Checkout repository	2025-12-22T16:07:00.6230074Z   submodules: false
+benchmark	Checkout repository	2025-12-22T16:07:00.6230274Z   set-safe-directory: true
+benchmark	Checkout repository	2025-12-22T16:07:00.6230657Z env:
+benchmark	Checkout repository	2025-12-22T16:07:00.6230834Z   toolchain: nightly-2024-01-01
+benchmark	Checkout repository	2025-12-22T16:07:00.6231160Z   GITHUB_TOKEN: ***
+benchmark	Checkout repository	2025-12-22T16:07:00.6231330Z ##[endgroup]
+benchmark	Checkout repository	2025-12-22T16:07:00.7403528Z Syncing repository: linksplatform/Comparisons.Neo4jVSDoublets
+benchmark	Checkout repository	2025-12-22T16:07:00.7405022Z ##[group]Getting Git version info
+benchmark	Checkout repository	2025-12-22T16:07:00.7405530Z Working directory is '/home/runner/work/Comparisons.Neo4jVSDoublets/Comparisons.Neo4jVSDoublets'
+benchmark	Checkout repository	2025-12-22T16:07:00.7406214Z [command]/usr/bin/git version
+benchmark	Checkout repository	2025-12-22T16:07:00.7470653Z git version 2.52.0
+benchmark	Checkout repository	2025-12-22T16:07:00.7497231Z ##[endgroup]
+benchmark	Checkout repository	2025-12-22T16:07:00.7511561Z Temporarily overriding HOME='/home/runner/work/_temp/0d3911f7-3300-4a25-aa20-20903f0fad04' before making global git config changes
+benchmark	Checkout repository	2025-12-22T16:07:00.7512860Z Adding repository directory to the temporary git global config as a safe directory
+benchmark	Checkout repository	2025-12-22T16:07:00.7518313Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Comparisons.Neo4jVSDoublets/Comparisons.Neo4jVSDoublets
+benchmark	Checkout repository	2025-12-22T16:07:00.7560754Z Deleting the contents of '/home/runner/work/Comparisons.Neo4jVSDoublets/Comparisons.Neo4jVSDoublets'
+benchmark	Checkout repository	2025-12-22T16:07:00.7564636Z ##[group]Initializing the repository
+benchmark	Checkout repository	2025-12-22T16:07:00.7569527Z [command]/usr/bin/git init /home/runner/work/Comparisons.Neo4jVSDoublets/Comparisons.Neo4jVSDoublets
+benchmark	Checkout repository	2025-12-22T16:07:00.7670618Z hint: Using 'master' as the name for the initial branch. This default branch name
+benchmark	Checkout repository	2025-12-22T16:07:00.7671896Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+benchmark	Checkout repository	2025-12-22T16:07:00.7672751Z hint: to use in all of your new repositories, which will suppress this warning,
+benchmark	Checkout repository	2025-12-22T16:07:00.7673353Z hint: call:
+benchmark	Checkout repository	2025-12-22T16:07:00.7673635Z hint:
+benchmark	Checkout repository	2025-12-22T16:07:00.7674036Z hint: 	git config --global init.defaultBranch <name>
+benchmark	Checkout repository	2025-12-22T16:07:00.7674543Z hint:
+benchmark	Checkout repository	2025-12-22T16:07:00.7675013Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+benchmark	Checkout repository	2025-12-22T16:07:00.7675801Z hint: 'development'. The just-created branch can be renamed via this command:
+benchmark	Checkout repository	2025-12-22T16:07:00.7676381Z hint:
+benchmark	Checkout repository	2025-12-22T16:07:00.7676663Z hint: 	git branch -m <name>
+benchmark	Checkout repository	2025-12-22T16:07:00.7677030Z hint:
+benchmark	Checkout repository	2025-12-22T16:07:00.7677503Z hint: Disable this message with "git config set advice.defaultBranchName false"
+benchmark	Checkout repository	2025-12-22T16:07:00.7678468Z Initialized empty Git repository in /home/runner/work/Comparisons.Neo4jVSDoublets/Comparisons.Neo4jVSDoublets/.git/
+benchmark	Checkout repository	2025-12-22T16:07:00.7686513Z [command]/usr/bin/git remote add origin https://github.com/linksplatform/Comparisons.Neo4jVSDoublets
+benchmark	Checkout repository	2025-12-22T16:07:00.7723056Z ##[endgroup]
+benchmark	Checkout repository	2025-12-22T16:07:00.7723697Z ##[group]Disabling automatic garbage collection
+benchmark	Checkout repository	2025-12-22T16:07:00.7728218Z [command]/usr/bin/git config --local gc.auto 0
+benchmark	Checkout repository	2025-12-22T16:07:00.7756720Z ##[endgroup]
+benchmark	Checkout repository	2025-12-22T16:07:00.7757309Z ##[group]Setting up auth
+benchmark	Checkout repository	2025-12-22T16:07:00.7764577Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+benchmark	Checkout repository	2025-12-22T16:07:00.7795248Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+benchmark	Checkout repository	2025-12-22T16:07:00.8117976Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+benchmark	Checkout repository	2025-12-22T16:07:00.8148074Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+benchmark	Checkout repository	2025-12-22T16:07:00.8369827Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+benchmark	Checkout repository	2025-12-22T16:07:00.8408229Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+benchmark	Checkout repository	2025-12-22T16:07:00.8635548Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+benchmark	Checkout repository	2025-12-22T16:07:00.8670286Z ##[endgroup]
+benchmark	Checkout repository	2025-12-22T16:07:00.8671046Z ##[group]Fetching the repository
+benchmark	Checkout repository	2025-12-22T16:07:00.8680312Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +c266bb7ac80fc6fc5de0b43268ebf3aad3996206:refs/remotes/origin/main
+benchmark	Checkout repository	2025-12-22T16:07:01.1277528Z From https://github.com/linksplatform/Comparisons.Neo4jVSDoublets
+benchmark	Checkout repository	2025-12-22T16:07:01.1279026Z  * [new ref]         c266bb7ac80fc6fc5de0b43268ebf3aad3996206 -> origin/main
+benchmark	Checkout repository	2025-12-22T16:07:01.1311419Z ##[endgroup]
+benchmark	Checkout repository	2025-12-22T16:07:01.1312288Z ##[group]Determining the checkout info
+benchmark	Checkout repository	2025-12-22T16:07:01.1315258Z ##[endgroup]
+benchmark	Checkout repository	2025-12-22T16:07:01.1320652Z [command]/usr/bin/git sparse-checkout disable
+benchmark	Checkout repository	2025-12-22T16:07:01.1363282Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+benchmark	Checkout repository	2025-12-22T16:07:01.1391301Z ##[group]Checking out the ref
+benchmark	Checkout repository	2025-12-22T16:07:01.1395832Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+benchmark	Checkout repository	2025-12-22T16:07:01.1470763Z Switched to a new branch 'main'
+benchmark	Checkout repository	2025-12-22T16:07:01.1473960Z branch 'main' set up to track 'origin/main'.
+benchmark	Checkout repository	2025-12-22T16:07:01.1480879Z ##[endgroup]
+benchmark	Checkout repository	2025-12-22T16:07:01.1519109Z [command]/usr/bin/git log -1 --format=%H
+benchmark	Checkout repository	2025-12-22T16:07:01.1543067Z c266bb7ac80fc6fc5de0b43268ebf3aad3996206
+benchmark	Setup Rust	﻿2025-12-22T16:07:01.1810352Z ##[group]Run dtolnay/rust-toolchain@master
+benchmark	Setup Rust	2025-12-22T16:07:01.1810650Z with:
+benchmark	Setup Rust	2025-12-22T16:07:01.1810827Z   toolchain: nightly-2024-01-01
+benchmark	Setup Rust	2025-12-22T16:07:01.1811062Z   components: rustfmt, clippy
+benchmark	Setup Rust	2025-12-22T16:07:01.1811260Z env:
+benchmark	Setup Rust	2025-12-22T16:07:01.1811426Z   toolchain: nightly-2024-01-01
+benchmark	Setup Rust	2025-12-22T16:07:01.1812021Z   GITHUB_TOKEN: ***
+benchmark	Setup Rust	2025-12-22T16:07:01.1812214Z ##[endgroup]
+benchmark	Setup Rust	2025-12-22T16:07:01.1912932Z ##[group]Run : parse toolchain version
+benchmark	Setup Rust	2025-12-22T16:07:01.1913314Z [36;1m: parse toolchain version[0m
+benchmark	Setup Rust	2025-12-22T16:07:01.1913584Z [36;1mif [[ -z $toolchain ]]; then[0m
+benchmark	Setup Rust	2025-12-22T16:07:01.1914059Z [36;1m  # GitHub does not enforce `required: true` inputs itself. https://github.com/actions/runner/issues/1070[0m
+benchmark	Setup Rust	2025-12-22T16:07:01.1914555Z [36;1m  echo "'toolchain' is a required input" >&2[0m
+benchmark	Setup Rust	2025-12-22T16:07:01.1914818Z [36;1m  exit 1[0m
+benchmark	Setup Rust	2025-12-22T16:07:01.1915107Z [36;1melif [[ $toolchain =~ ^stable' '[0-9]+' '(year|month|week|day)s?' 'ago$ ]]; then[0m
+benchmark	Setup Rust	2025-12-22T16:07:01.1915463Z [36;1m  if [[ Linux == macOS ]]; then[0m
+benchmark	Setup Rust	2025-12-22T16:07:01.1915939Z [36;1m    echo "toolchain=1.$((($(date -v-$(sed 's/stable \([0-9]*\) \(.\).*/\1\2/' <<< $toolchain) +%s)/60/60/24-16569)/7/6))" >> $GITHUB_OUTPUT[0m
+benchmark	Setup Rust	2025-12-22T16:07:01.1916365Z [36;1m  else[0m
+benchmark	Setup Rust	2025-12-22T16:07:01.1916711Z [36;1m    echo "toolchain=1.$((($(date --date "${toolchain#stable }" +%s)/60/60/24-16569)/7/6))" >> $GITHUB_OUTPUT[0m
+benchmark	Setup Rust	2025-12-22T16:07:01.1917089Z [36;1m  fi[0m
+benchmark	Setup Rust	2025-12-22T16:07:01.1917351Z [36;1melif [[ $toolchain =~ ^stable' 'minus' '[0-9]+' 'releases?$ ]]; then[0m
+benchmark	Setup Rust	2025-12-22T16:07:01.1917806Z [36;1m  echo "toolchain=1.$((($(date +%s)/60/60/24-16569)/7/6-${toolchain//[^0-9]/}))" >> $GITHUB_OUTPUT[0m
+benchmark	Setup Rust	2025-12-22T16:07:01.1918202Z [36;1melif [[ $toolchain =~ ^1\.[0-9]+$ ]]; then[0m
+benchmark	Setup Rust	2025-12-22T16:07:01.1918851Z [36;1m  echo "toolchain=1.$((i=${toolchain#1.}, c=($(date +%s)/60/60/24-16569)/7/6, i+9*i*(10*i<=c)+90*i*(100*i<=c)))" >> $GITHUB_OUTPUT[0m
+benchmark	Setup Rust	2025-12-22T16:07:01.1919255Z [36;1melse[0m
+benchmark	Setup Rust	2025-12-22T16:07:01.1919478Z [36;1m  echo "toolchain=$toolchain" >> $GITHUB_OUTPUT[0m
+benchmark	Setup Rust	2025-12-22T16:07:01.1919733Z [36;1mfi[0m
+benchmark	Setup Rust	2025-12-22T16:07:01.1956716Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+benchmark	Setup Rust	2025-12-22T16:07:01.1957043Z env:
+benchmark	Setup Rust	2025-12-22T16:07:01.1957217Z   toolchain: nightly-2024-01-01
+benchmark	Setup Rust	2025-12-22T16:07:01.1957628Z   GITHUB_TOKEN: ***
+benchmark	Setup Rust	2025-12-22T16:07:01.1957811Z ##[endgroup]
+benchmark	Setup Rust	2025-12-22T16:07:01.2093320Z ##[group]Run : construct rustup command line
+benchmark	Setup Rust	2025-12-22T16:07:01.2093640Z [36;1m: construct rustup command line[0m
+benchmark	Setup Rust	2025-12-22T16:07:01.2094056Z [36;1mecho "targets=$(for t in ${targets//,/ }; do echo -n ' --target' $t; done)" >> $GITHUB_OUTPUT[0m
+benchmark	Setup Rust	2025-12-22T16:07:01.2094629Z [36;1mecho "components=$(for c in ${components//,/ }; do echo -n ' --component' $c; done)" >> $GITHUB_OUTPUT[0m
+benchmark	Setup Rust	2025-12-22T16:07:01.2095074Z [36;1mecho "downgrade=" >> $GITHUB_OUTPUT[0m
+benchmark	Setup Rust	2025-12-22T16:07:01.2125817Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+benchmark	Setup Rust	2025-12-22T16:07:01.2126120Z env:
+benchmark	Setup Rust	2025-12-22T16:07:01.2126317Z   toolchain: nightly-2024-01-01
+benchmark	Setup Rust	2025-12-22T16:07:01.2126736Z   GITHUB_TOKEN: ***
+benchmark	Setup Rust	2025-12-22T16:07:01.2126918Z   targets: 
+benchmark	Setup Rust	2025-12-22T16:07:01.2127096Z   components: rustfmt, clippy
+benchmark	Setup Rust	2025-12-22T16:07:01.2127307Z ##[endgroup]
+benchmark	Setup Rust	2025-12-22T16:07:01.2209775Z ##[group]Run : set $CARGO_HOME
+benchmark	Setup Rust	2025-12-22T16:07:01.2210018Z [36;1m: set $CARGO_HOME[0m
+benchmark	Setup Rust	2025-12-22T16:07:01.2210301Z [36;1mecho CARGO_HOME=${CARGO_HOME:-"$HOME/.cargo"} >> $GITHUB_ENV[0m
+benchmark	Setup Rust	2025-12-22T16:07:01.2240516Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+benchmark	Setup Rust	2025-12-22T16:07:01.2240835Z env:
+benchmark	Setup Rust	2025-12-22T16:07:01.2241012Z   toolchain: nightly-2024-01-01
+benchmark	Setup Rust	2025-12-22T16:07:01.2241417Z   GITHUB_TOKEN: ***
+benchmark	Setup Rust	2025-12-22T16:07:01.2241837Z ##[endgroup]
+benchmark	Setup Rust	2025-12-22T16:07:01.2320668Z ##[group]Run : install rustup if needed
+benchmark	Setup Rust	2025-12-22T16:07:01.2320963Z [36;1m: install rustup if needed[0m
+benchmark	Setup Rust	2025-12-22T16:07:01.2321237Z [36;1mif ! command -v rustup &>/dev/null; then[0m
+benchmark	Setup Rust	2025-12-22T16:07:01.2322155Z [36;1m  curl --proto '=https' --tlsv1.2 --retry 10 --retry-connrefused --location --silent --show-error --fail https://sh.rustup.rs | sh -s -- --default-toolchain none -y[0m
+benchmark	Setup Rust	2025-12-22T16:07:01.2323077Z [36;1m  echo "$CARGO_HOME/bin" >> $GITHUB_PATH[0m
+benchmark	Setup Rust	2025-12-22T16:07:01.2323329Z [36;1mfi[0m
+benchmark	Setup Rust	2025-12-22T16:07:01.2353622Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+benchmark	Setup Rust	2025-12-22T16:07:01.2353946Z env:
+benchmark	Setup Rust	2025-12-22T16:07:01.2354129Z   toolchain: nightly-2024-01-01
+benchmark	Setup Rust	2025-12-22T16:07:01.2354539Z   GITHUB_TOKEN: ***
+benchmark	Setup Rust	2025-12-22T16:07:01.2354741Z   CARGO_HOME: /home/runner/.cargo
+benchmark	Setup Rust	2025-12-22T16:07:01.2354977Z ##[endgroup]
+benchmark	Setup Rust	2025-12-22T16:07:01.2432141Z ##[group]Run rustup toolchain install nightly-2024-01-01 --component rustfmt --component clippy --profile minimal --no-self-update
+benchmark	Setup Rust	2025-12-22T16:07:01.2432966Z [36;1mrustup toolchain install nightly-2024-01-01 --component rustfmt --component clippy --profile minimal --no-self-update[0m
+benchmark	Setup Rust	2025-12-22T16:07:01.2462881Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+benchmark	Setup Rust	2025-12-22T16:07:01.2463186Z env:
+benchmark	Setup Rust	2025-12-22T16:07:01.2463381Z   toolchain: nightly-2024-01-01
+benchmark	Setup Rust	2025-12-22T16:07:01.2463783Z   GITHUB_TOKEN: ***
+benchmark	Setup Rust	2025-12-22T16:07:01.2463982Z   CARGO_HOME: /home/runner/.cargo
+benchmark	Setup Rust	2025-12-22T16:07:01.2464217Z   RUSTUP_PERMIT_COPY_RENAME: 1
+benchmark	Setup Rust	2025-12-22T16:07:01.2464422Z ##[endgroup]
+benchmark	Setup Rust	2025-12-22T16:07:01.3378072Z info: syncing channel updates for 'nightly-2024-01-01-x86_64-unknown-linux-gnu'
+benchmark	Setup Rust	2025-12-22T16:07:02.1857958Z info: latest update on 2024-01-01, rust version 1.77.0-nightly (e51e98dde 2023-12-31)
+benchmark	Setup Rust	2025-12-22T16:07:02.1858672Z info: downloading component 'cargo'
+benchmark	Setup Rust	2025-12-22T16:07:02.2409388Z info: downloading component 'clippy'
+benchmark	Setup Rust	2025-12-22T16:07:02.2670137Z info: downloading component 'rust-std'
+benchmark	Setup Rust	2025-12-22T16:07:02.4020572Z info: downloading component 'rustc'
+benchmark	Setup Rust	2025-12-22T16:07:03.1571257Z info: downloading component 'rustfmt'
+benchmark	Setup Rust	2025-12-22T16:07:03.1812224Z info: installing component 'cargo'
+benchmark	Setup Rust	2025-12-22T16:07:03.7943952Z info: installing component 'clippy'
+benchmark	Setup Rust	2025-12-22T16:07:04.0264675Z info: installing component 'rust-std'
+benchmark	Setup Rust	2025-12-22T16:07:05.8282537Z info: installing component 'rustc'
+benchmark	Setup Rust	2025-12-22T16:07:09.7407849Z info: installing component 'rustfmt'
+benchmark	Setup Rust	2025-12-22T16:07:10.0282963Z 
+benchmark	Setup Rust	2025-12-22T16:07:10.0388820Z   nightly-2024-01-01-x86_64-unknown-linux-gnu installed - rustc 1.77.0-nightly (e51e98dde 2023-12-31)
+benchmark	Setup Rust	2025-12-22T16:07:10.0389303Z 
+benchmark	Setup Rust	2025-12-22T16:07:10.0437842Z ##[group]Run rustup default nightly-2024-01-01
+benchmark	Setup Rust	2025-12-22T16:07:10.0438186Z [36;1mrustup default nightly-2024-01-01[0m
+benchmark	Setup Rust	2025-12-22T16:07:10.0471945Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+benchmark	Setup Rust	2025-12-22T16:07:10.0472298Z env:
+benchmark	Setup Rust	2025-12-22T16:07:10.0472492Z   toolchain: nightly-2024-01-01
+benchmark	Setup Rust	2025-12-22T16:07:10.0472977Z   GITHUB_TOKEN: ***
+benchmark	Setup Rust	2025-12-22T16:07:10.0473207Z   CARGO_HOME: /home/runner/.cargo
+benchmark	Setup Rust	2025-12-22T16:07:10.0473469Z ##[endgroup]
+benchmark	Setup Rust	2025-12-22T16:07:10.0577954Z info: using existing install for 'nightly-2024-01-01-x86_64-unknown-linux-gnu'
+benchmark	Setup Rust	2025-12-22T16:07:10.0835078Z info: default toolchain set to 'nightly-2024-01-01-x86_64-unknown-linux-gnu'
+benchmark	Setup Rust	2025-12-22T16:07:10.0835983Z 
+benchmark	Setup Rust	2025-12-22T16:07:10.0934343Z   nightly-2024-01-01-x86_64-unknown-linux-gnu unchanged - rustc 1.77.0-nightly (e51e98dde 2023-12-31)
+benchmark	Setup Rust	2025-12-22T16:07:10.0935022Z 
+benchmark	Setup Rust	2025-12-22T16:07:10.0936270Z info: note that the toolchain 'nightly-2022-08-22-x86_64-unknown-linux-gnu' is currently in use (overridden by '/home/runner/work/Comparisons.Neo4jVSDoublets/Comparisons.Neo4jVSDoublets/rust-toolchain.toml')
+benchmark	Setup Rust	2025-12-22T16:07:10.0977312Z ##[group]Run : create cachekey
+benchmark	Setup Rust	2025-12-22T16:07:10.0977617Z [36;1m: create cachekey[0m
+benchmark	Setup Rust	2025-12-22T16:07:10.0978190Z [36;1mDATE=$(rustc +nightly-2024-01-01 --version --verbose | sed -ne 's/^commit-date: \(20[0-9][0-9]\)-\([01][0-9]\)-\([0-3][0-9]\)$/\1\2\3/p')[0m
+benchmark	Setup Rust	2025-12-22T16:07:10.0978979Z [36;1mHASH=$(rustc +nightly-2024-01-01 --version --verbose | sed -ne 's/^commit-hash: //p')[0m
+benchmark	Setup Rust	2025-12-22T16:07:10.0979567Z [36;1mecho "cachekey=$(echo $DATE$HASH | head -c12)" >> $GITHUB_OUTPUT[0m
+benchmark	Setup Rust	2025-12-22T16:07:10.1013410Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+benchmark	Setup Rust	2025-12-22T16:07:10.1013949Z env:
+benchmark	Setup Rust	2025-12-22T16:07:10.1014143Z   toolchain: nightly-2024-01-01
+benchmark	Setup Rust	2025-12-22T16:07:10.1014596Z   GITHUB_TOKEN: ***
+benchmark	Setup Rust	2025-12-22T16:07:10.1014809Z   CARGO_HOME: /home/runner/.cargo
+benchmark	Setup Rust	2025-12-22T16:07:10.1015055Z ##[endgroup]
+benchmark	Setup Rust	2025-12-22T16:07:10.1466743Z ##[group]Run : disable incremental compilation
+benchmark	Setup Rust	2025-12-22T16:07:10.1467120Z [36;1m: disable incremental compilation[0m
+benchmark	Setup Rust	2025-12-22T16:07:10.1467454Z [36;1mif [ -z "${CARGO_INCREMENTAL+set}" ]; then[0m
+benchmark	Setup Rust	2025-12-22T16:07:10.1467800Z [36;1m  echo CARGO_INCREMENTAL=0 >> $GITHUB_ENV[0m
+benchmark	Setup Rust	2025-12-22T16:07:10.1468088Z [36;1mfi[0m
+benchmark	Setup Rust	2025-12-22T16:07:10.1501036Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+benchmark	Setup Rust	2025-12-22T16:07:10.1501380Z env:
+benchmark	Setup Rust	2025-12-22T16:07:10.1501573Z   toolchain: nightly-2024-01-01
+benchmark	Setup Rust	2025-12-22T16:07:10.1502263Z   GITHUB_TOKEN: ***
+benchmark	Setup Rust	2025-12-22T16:07:10.1502476Z   CARGO_HOME: /home/runner/.cargo
+benchmark	Setup Rust	2025-12-22T16:07:10.1502704Z ##[endgroup]
+benchmark	Setup Rust	2025-12-22T16:07:10.1571420Z ##[group]Run : enable colors in Cargo output
+benchmark	Setup Rust	2025-12-22T16:07:10.1572002Z [36;1m: enable colors in Cargo output[0m
+benchmark	Setup Rust	2025-12-22T16:07:10.1572302Z [36;1mif [ -z "${CARGO_TERM_COLOR+set}" ]; then[0m
+benchmark	Setup Rust	2025-12-22T16:07:10.1572619Z [36;1m  echo CARGO_TERM_COLOR=always >> $GITHUB_ENV[0m
+benchmark	Setup Rust	2025-12-22T16:07:10.1572879Z [36;1mfi[0m
+benchmark	Setup Rust	2025-12-22T16:07:10.1603584Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+benchmark	Setup Rust	2025-12-22T16:07:10.1603910Z env:
+benchmark	Setup Rust	2025-12-22T16:07:10.1604088Z   toolchain: nightly-2024-01-01
+benchmark	Setup Rust	2025-12-22T16:07:10.1604502Z   GITHUB_TOKEN: ***
+benchmark	Setup Rust	2025-12-22T16:07:10.1604715Z   CARGO_HOME: /home/runner/.cargo
+benchmark	Setup Rust	2025-12-22T16:07:10.1604950Z   CARGO_INCREMENTAL: 0
+benchmark	Setup Rust	2025-12-22T16:07:10.1605150Z ##[endgroup]
+benchmark	Setup Rust	2025-12-22T16:07:10.1674143Z ##[group]Run : enable Cargo sparse registry
+benchmark	Setup Rust	2025-12-22T16:07:10.1674633Z [36;1m: enable Cargo sparse registry[0m
+benchmark	Setup Rust	2025-12-22T16:07:10.1674966Z [36;1m# implemented in 1.66, stabilized in 1.68, made default in 1.70[0m
+benchmark	Setup Rust	2025-12-22T16:07:10.1675588Z [36;1mif [ -z "${CARGO_REGISTRIES_CRATES_IO_PROTOCOL+set}" -o -f "/home/runner/work/_temp"/.implicit_cargo_registries_crates_io_protocol ]; then[0m
+benchmark	Setup Rust	2025-12-22T16:07:10.1676278Z [36;1m  if rustc +nightly-2024-01-01 --version --verbose | grep -q '^release: 1\.6[89]\.'; then[0m
+benchmark	Setup Rust	2025-12-22T16:07:10.1677098Z [36;1m    touch "/home/runner/work/_temp"/.implicit_cargo_registries_crates_io_protocol || true[0m
+benchmark	Setup Rust	2025-12-22T16:07:10.1677575Z [36;1m    echo CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse >> $GITHUB_ENV[0m
+benchmark	Setup Rust	2025-12-22T16:07:10.1678051Z [36;1m  elif rustc +nightly-2024-01-01 --version --verbose | grep -q '^release: 1\.6[67]\.'; then[0m
+benchmark	Setup Rust	2025-12-22T16:07:10.1678582Z [36;1m    touch "/home/runner/work/_temp"/.implicit_cargo_registries_crates_io_protocol || true[0m
+benchmark	Setup Rust	2025-12-22T16:07:10.1679044Z [36;1m    echo CARGO_REGISTRIES_CRATES_IO_PROTOCOL=git >> $GITHUB_ENV[0m
+benchmark	Setup Rust	2025-12-22T16:07:10.1679351Z [36;1m  fi[0m
+benchmark	Setup Rust	2025-12-22T16:07:10.1679513Z [36;1mfi[0m
+benchmark	Setup Rust	2025-12-22T16:07:10.1709913Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+benchmark	Setup Rust	2025-12-22T16:07:10.1710234Z env:
+benchmark	Setup Rust	2025-12-22T16:07:10.1710404Z   toolchain: nightly-2024-01-01
+benchmark	Setup Rust	2025-12-22T16:07:10.1710808Z   GITHUB_TOKEN: ***
+benchmark	Setup Rust	2025-12-22T16:07:10.1711006Z   CARGO_HOME: /home/runner/.cargo
+benchmark	Setup Rust	2025-12-22T16:07:10.1711238Z   CARGO_INCREMENTAL: 0
+benchmark	Setup Rust	2025-12-22T16:07:10.1711430Z   CARGO_TERM_COLOR: always
+benchmark	Setup Rust	2025-12-22T16:07:10.1711845Z ##[endgroup]
+benchmark	Setup Rust	2025-12-22T16:07:10.2091217Z ##[group]Run : work around spurious network errors in curl 8.0
+benchmark	Setup Rust	2025-12-22T16:07:10.2091942Z [36;1m: work around spurious network errors in curl 8.0[0m
+benchmark	Setup Rust	2025-12-22T16:07:10.2092501Z [36;1m# https://rust-lang.zulipchat.com/#narrow/stream/246057-t-cargo/topic/timeout.20investigation[0m
+benchmark	Setup Rust	2025-12-22T16:07:10.2093113Z [36;1mif rustc +nightly-2024-01-01 --version --verbose | grep -q '^release: 1\.7[01]\.'; then[0m
+benchmark	Setup Rust	2025-12-22T16:07:10.2093577Z [36;1m  echo CARGO_HTTP_MULTIPLEXING=false >> $GITHUB_ENV[0m
+benchmark	Setup Rust	2025-12-22T16:07:10.2093890Z [36;1mfi[0m
+benchmark	Setup Rust	2025-12-22T16:07:10.2128284Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+benchmark	Setup Rust	2025-12-22T16:07:10.2128789Z env:
+benchmark	Setup Rust	2025-12-22T16:07:10.2128967Z   toolchain: nightly-2024-01-01
+benchmark	Setup Rust	2025-12-22T16:07:10.2129400Z   GITHUB_TOKEN: ***
+benchmark	Setup Rust	2025-12-22T16:07:10.2129600Z   CARGO_HOME: /home/runner/.cargo
+benchmark	Setup Rust	2025-12-22T16:07:10.2129830Z   CARGO_INCREMENTAL: 0
+benchmark	Setup Rust	2025-12-22T16:07:10.2130024Z   CARGO_TERM_COLOR: always
+benchmark	Setup Rust	2025-12-22T16:07:10.2130217Z ##[endgroup]
+benchmark	Setup Rust	2025-12-22T16:07:10.2364489Z ##[group]Run rustc +nightly-2024-01-01 --version --verbose
+benchmark	Setup Rust	2025-12-22T16:07:10.2364893Z [36;1mrustc +nightly-2024-01-01 --version --verbose[0m
+benchmark	Setup Rust	2025-12-22T16:07:10.2398556Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+benchmark	Setup Rust	2025-12-22T16:07:10.2398886Z env:
+benchmark	Setup Rust	2025-12-22T16:07:10.2399076Z   toolchain: nightly-2024-01-01
+benchmark	Setup Rust	2025-12-22T16:07:10.2399530Z   GITHUB_TOKEN: ***
+benchmark	Setup Rust	2025-12-22T16:07:10.2399755Z   CARGO_HOME: /home/runner/.cargo
+benchmark	Setup Rust	2025-12-22T16:07:10.2399994Z   CARGO_INCREMENTAL: 0
+benchmark	Setup Rust	2025-12-22T16:07:10.2400189Z   CARGO_TERM_COLOR: always
+benchmark	Setup Rust	2025-12-22T16:07:10.2400401Z ##[endgroup]
+benchmark	Setup Rust	2025-12-22T16:07:10.2589882Z rustc 1.77.0-nightly (e51e98dde 2023-12-31)
+benchmark	Setup Rust	2025-12-22T16:07:10.2590460Z binary: rustc
+benchmark	Setup Rust	2025-12-22T16:07:10.2590870Z commit-hash: e51e98dde6a60637b6a71b8105245b629ac3fe77
+benchmark	Setup Rust	2025-12-22T16:07:10.2591348Z commit-date: 2023-12-31
+benchmark	Setup Rust	2025-12-22T16:07:10.2591905Z host: x86_64-unknown-linux-gnu
+benchmark	Setup Rust	2025-12-22T16:07:10.2592284Z release: 1.77.0-nightly
+benchmark	Setup Rust	2025-12-22T16:07:10.2592613Z LLVM version: 17.0.6
+benchmark	Wait for Neo4j to be ready	﻿2025-12-22T16:07:10.2656486Z ##[group]Run echo "Waiting for Neo4j to be fully ready..."
+benchmark	Wait for Neo4j to be ready	2025-12-22T16:07:10.2656891Z [36;1mecho "Waiting for Neo4j to be fully ready..."[0m
+benchmark	Wait for Neo4j to be ready	2025-12-22T16:07:10.2657170Z [36;1mfor i in {1..30}; do[0m
+benchmark	Wait for Neo4j to be ready	2025-12-22T16:07:10.2657456Z [36;1m  if curl -s http://localhost:7474 > /dev/null; then[0m
+benchmark	Wait for Neo4j to be ready	2025-12-22T16:07:10.2657740Z [36;1m    echo "Neo4j is ready!"[0m
+benchmark	Wait for Neo4j to be ready	2025-12-22T16:07:10.2658148Z [36;1m    break[0m
+benchmark	Wait for Neo4j to be ready	2025-12-22T16:07:10.2658326Z [36;1m  fi[0m
+benchmark	Wait for Neo4j to be ready	2025-12-22T16:07:10.2658542Z [36;1m  echo "Attempt $i: Neo4j not ready yet..."[0m
+benchmark	Wait for Neo4j to be ready	2025-12-22T16:07:10.2658796Z [36;1m  sleep 2[0m
+benchmark	Wait for Neo4j to be ready	2025-12-22T16:07:10.2658970Z [36;1mdone[0m
+benchmark	Wait for Neo4j to be ready	2025-12-22T16:07:10.2695563Z shell: /usr/bin/bash -e {0}
+benchmark	Wait for Neo4j to be ready	2025-12-22T16:07:10.2695796Z env:
+benchmark	Wait for Neo4j to be ready	2025-12-22T16:07:10.2695975Z   toolchain: nightly-2024-01-01
+benchmark	Wait for Neo4j to be ready	2025-12-22T16:07:10.2696410Z   GITHUB_TOKEN: ***
+benchmark	Wait for Neo4j to be ready	2025-12-22T16:07:10.2696617Z   CARGO_HOME: /home/runner/.cargo
+benchmark	Wait for Neo4j to be ready	2025-12-22T16:07:10.2696848Z   CARGO_INCREMENTAL: 0
+benchmark	Wait for Neo4j to be ready	2025-12-22T16:07:10.2697041Z   CARGO_TERM_COLOR: always
+benchmark	Wait for Neo4j to be ready	2025-12-22T16:07:10.2697283Z ##[endgroup]
+benchmark	Wait for Neo4j to be ready	2025-12-22T16:07:10.2748279Z Waiting for Neo4j to be fully ready...
+benchmark	Wait for Neo4j to be ready	2025-12-22T16:07:10.2847306Z Neo4j is ready!
+benchmark	Build benchmark	﻿2025-12-22T16:07:10.2872527Z ##[group]Run cargo build --release --all-features --manifest-path rust/Cargo.toml
+benchmark	Build benchmark	2025-12-22T16:07:10.2873084Z [36;1mcargo build --release --all-features --manifest-path rust/Cargo.toml[0m
+benchmark	Build benchmark	2025-12-22T16:07:10.2905490Z shell: /usr/bin/bash -e {0}
+benchmark	Build benchmark	2025-12-22T16:07:10.2905723Z env:
+benchmark	Build benchmark	2025-12-22T16:07:10.2905894Z   toolchain: nightly-2024-01-01
+benchmark	Build benchmark	2025-12-22T16:07:10.2906326Z   GITHUB_TOKEN: ***
+benchmark	Build benchmark	2025-12-22T16:07:10.2906527Z   CARGO_HOME: /home/runner/.cargo
+benchmark	Build benchmark	2025-12-22T16:07:10.2906758Z   CARGO_INCREMENTAL: 0
+benchmark	Build benchmark	2025-12-22T16:07:10.2906950Z   CARGO_TERM_COLOR: always
+benchmark	Build benchmark	2025-12-22T16:07:10.2907141Z ##[endgroup]
+benchmark	Build benchmark	2025-12-22T16:07:10.3010413Z info: syncing channel updates for 'nightly-2022-08-22-x86_64-unknown-linux-gnu'
+benchmark	Build benchmark	2025-12-22T16:07:10.8570898Z info: latest update on 2022-08-22, rust version 1.65.0-nightly (c0941dfb5 2022-08-21)
+benchmark	Build benchmark	2025-12-22T16:07:10.8571851Z info: downloading component 'cargo'
+benchmark	Build benchmark	2025-12-22T16:07:10.9122973Z info: downloading component 'rust-std'
+benchmark	Build benchmark	2025-12-22T16:07:11.0615110Z info: downloading component 'rustc'
+benchmark	Build benchmark	2025-12-22T16:07:11.3275873Z info: installing component 'cargo'
+benchmark	Build benchmark	2025-12-22T16:07:11.8411786Z info: installing component 'rust-std'
+benchmark	Build benchmark	2025-12-22T16:07:14.0846266Z info: installing component 'rustc'
+benchmark	Build benchmark	2025-12-22T16:07:17.8863787Z [0m[0m[1m[32m    Updating[0m git repository `https://github.com/linksplatform/doublets-rs.git`
+benchmark	Build benchmark	2025-12-22T16:07:18.1482116Z [0m[0m[1m[32m    Updating[0m git submodule `https://github.com/linksplatform/data-rs`
+benchmark	Build benchmark	2025-12-22T16:07:18.3212086Z [0m[0m[1m[32m    Updating[0m git submodule `https://github.com/linksplatform/mem-rs`
+benchmark	Build benchmark	2025-12-22T16:07:18.6542521Z [0m[0m[1m[32m    Updating[0m git submodule `https://github.com/linksplatform/trees-rs`
+benchmark	Build benchmark	2025-12-22T16:07:18.8265480Z [0m[0m[1m[32m    Updating[0m crates.io index
+benchmark	Build benchmark	2025-12-22T16:12:09.0101374Z [0m[0m[1m[32m Downloading[0m crates ...
+benchmark	Build benchmark	2025-12-22T16:12:09.2022575Z [0m[0m[1m[32m  Downloaded[0m getrandom v0.3.4
+benchmark	Build benchmark	2025-12-22T16:12:09.2069760Z [0m[0m[1m[32m  Downloaded[0m funty v2.0.0
+benchmark	Build benchmark	2025-12-22T16:12:09.2080176Z [0m[0m[1m[32m  Downloaded[0m beef v0.5.2
+benchmark	Build benchmark	2025-12-22T16:12:09.2100842Z [0m[0m[1m[32m  Downloaded[0m errno v0.3.14
+benchmark	Build benchmark	2025-12-22T16:12:09.2118303Z [0m[0m[1m[32m  Downloaded[0m delegate v0.7.0
+benchmark	Build benchmark	2025-12-22T16:12:09.2126809Z [0m[0m[1m[32m  Downloaded[0m itoa v1.0.11
+benchmark	Build benchmark	2025-12-22T16:12:09.2144067Z [0m[0m[1m[32m  Downloaded[0m thiserror-impl v1.0.58
+benchmark	Build benchmark	2025-12-22T16:12:09.2158108Z [0m[0m[1m[32m  Downloaded[0m fastrand v2.3.0
+benchmark	Build benchmark	2025-12-22T16:12:09.2173135Z [0m[0m[1m[32m  Downloaded[0m cfg-if v1.0.4
+benchmark	Build benchmark	2025-12-22T16:12:09.2190008Z [0m[0m[1m[32m  Downloaded[0m leak_slice v0.2.0
+benchmark	Build benchmark	2025-12-22T16:12:09.2201566Z [0m[0m[1m[32m  Downloaded[0m tap v1.0.1
+benchmark	Build benchmark	2025-12-22T16:12:09.2214317Z [0m[0m[1m[32m  Downloaded[0m thiserror v1.0.58
+benchmark	Build benchmark	2025-12-22T16:12:09.2299308Z [0m[0m[1m[32m  Downloaded[0m quote v1.0.35
+benchmark	Build benchmark	2025-12-22T16:12:09.2333624Z [0m[0m[1m[32m  Downloaded[0m memmap2 v0.5.10
+benchmark	Build benchmark	2025-12-22T16:12:09.2352645Z [0m[0m[1m[32m  Downloaded[0m tempfile v3.23.0
+benchmark	Build benchmark	2025-12-22T16:12:09.2385710Z [0m[0m[1m[32m  Downloaded[0m unicode-ident v1.0.22
+benchmark	Build benchmark	2025-12-22T16:12:09.2417639Z [0m[0m[1m[32m  Downloaded[0m once_cell v1.21.3
+benchmark	Build benchmark	2025-12-22T16:12:09.2448458Z [0m[0m[1m[32m  Downloaded[0m proc-macro2 v1.0.103
+benchmark	Build benchmark	2025-12-22T16:12:09.2484061Z [0m[0m[1m[32m  Downloaded[0m serde v1.0.152
+benchmark	Build benchmark	2025-12-22T16:12:09.2520926Z [0m[0m[1m[32m  Downloaded[0m serde_derive v1.0.152
+benchmark	Build benchmark	2025-12-22T16:12:09.2549753Z [0m[0m[1m[32m  Downloaded[0m bumpalo v3.11.1
+benchmark	Build benchmark	2025-12-22T16:12:09.2579430Z [0m[0m[1m[32m  Downloaded[0m bitflags v2.10.0
+benchmark	Build benchmark	2025-12-22T16:12:09.2626981Z [0m[0m[1m[32m  Downloaded[0m ryu v1.0.17
+benchmark	Build benchmark	2025-12-22T16:12:09.2669151Z [0m[0m[1m[32m  Downloaded[0m syn v1.0.109
+benchmark	Build benchmark	2025-12-22T16:12:09.2786594Z [0m[0m[1m[32m  Downloaded[0m syn v2.0.58
+benchmark	Build benchmark	2025-12-22T16:12:09.2910297Z [0m[0m[1m[32m  Downloaded[0m rustix v1.1.2
+benchmark	Build benchmark	2025-12-22T16:12:09.3216232Z [0m[0m[1m[32m  Downloaded[0m serde_json v1.0.91
+benchmark	Build benchmark	2025-12-22T16:12:09.3322800Z [0m[0m[1m[32m  Downloaded[0m libc v0.2.178
+benchmark	Build benchmark	2025-12-22T16:12:09.3757569Z [0m[0m[1m[32m  Downloaded[0m linux-raw-sys v0.11.0
+benchmark	Build benchmark	2025-12-22T16:12:09.4991193Z [0m[0m[1m[32m   Compiling[0m proc-macro2 v1.0.103
+benchmark	Build benchmark	2025-12-22T16:12:09.4992085Z [0m[0m[1m[32m   Compiling[0m unicode-ident v1.0.22
+benchmark	Build benchmark	2025-12-22T16:12:09.4995754Z [0m[0m[1m[32m   Compiling[0m syn v1.0.109
+benchmark	Build benchmark	2025-12-22T16:12:09.4997197Z [0m[0m[1m[32m   Compiling[0m libc v0.2.178
+benchmark	Build benchmark	2025-12-22T16:12:09.6342198Z [0m[0m[1m[32m   Compiling[0m thiserror v1.0.58
+benchmark	Build benchmark	2025-12-22T16:12:09.8803759Z [0m[0m[1m[32m   Compiling[0m rustix v1.1.2
+benchmark	Build benchmark	2025-12-22T16:12:09.8992648Z [0m[0m[1m[32m   Compiling[0m getrandom v0.3.4
+benchmark	Build benchmark	2025-12-22T16:12:09.9749038Z [0m[0m[1m[32m   Compiling[0m linux-raw-sys v0.11.0
+benchmark	Build benchmark	2025-12-22T16:12:09.9842982Z [0m[0m[1m[32m   Compiling[0m serde_derive v1.0.152
+benchmark	Build benchmark	2025-12-22T16:12:10.2679233Z [0m[0m[1m[32m   Compiling[0m cfg-if v1.0.4
+benchmark	Build benchmark	2025-12-22T16:12:10.3099243Z [0m[0m[1m[32m   Compiling[0m bitflags v2.10.0
+benchmark	Build benchmark	2025-12-22T16:12:10.3141982Z [0m[0m[1m[32m   Compiling[0m serde v1.0.152
+benchmark	Build benchmark	2025-12-22T16:12:10.3482152Z [0m[0m[1m[32m   Compiling[0m fastrand v2.3.0
+benchmark	Build benchmark	2025-12-22T16:12:10.6877644Z [0m[0m[1m[32m   Compiling[0m beef v0.5.2
+benchmark	Build benchmark	2025-12-22T16:12:10.6955255Z [0m[0m[1m[32m   Compiling[0m once_cell v1.21.3
+benchmark	Build benchmark	2025-12-22T16:12:10.8302012Z [0m[0m[1m[32m   Compiling[0m funty v2.0.0
+benchmark	Build benchmark	2025-12-22T16:12:10.8444852Z [0m[0m[1m[32m   Compiling[0m tap v1.0.1
+benchmark	Build benchmark	2025-12-22T16:12:10.9666031Z [0m[0m[1m[32m   Compiling[0m serde_json v1.0.91
+benchmark	Build benchmark	2025-12-22T16:12:11.0111980Z [0m[0m[1m[32m   Compiling[0m bumpalo v3.11.1
+benchmark	Build benchmark	2025-12-22T16:12:11.1333294Z [0m[0m[1m[32m   Compiling[0m ryu v1.0.17
+benchmark	Build benchmark	2025-12-22T16:12:11.3082321Z [0m[0m[1m[32m   Compiling[0m itoa v1.0.11
+benchmark	Build benchmark	2025-12-22T16:12:11.4752365Z [0m[0m[1m[32m   Compiling[0m leak_slice v0.2.0
+benchmark	Build benchmark	2025-12-22T16:12:12.5471828Z [0m[0m[1m[32m   Compiling[0m quote v1.0.35
+benchmark	Build benchmark	2025-12-22T16:12:12.9862991Z [0m[0m[1m[32m   Compiling[0m syn v2.0.58
+benchmark	Build benchmark	2025-12-22T16:12:15.2929364Z [0m[0m[1m[32m   Compiling[0m memmap2 v0.5.10
+benchmark	Build benchmark	2025-12-22T16:12:15.7101802Z [0m[0m[1m[32m   Compiling[0m tempfile v3.23.0
+benchmark	Build benchmark	2025-12-22T16:12:16.8523010Z [0m[0m[1m[32m   Compiling[0m thiserror-impl v1.0.58
+benchmark	Build benchmark	2025-12-22T16:12:18.0255886Z [0m[0m[1m[32m   Compiling[0m delegate v0.7.0
+benchmark	Build benchmark	2025-12-22T16:12:18.4459835Z [0m[0m[1m[32m   Compiling[0m platform-data v0.1.0-beta.3 (https://github.com/linksplatform/doublets-rs.git#5522d91c)
+benchmark	Build benchmark	2025-12-22T16:12:18.7080129Z [0m[0m[1m[32m   Compiling[0m platform-mem v0.1.0-pre+beta.2 (https://github.com/linksplatform/doublets-rs.git#5522d91c)
+benchmark	Build benchmark	2025-12-22T16:12:18.7873497Z [0m[0m[1m[32m   Compiling[0m platform-trees v0.1.0-beta.1 (https://github.com/linksplatform/doublets-rs.git#5522d91c)
+benchmark	Build benchmark	2025-12-22T16:12:18.9785562Z [0m[0m[1m[32m   Compiling[0m doublets v0.1.0-pre+beta.15 (https://github.com/linksplatform/doublets-rs.git#5522d91c)
+benchmark	Build benchmark	2025-12-22T16:12:23.7929333Z [0m[0m[1m[32m   Compiling[0m linksneo4j v0.1.0 (/home/runner/work/Comparisons.Neo4jVSDoublets/Comparisons.Neo4jVSDoublets/rust)
+benchmark	Build benchmark	2025-12-22T16:12:24.7834609Z [0m[0m[1m[32m    Finished[0m release [optimized] target(s) in 5m 07s
+benchmark	Run benchmark	﻿2025-12-22T16:12:24.8259390Z ##[group]Run cargo bench --bench bench -- --output-format bencher | tee out.txt
+benchmark	Run benchmark	2025-12-22T16:12:24.8260324Z [36;1mcargo bench --bench bench -- --output-format bencher | tee out.txt[0m
+benchmark	Run benchmark	2025-12-22T16:12:24.8294272Z shell: /usr/bin/bash -e {0}
+benchmark	Run benchmark	2025-12-22T16:12:24.8294619Z env:
+benchmark	Run benchmark	2025-12-22T16:12:24.8294989Z   toolchain: nightly-2024-01-01
+benchmark	Run benchmark	2025-12-22T16:12:24.8295828Z   GITHUB_TOKEN: ***
+benchmark	Run benchmark	2025-12-22T16:12:24.8296116Z   CARGO_HOME: /home/runner/.cargo
+benchmark	Run benchmark	2025-12-22T16:12:24.8296544Z   CARGO_INCREMENTAL: 0
+benchmark	Run benchmark	2025-12-22T16:12:24.8296825Z   CARGO_TERM_COLOR: always
+benchmark	Run benchmark	2025-12-22T16:12:24.8297143Z   NEO4J_URI: bolt://localhost:7687
+benchmark	Run benchmark	2025-12-22T16:12:24.8297416Z   NEO4J_USER: neo4j
+benchmark	Run benchmark	2025-12-22T16:12:24.8297775Z   NEO4J_PASSWORD: password
+benchmark	Run benchmark	2025-12-22T16:12:24.8298075Z ##[endgroup]
+benchmark	Run benchmark	2025-12-22T16:12:24.9041981Z [0m[0m[1m[32m Downloading[0m crates ...
+benchmark	Run benchmark	2025-12-22T16:12:24.9429286Z [0m[0m[1m[32m  Downloaded[0m aho-corasick v1.1.4
+benchmark	Run benchmark	2025-12-22T16:12:24.9504744Z [0m[0m[1m[32m  Downloaded[0m num-traits v0.2.19
+benchmark	Run benchmark	2025-12-22T16:12:24.9540098Z [0m[0m[1m[32m  Downloaded[0m ciborium-ll v0.2.2
+benchmark	Run benchmark	2025-12-22T16:12:24.9553474Z [0m[0m[1m[32m  Downloaded[0m autocfg v1.5.0
+benchmark	Run benchmark	2025-12-22T16:12:24.9577950Z [0m[0m[1m[32m  Downloaded[0m same-file v1.0.6
+benchmark	Run benchmark	2025-12-22T16:12:24.9594990Z [0m[0m[1m[32m  Downloaded[0m anes v0.1.6
+benchmark	Run benchmark	2025-12-22T16:12:24.9626965Z [0m[0m[1m[32m  Downloaded[0m plotters-svg v0.3.7
+benchmark	Run benchmark	2025-12-22T16:12:24.9636918Z [0m[0m[1m[32m  Downloaded[0m regex v1.12.2
+benchmark	Run benchmark	2025-12-22T16:12:24.9715178Z [0m[0m[1m[32m  Downloaded[0m tinytemplate v1.2.1
+benchmark	Run benchmark	2025-12-22T16:12:24.9735853Z [0m[0m[1m[32m  Downloaded[0m walkdir v2.5.0
+benchmark	Run benchmark	2025-12-22T16:12:24.9759759Z [0m[0m[1m[32m  Downloaded[0m crossbeam-deque v0.8.6
+benchmark	Run benchmark	2025-12-22T16:12:24.9780346Z [0m[0m[1m[32m  Downloaded[0m atty v0.2.14
+benchmark	Run benchmark	2025-12-22T16:12:24.9792155Z [0m[0m[1m[32m  Downloaded[0m lazy_static v1.5.0
+benchmark	Run benchmark	2025-12-22T16:12:24.9812182Z [0m[0m[1m[32m  Downloaded[0m ciborium-io v0.2.2
+benchmark	Run benchmark	2025-12-22T16:12:24.9821318Z [0m[0m[1m[32m  Downloaded[0m plotters-backend v0.3.7
+benchmark	Run benchmark	2025-12-22T16:12:24.9837357Z [0m[0m[1m[32m  Downloaded[0m clap_lex v0.2.4
+benchmark	Run benchmark	2025-12-22T16:12:24.9848340Z [0m[0m[1m[32m  Downloaded[0m criterion-plot v0.5.0
+benchmark	Run benchmark	2025-12-22T16:12:24.9868969Z [0m[0m[1m[32m  Downloaded[0m rayon-core v1.12.1
+benchmark	Run benchmark	2025-12-22T16:12:24.9914444Z [0m[0m[1m[32m  Downloaded[0m either v1.15.0
+benchmark	Run benchmark	2025-12-22T16:12:24.9935701Z [0m[0m[1m[32m  Downloaded[0m cast v0.3.0
+benchmark	Run benchmark	2025-12-22T16:12:24.9950754Z [0m[0m[1m[32m  Downloaded[0m oorandom v11.1.5
+benchmark	Run benchmark	2025-12-22T16:12:24.9963825Z [0m[0m[1m[32m  Downloaded[0m bitflags v1.3.2
+benchmark	Run benchmark	2025-12-22T16:12:25.0000781Z [0m[0m[1m[32m  Downloaded[0m os_str_bytes v6.6.1
+benchmark	Run benchmark	2025-12-22T16:12:25.0032028Z [0m[0m[1m[32m  Downloaded[0m crossbeam-utils v0.8.21
+benchmark	Run benchmark	2025-12-22T16:12:25.0065010Z [0m[0m[1m[32m  Downloaded[0m ciborium v0.2.2
+benchmark	Run benchmark	2025-12-22T16:12:25.0093512Z [0m[0m[1m[32m  Downloaded[0m half v2.2.1
+benchmark	Run benchmark	2025-12-22T16:12:25.0121801Z [0m[0m[1m[32m  Downloaded[0m crossbeam-epoch v0.9.18
+benchmark	Run benchmark	2025-12-22T16:12:25.0152073Z [0m[0m[1m[32m  Downloaded[0m indexmap v1.9.3
+benchmark	Run benchmark	2025-12-22T16:12:25.0190632Z [0m[0m[1m[32m  Downloaded[0m textwrap v0.16.1
+benchmark	Run benchmark	2025-12-22T16:12:25.0226039Z [0m[0m[1m[32m  Downloaded[0m memchr v2.7.6
+benchmark	Run benchmark	2025-12-22T16:12:25.0292660Z [0m[0m[1m[32m  Downloaded[0m criterion v0.4.0
+benchmark	Run benchmark	2025-12-22T16:12:25.0380989Z [0m[0m[1m[32m  Downloaded[0m plotters v0.3.5
+benchmark	Run benchmark	2025-12-22T16:12:25.0486106Z [0m[0m[1m[32m  Downloaded[0m itertools v0.10.5
+benchmark	Run benchmark	2025-12-22T16:12:25.0556390Z [0m[0m[1m[32m  Downloaded[0m hashbrown v0.12.3
+benchmark	Run benchmark	2025-12-22T16:12:25.0603984Z [0m[0m[1m[32m  Downloaded[0m rayon v1.10.0
+benchmark	Run benchmark	2025-12-22T16:12:25.0717176Z [0m[0m[1m[32m  Downloaded[0m clap v3.2.25
+benchmark	Run benchmark	2025-12-22T16:12:25.0869516Z [0m[0m[1m[32m  Downloaded[0m regex-syntax v0.8.8
+benchmark	Run benchmark	2025-12-22T16:12:25.0963778Z [0m[0m[1m[32m  Downloaded[0m regex-automata v0.4.13
+benchmark	Run benchmark	2025-12-22T16:12:25.1255587Z [0m[0m[1m[32m   Compiling[0m autocfg v1.5.0
+benchmark	Run benchmark	2025-12-22T16:12:25.1256324Z [0m[0m[1m[32m   Compiling[0m serde v1.0.152
+benchmark	Run benchmark	2025-12-22T16:12:25.1258021Z [0m[0m[1m[32m   Compiling[0m crossbeam-utils v0.8.21
+benchmark	Run benchmark	2025-12-22T16:12:25.1282271Z [0m[0m[1m[32m   Compiling[0m either v1.15.0
+benchmark	Run benchmark	2025-12-22T16:12:25.4052753Z [0m[0m[1m[32m   Compiling[0m rayon-core v1.12.1
+benchmark	Run benchmark	2025-12-22T16:12:25.5323383Z [0m[0m[1m[32m   Compiling[0m hashbrown v0.12.3
+benchmark	Run benchmark	2025-12-22T16:12:25.5397250Z [0m[0m[1m[32m   Compiling[0m os_str_bytes v6.6.1
+benchmark	Run benchmark	2025-12-22T16:12:25.6221496Z [0m[0m[1m[32m   Compiling[0m plotters-backend v0.3.7
+benchmark	Run benchmark	2025-12-22T16:12:25.7241421Z [0m[0m[1m[32m   Compiling[0m ciborium-io v0.2.2
+benchmark	Run benchmark	2025-12-22T16:12:25.8194626Z [0m[0m[1m[32m   Compiling[0m half v2.2.1
+benchmark	Run benchmark	2025-12-22T16:12:25.9765374Z [0m[0m[1m[32m   Compiling[0m regex-syntax v0.8.8
+benchmark	Run benchmark	2025-12-22T16:12:26.2841278Z [0m[0m[1m[32m   Compiling[0m cast v0.3.0
+benchmark	Run benchmark	2025-12-22T16:12:26.2993891Z [0m[0m[1m[32m   Compiling[0m bitflags v1.3.2
+benchmark	Run benchmark	2025-12-22T16:12:26.3929495Z [0m[0m[1m[32m   Compiling[0m same-file v1.0.6
+benchmark	Run benchmark	2025-12-22T16:12:26.5218176Z [0m[0m[1m[32m   Compiling[0m textwrap v0.16.1
+benchmark	Run benchmark	2025-12-22T16:12:26.5745138Z [0m[0m[1m[32m   Compiling[0m anes v0.1.6
+benchmark	Run benchmark	2025-12-22T16:12:26.6238545Z [0m[0m[1m[32m   Compiling[0m oorandom v11.1.5
+benchmark	Run benchmark	2025-12-22T16:12:26.7836917Z [0m[0m[1m[32m   Compiling[0m lazy_static v1.5.0
+benchmark	Run benchmark	2025-12-22T16:12:26.8884666Z [0m[0m[1m[32m   Compiling[0m itertools v0.10.5
+benchmark	Run benchmark	2025-12-22T16:12:27.0397776Z [0m[0m[1m[32m   Compiling[0m num-traits v0.2.19
+benchmark	Run benchmark	2025-12-22T16:12:27.2805965Z [0m[0m[1m[32m   Compiling[0m indexmap v1.9.3
+benchmark	Run benchmark	2025-12-22T16:12:27.5430956Z [0m[0m[1m[32m   Compiling[0m clap_lex v0.2.4
+benchmark	Run benchmark	2025-12-22T16:12:28.3441507Z [0m[0m[1m[32m   Compiling[0m plotters-svg v0.3.7
+benchmark	Run benchmark	2025-12-22T16:12:28.3989934Z [0m[0m[1m[32m   Compiling[0m ciborium-ll v0.2.2
+benchmark	Run benchmark	2025-12-22T16:12:28.7938315Z [0m[0m[1m[32m   Compiling[0m walkdir v2.5.0
+benchmark	Run benchmark	2025-12-22T16:12:29.1025724Z [0m[0m[1m[32m   Compiling[0m regex-automata v0.4.13
+benchmark	Run benchmark	2025-12-22T16:12:30.0013367Z [0m[0m[1m[32m   Compiling[0m criterion-plot v0.5.0
+benchmark	Run benchmark	2025-12-22T16:12:30.0804776Z [0m[0m[1m[32m   Compiling[0m atty v0.2.14
+benchmark	Run benchmark	2025-12-22T16:12:31.4882032Z [0m[0m[1m[32m   Compiling[0m crossbeam-epoch v0.9.18
+benchmark	Run benchmark	2025-12-22T16:12:32.3233225Z [0m[0m[1m[32m   Compiling[0m regex v1.12.2
+benchmark	Run benchmark	2025-12-22T16:12:32.4734854Z [0m[0m[1m[32m   Compiling[0m plotters v0.3.5
+benchmark	Run benchmark	2025-12-22T16:12:34.6301228Z [0m[0m[1m[32m   Compiling[0m crossbeam-deque v0.8.6
+benchmark	Run benchmark	2025-12-22T16:12:34.7858022Z [0m[0m[1m[32m   Compiling[0m clap v3.2.25
+benchmark	Run benchmark	2025-12-22T16:12:37.4810685Z [0m[0m[1m[32m   Compiling[0m rayon v1.10.0
+benchmark	Run benchmark	2025-12-22T16:12:40.6826522Z [0m[0m[1m[32m   Compiling[0m serde_json v1.0.91
+benchmark	Run benchmark	2025-12-22T16:12:40.8677043Z [0m[0m[1m[32m   Compiling[0m ciborium v0.2.2
+benchmark	Run benchmark	2025-12-22T16:12:42.2608676Z [0m[0m[1m[32m   Compiling[0m tinytemplate v1.2.1
+benchmark	Run benchmark	2025-12-22T16:12:42.2748894Z [0m[0m[1m[32m   Compiling[0m linksneo4j v0.1.0 (/home/runner/work/Comparisons.Neo4jVSDoublets/Comparisons.Neo4jVSDoublets/rust)
+benchmark	Run benchmark	2025-12-22T16:12:43.0660043Z [0m[0m[1m[32m   Compiling[0m criterion v0.4.0
+benchmark	Run benchmark	2025-12-22T16:13:01.8709609Z [0m[0m[1m[32m    Finished[0m bench [optimized] target(s) in 36.99s
+benchmark	Run benchmark	2025-12-22T16:13:01.8759127Z [0m[0m[1m[32m     Running[0m benches/bench.rs (target/release/deps/bench-b61b7197f49d9492)
+benchmark	Run benchmark	2025-12-22T16:13:28.1790230Z 
+benchmark	Run benchmark	2025-12-22T16:13:28.1791827Z Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 2400.4s, or reduce sample count to 10.
+benchmark	Run benchmark	2025-12-22T16:34:17.3462899Z test Create/Neo4j_NonTransaction ... bench:  3107850791 ns/iter (+/- 134602015)
+benchmark	Run benchmark	2025-12-22T16:34:25.8497225Z test Create/Neo4j_Transaction ... bench:       31740 ns/iter (+/- 91)
+benchmark	Run benchmark	2025-12-22T16:34:39.1364510Z test Create/Doublets_United_Volatile ... bench:       97789 ns/iter (+/- 612)
+benchmark	Run benchmark	2025-12-22T16:34:52.4298031Z test Create/Doublets_United_NonVolatile ... bench:      100438 ns/iter (+/- 1716)
+benchmark	Run benchmark	2025-12-22T16:35:04.1880654Z test Create/Doublets_Split_Volatile ... bench:       86465 ns/iter (+/- 693)
+benchmark	Run benchmark	2025-12-22T16:35:16.3287195Z test Create/Doublets_Split_NonVolatile ... bench:       83558 ns/iter (+/- 1722)
+benchmark	Run benchmark	2025-12-22T16:35:16.3296418Z 
+benchmark	Run benchmark	2025-12-22T16:35:30.2003459Z 
+benchmark	Run benchmark	2025-12-22T16:35:30.2004469Z Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 1386.6s, or reduce sample count to 10.
+benchmark	Run benchmark	2025-12-22T16:58:33.1061470Z test Delete/Neo4j_NonTransaction ... bench:  1868497988 ns/iter (+/- 157860603)
+benchmark	Run benchmark	2025-12-22T16:58:33.1113720Z thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: NotExists(4000)', benches/benchmarks/delete.rs:23:9
+benchmark	Run benchmark	2025-12-22T16:58:33.1114714Z note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+benchmark	Run benchmark	2025-12-22T16:58:33.1115185Z 
+benchmark	Run benchmark	2025-12-22T16:58:33.1117860Z [0m[0m[1m[31merror[0m[1m:[0m bench failed
+benchmark	Prepare benchmark results	﻿2025-12-22T16:58:33.1159919Z ##[group]Run git config --global user.email "linksplatform@gmail.com"
+benchmark	Prepare benchmark results	2025-12-22T16:58:33.1160420Z [36;1mgit config --global user.email "linksplatform@gmail.com"[0m
+benchmark	Prepare benchmark results	2025-12-22T16:58:33.1160806Z [36;1mgit config --global user.name "LinksPlatformBencher"[0m
+benchmark	Prepare benchmark results	2025-12-22T16:58:33.1161100Z [36;1mcd rust[0m
+benchmark	Prepare benchmark results	2025-12-22T16:58:33.1161294Z [36;1mpip install numpy matplotlib[0m
+benchmark	Prepare benchmark results	2025-12-22T16:58:33.1161543Z [36;1mpython3 out.py[0m
+benchmark	Prepare benchmark results	2025-12-22T16:58:33.1162082Z [36;1mcd ..[0m
+benchmark	Prepare benchmark results	2025-12-22T16:58:33.1162258Z [36;1m[0m
+benchmark	Prepare benchmark results	2025-12-22T16:58:33.1162462Z [36;1m# Create Docs directory if it doesn't exist[0m
+benchmark	Prepare benchmark results	2025-12-22T16:58:33.1162731Z [36;1mmkdir -p Docs[0m
+benchmark	Prepare benchmark results	2025-12-22T16:58:33.1162926Z [36;1m[0m
+benchmark	Prepare benchmark results	2025-12-22T16:58:33.1163102Z [36;1m# Copy generated images[0m
+benchmark	Prepare benchmark results	2025-12-22T16:58:33.1163347Z [36;1mcp -f rust/bench_rust.png Docs/[0m
+benchmark	Prepare benchmark results	2025-12-22T16:58:33.1163625Z [36;1mcp -f rust/bench_rust_log_scale.png Docs/[0m
+benchmark	Prepare benchmark results	2025-12-22T16:58:33.1163984Z [36;1m[0m
+benchmark	Prepare benchmark results	2025-12-22T16:58:33.1164255Z [36;1m# Update README with latest results[0m
+benchmark	Prepare benchmark results	2025-12-22T16:58:33.1164550Z [36;1mif [ -f rust/results.md ]; then[0m
+benchmark	Prepare benchmark results	2025-12-22T16:58:33.1164821Z [36;1m  # Replace the results section in README.md[0m
+benchmark	Prepare benchmark results	2025-12-22T16:58:33.1165078Z [36;1m  python3 -c "[0m
+benchmark	Prepare benchmark results	2025-12-22T16:58:33.1165288Z [36;1mimport re[0m
+benchmark	Prepare benchmark results	2025-12-22T16:58:33.1165455Z [36;1m[0m
+benchmark	Prepare benchmark results	2025-12-22T16:58:33.1165643Z [36;1mwith open('rust/results.md', 'r') as f:[0m
+benchmark	Prepare benchmark results	2025-12-22T16:58:33.1165908Z [36;1m    results = f.read()[0m
+benchmark	Prepare benchmark results	2025-12-22T16:58:33.1166111Z [36;1m[0m
+benchmark	Prepare benchmark results	2025-12-22T16:58:33.1166276Z [36;1mwith open('README.md', 'r') as f:[0m
+benchmark	Prepare benchmark results	2025-12-22T16:58:33.1166513Z [36;1m    readme = f.read()[0m
+benchmark	Prepare benchmark results	2025-12-22T16:58:33.1166709Z [36;1m[0m
+benchmark	Prepare benchmark results	2025-12-22T16:58:33.1166948Z [36;1m# Pattern to find and replace the results table[0m
+benchmark	Prepare benchmark results	2025-12-22T16:58:33.1167274Z [36;1mpattern = r'(\| Operation.*?\n\|[-|]+\n(?:\|.*?\n)*)'[0m
+benchmark	Prepare benchmark results	2025-12-22T16:58:33.1167563Z [36;1mif re.search(pattern, readme):[0m
+benchmark	Prepare benchmark results	2025-12-22T16:58:33.1167873Z [36;1m    readme = re.sub(pattern, results.strip() + '\n', readme)[0m
+benchmark	Prepare benchmark results	2025-12-22T16:58:33.1168156Z [36;1m[0m
+benchmark	Prepare benchmark results	2025-12-22T16:58:33.1168327Z [36;1mwith open('README.md', 'w') as f:[0m
+benchmark	Prepare benchmark results	2025-12-22T16:58:33.1168560Z [36;1m    f.write(readme)[0m
+benchmark	Prepare benchmark results	2025-12-22T16:58:33.1168753Z [36;1m"[0m
+benchmark	Prepare benchmark results	2025-12-22T16:58:33.1168902Z [36;1mfi[0m
+benchmark	Prepare benchmark results	2025-12-22T16:58:33.1169049Z [36;1m[0m
+benchmark	Prepare benchmark results	2025-12-22T16:58:33.1169212Z [36;1m# Commit changes if any[0m
+benchmark	Prepare benchmark results	2025-12-22T16:58:33.1169429Z [36;1mgit add Docs README.md[0m
+benchmark	Prepare benchmark results	2025-12-22T16:58:33.1169670Z [36;1mif git diff --staged --quiet; then[0m
+benchmark	Prepare benchmark results	2025-12-22T16:58:33.1169918Z [36;1m  echo "No changes to commit"[0m
+benchmark	Prepare benchmark results	2025-12-22T16:58:33.1170139Z [36;1melse[0m
+benchmark	Prepare benchmark results	2025-12-22T16:58:33.1170340Z [36;1m  git commit -m "Update benchmark results"[0m
+benchmark	Prepare benchmark results	2025-12-22T16:58:33.1170604Z [36;1m  git push origin HEAD[0m
+benchmark	Prepare benchmark results	2025-12-22T16:58:33.1170804Z [36;1mfi[0m
+benchmark	Prepare benchmark results	2025-12-22T16:58:33.1203236Z shell: /usr/bin/bash -e {0}
+benchmark	Prepare benchmark results	2025-12-22T16:58:33.1203468Z env:
+benchmark	Prepare benchmark results	2025-12-22T16:58:33.1203638Z   toolchain: nightly-2024-01-01
+benchmark	Prepare benchmark results	2025-12-22T16:58:33.1204072Z   GITHUB_TOKEN: ***
+benchmark	Prepare benchmark results	2025-12-22T16:58:33.1204280Z   CARGO_HOME: /home/runner/.cargo
+benchmark	Prepare benchmark results	2025-12-22T16:58:33.1204499Z   CARGO_INCREMENTAL: 0
+benchmark	Prepare benchmark results	2025-12-22T16:58:33.1204690Z   CARGO_TERM_COLOR: always
+benchmark	Prepare benchmark results	2025-12-22T16:58:33.1204878Z ##[endgroup]
+benchmark	Prepare benchmark results	2025-12-22T16:58:34.2930433Z Defaulting to user installation because normal site-packages is not writeable
+benchmark	Prepare benchmark results	2025-12-22T16:58:35.1206308Z Collecting numpy
+benchmark	Prepare benchmark results	2025-12-22T16:58:35.2017932Z   Downloading numpy-2.4.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (6.6 kB)
+benchmark	Prepare benchmark results	2025-12-22T16:58:35.3457291Z Collecting matplotlib
+benchmark	Prepare benchmark results	2025-12-22T16:58:35.3654040Z   Downloading matplotlib-3.10.8-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (52 kB)
+benchmark	Prepare benchmark results	2025-12-22T16:58:35.3898091Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 52.8/52.8 kB 2.0 MB/s eta 0:00:00
+benchmark	Prepare benchmark results	2025-12-22T16:58:35.4770214Z Collecting contourpy>=1.0.1 (from matplotlib)
+benchmark	Prepare benchmark results	2025-12-22T16:58:35.4963457Z   Downloading contourpy-1.3.3-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (5.5 kB)
+benchmark	Prepare benchmark results	2025-12-22T16:58:35.5134086Z Collecting cycler>=0.10 (from matplotlib)
+benchmark	Prepare benchmark results	2025-12-22T16:58:35.5326988Z   Downloading cycler-0.12.1-py3-none-any.whl.metadata (3.8 kB)
+benchmark	Prepare benchmark results	2025-12-22T16:58:35.7070555Z Collecting fonttools>=4.22.0 (from matplotlib)
+benchmark	Prepare benchmark results	2025-12-22T16:58:35.7267844Z   Downloading fonttools-4.61.1-cp312-cp312-manylinux1_x86_64.manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_5_x86_64.whl.metadata (114 kB)
+benchmark	Prepare benchmark results	2025-12-22T16:58:35.7479278Z      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 114.2/114.2 kB 5.4 MB/s eta 0:00:00
+benchmark	Prepare benchmark results	2025-12-22T16:58:35.8193046Z Collecting kiwisolver>=1.3.1 (from matplotlib)
+benchmark	Prepare benchmark results	2025-12-22T16:58:35.8385334Z   Downloading kiwisolver-1.4.9-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (6.3 kB)
+benchmark	Prepare benchmark results	2025-12-22T16:58:35.8476341Z Requirement already satisfied: packaging>=20.0 in /usr/lib/python3/dist-packages (from matplotlib) (24.0)
+benchmark	Prepare benchmark results	2025-12-22T16:58:36.0510747Z Collecting pillow>=8 (from matplotlib)
+benchmark	Prepare benchmark results	2025-12-22T16:58:36.0706714Z   Downloading pillow-12.0.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (8.8 kB)
+benchmark	Prepare benchmark results	2025-12-22T16:58:36.0750920Z Requirement already satisfied: pyparsing>=3 in /usr/lib/python3/dist-packages (from matplotlib) (3.1.1)
+benchmark	Prepare benchmark results	2025-12-22T16:58:36.0761299Z Requirement already satisfied: python-dateutil>=2.7 in /usr/lib/python3/dist-packages (from matplotlib) (2.8.2)
+benchmark	Prepare benchmark results	2025-12-22T16:58:36.1537097Z Downloading numpy-2.4.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (16.4 MB)
+benchmark	Prepare benchmark results	2025-12-22T16:58:36.3105756Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 16.4/16.4 MB 142.0 MB/s eta 0:00:00
+benchmark	Prepare benchmark results	2025-12-22T16:58:36.3302169Z Downloading matplotlib-3.10.8-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (8.7 MB)
+benchmark	Prepare benchmark results	2025-12-22T16:58:36.3854823Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 8.7/8.7 MB 162.7 MB/s eta 0:00:00
+benchmark	Prepare benchmark results	2025-12-22T16:58:36.4050926Z Downloading contourpy-1.3.3-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (362 kB)
+benchmark	Prepare benchmark results	2025-12-22T16:58:36.4103806Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 362.6/362.6 kB 95.9 MB/s eta 0:00:00
+benchmark	Prepare benchmark results	2025-12-22T16:58:36.4296833Z Downloading cycler-0.12.1-py3-none-any.whl (8.3 kB)
+benchmark	Prepare benchmark results	2025-12-22T16:58:36.4505693Z Downloading fonttools-4.61.1-cp312-cp312-manylinux1_x86_64.manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_5_x86_64.whl (5.0 MB)
+benchmark	Prepare benchmark results	2025-12-22T16:58:36.4823419Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.0/5.0 MB 163.8 MB/s eta 0:00:00
+benchmark	Prepare benchmark results	2025-12-22T16:58:36.5015787Z Downloading kiwisolver-1.4.9-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (1.5 MB)
+benchmark	Prepare benchmark results	2025-12-22T16:58:36.5133696Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.5/1.5 MB 143.3 MB/s eta 0:00:00
+benchmark	Prepare benchmark results	2025-12-22T16:58:36.5326270Z Downloading pillow-12.0.0-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (7.0 MB)
+benchmark	Prepare benchmark results	2025-12-22T16:58:36.5759105Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 7.0/7.0 MB 168.8 MB/s eta 0:00:00
+benchmark	Prepare benchmark results	2025-12-22T16:58:36.9312532Z Installing collected packages: pillow, numpy, kiwisolver, fonttools, cycler, contourpy, matplotlib
+benchmark	Prepare benchmark results	2025-12-22T16:58:41.0358891Z Successfully installed contourpy-1.3.3 cycler-0.12.1 fonttools-4.61.1 kiwisolver-1.4.9 matplotlib-3.10.8 numpy-2.4.0 pillow-12.0.0
+benchmark	Prepare benchmark results	2025-12-22T16:58:42.7546211Z Loaded out.txt, length: 550 characters
+benchmark	Prepare benchmark results	2025-12-22T16:58:42.7548512Z Pattern test\s+(\w+)/(Neo4j)_(\w+)\s+\.\.\.\s+bench:\s+(\d+)\s+ns/iter\s+\(\+/-\s+\d+\) matched 3 entries
+benchmark	Prepare benchmark results	2025-12-22T16:58:42.7549337Z Neo4j Create - NonTransaction: 3107850791 ns
+benchmark	Prepare benchmark results	2025-12-22T16:58:42.7549896Z Neo4j Create - Transaction: 31740 ns
+benchmark	Prepare benchmark results	2025-12-22T16:58:42.7550852Z Neo4j Delete - NonTransaction: 1868497988 ns
+benchmark	Prepare benchmark results	2025-12-22T16:58:42.7551928Z Pattern test\s+(\w+)/(Doublets)_(\w+)_(\w+)\s+\.\.\.\s+bench:\s+(\d+)\s+ns/iter\s+\(\+/-\s+\d+\) matched 4 entries
+benchmark	Prepare benchmark results	2025-12-22T16:58:42.7552798Z Doublets Create - United Volatile: 97789 ns
+benchmark	Prepare benchmark results	2025-12-22T16:58:42.7553368Z Doublets Create - United NonVolatile: 100438 ns
+benchmark	Prepare benchmark results	2025-12-22T16:58:42.7553947Z Doublets Create - Split Volatile: 86465 ns
+benchmark	Prepare benchmark results	2025-12-22T16:58:42.7554510Z Doublets Create - Split NonVolatile: 83558 ns
+benchmark	Prepare benchmark results	2025-12-22T16:58:42.7554888Z 
+benchmark	Prepare benchmark results	2025-12-22T16:58:42.7555071Z Final dictionaries (after parsing):
+benchmark	Prepare benchmark results	2025-12-22T16:58:42.7555847Z Neo4j_Transaction: {'Create': 31740}
+benchmark	Prepare benchmark results	2025-12-22T16:58:42.7556477Z Neo4j_NonTransaction: {'Create': 3107850791, 'Delete': 1868497988}
+benchmark	Prepare benchmark results	2025-12-22T16:58:42.7557031Z Doublets_United_Volatile: {'Create': 97789}
+benchmark	Prepare benchmark results	2025-12-22T16:58:42.7557464Z Doublets_United_NonVolatile: {'Create': 100438}
+benchmark	Prepare benchmark results	2025-12-22T16:58:42.7557924Z Doublets_Split_Volatile: {'Create': 86465}
+benchmark	Prepare benchmark results	2025-12-22T16:58:42.7558372Z Doublets_Split_NonVolatile: {'Create': 83558}
+benchmark	Prepare benchmark results	2025-12-22T16:58:42.7558680Z 
+benchmark	Prepare benchmark results	2025-12-22T16:58:42.7558803Z Generated Markdown Table:
+benchmark	Prepare benchmark results	2025-12-22T16:58:42.7559844Z | Operation     | Doublets United Volatile | Doublets United NonVolatile | Doublets Split Volatile | Doublets Split NonVolatile | Neo4j NonTransaction | Neo4j Transaction |
+benchmark	Prepare benchmark results	2025-12-22T16:58:42.7560842Z |---------------|--------------------------|-----------------------------|-------------------------|----------------------------|----------------------|-------------------|
+benchmark	Prepare benchmark results	2025-12-22T16:58:42.7561549Z | Create        | 97789 (0.3x faster)      | 100438 (0.3x faster)        | 86465 (0.4x faster)     | 83558 (0.4x faster)        | 3107850791           | 31740             |
+benchmark	Prepare benchmark results	2025-12-22T16:58:42.7562458Z | Update        | N/A                      | N/A                         | N/A                     | N/A                        | N/A                  | N/A               |
+benchmark	Prepare benchmark results	2025-12-22T16:58:42.7562911Z | Delete        | N/A                      | N/A                         | N/A                     | N/A                        | 1868497988           | N/A               |
+benchmark	Prepare benchmark results	2025-12-22T16:58:42.7563358Z | Each All      | N/A                      | N/A                         | N/A                     | N/A                        | N/A                  | N/A               |
+benchmark	Prepare benchmark results	2025-12-22T16:58:42.7563809Z | Each Identity | N/A                      | N/A                         | N/A                     | N/A                        | N/A                  | N/A               |
+benchmark	Prepare benchmark results	2025-12-22T16:58:42.7564290Z | Each Concrete | N/A                      | N/A                         | N/A                     | N/A                        | N/A                  | N/A               |
+benchmark	Prepare benchmark results	2025-12-22T16:58:42.7564772Z | Each Outgoing | N/A                      | N/A                         | N/A                     | N/A                        | N/A                  | N/A               |
+benchmark	Prepare benchmark results	2025-12-22T16:58:42.7565245Z | Each Incoming | N/A                      | N/A                         | N/A                     | N/A                        | N/A                  | N/A               |
+benchmark	Prepare benchmark results	2025-12-22T16:58:42.9552410Z bench_rust.png saved.
+benchmark	Prepare benchmark results	2025-12-22T16:58:43.3035901Z bench_rust_log_scale.png saved.
+benchmark	Prepare benchmark results	2025-12-22T16:58:43.3036905Z | Operation     | Doublets United Volatile | Doublets United NonVolatile | Doublets Split Volatile | Doublets Split NonVolatile | Neo4j NonTransaction | Neo4j Transaction |
+benchmark	Prepare benchmark results	2025-12-22T16:58:43.3038046Z |---------------|--------------------------|-----------------------------|-------------------------|----------------------------|----------------------|-------------------|
+benchmark	Prepare benchmark results	2025-12-22T16:58:43.3038937Z | Create        | 97789 (0.3x faster)      | 100438 (0.3x faster)        | 86465 (0.4x faster)     | 83558 (0.4x faster)        | 3107850791           | 31740             |
+benchmark	Prepare benchmark results	2025-12-22T16:58:43.3039663Z | Update        | N/A                      | N/A                         | N/A                     | N/A                        | N/A                  | N/A               |
+benchmark	Prepare benchmark results	2025-12-22T16:58:43.3040512Z | Delete        | N/A                      | N/A                         | N/A                     | N/A                        | 1868497988           | N/A               |
+benchmark	Prepare benchmark results	2025-12-22T16:58:43.3041059Z | Each All      | N/A                      | N/A                         | N/A                     | N/A                        | N/A                  | N/A               |
+benchmark	Prepare benchmark results	2025-12-22T16:58:43.3042147Z | Each Identity | N/A                      | N/A                         | N/A                     | N/A                        | N/A                  | N/A               |
+benchmark	Prepare benchmark results	2025-12-22T16:58:43.3043100Z | Each Concrete | N/A                      | N/A                         | N/A                     | N/A                        | N/A                  | N/A               |
+benchmark	Prepare benchmark results	2025-12-22T16:58:43.3043719Z | Each Outgoing | N/A                      | N/A                         | N/A                     | N/A                        | N/A                  | N/A               |
+benchmark	Prepare benchmark results	2025-12-22T16:58:43.3044325Z | Each Incoming | N/A                      | N/A                         | N/A                     | N/A                        | N/A                  | N/A               |
+benchmark	Prepare benchmark results	2025-12-22T16:58:43.3963015Z [main 303033a] Update benchmark results
+benchmark	Prepare benchmark results	2025-12-22T16:58:43.3963445Z  3 files changed, 2 insertions(+), 2 deletions(-)
+benchmark	Prepare benchmark results	2025-12-22T16:58:43.9645022Z To https://github.com/linksplatform/Comparisons.Neo4jVSDoublets
+benchmark	Prepare benchmark results	2025-12-22T16:58:43.9645635Z    c266bb7..303033a  HEAD -> main
+benchmark	Save benchmark results	﻿2025-12-22T16:58:43.9738587Z ##[group]Run actions/upload-artifact@v4
+benchmark	Save benchmark results	2025-12-22T16:58:43.9739043Z with:
+benchmark	Save benchmark results	2025-12-22T16:58:43.9739328Z   name: Benchmark results
+benchmark	Save benchmark results	2025-12-22T16:58:43.9739862Z   path: rust/bench_rust.png
+benchmark	Save benchmark results	rust/bench_rust_log_scale.png
+benchmark	Save benchmark results	rust/out.txt
+benchmark	Save benchmark results	
+benchmark	Save benchmark results	2025-12-22T16:58:43.9740449Z   if-no-files-found: warn
+benchmark	Save benchmark results	2025-12-22T16:58:43.9740814Z   compression-level: 6
+benchmark	Save benchmark results	2025-12-22T16:58:43.9741147Z   overwrite: false
+benchmark	Save benchmark results	2025-12-22T16:58:43.9741473Z   include-hidden-files: false
+benchmark	Save benchmark results	2025-12-22T16:58:43.9742020Z env:
+benchmark	Save benchmark results	2025-12-22T16:58:43.9742316Z   toolchain: nightly-2024-01-01
+benchmark	Save benchmark results	2025-12-22T16:58:43.9742973Z   GITHUB_TOKEN: ***
+benchmark	Save benchmark results	2025-12-22T16:58:43.9743311Z   CARGO_HOME: /home/runner/.cargo
+benchmark	Save benchmark results	2025-12-22T16:58:43.9743693Z   CARGO_INCREMENTAL: 0
+benchmark	Save benchmark results	2025-12-22T16:58:43.9744019Z   CARGO_TERM_COLOR: always
+benchmark	Save benchmark results	2025-12-22T16:58:43.9744351Z ##[endgroup]
+benchmark	Save benchmark results	2025-12-22T16:58:44.1875771Z Multiple search paths detected. Calculating the least common ancestor of all paths
+benchmark	Save benchmark results	2025-12-22T16:58:44.1882188Z The least common ancestor is /home/runner/work/Comparisons.Neo4jVSDoublets/Comparisons.Neo4jVSDoublets/rust. This will be the root directory of the artifact
+benchmark	Save benchmark results	2025-12-22T16:58:44.1883631Z With the provided path, there will be 3 files uploaded
+benchmark	Save benchmark results	2025-12-22T16:58:44.1887994Z Artifact name is valid!
+benchmark	Save benchmark results	2025-12-22T16:58:44.1889619Z Root directory input is valid!
+benchmark	Save benchmark results	2025-12-22T16:58:44.3057613Z Beginning upload of artifact content to blob storage
+benchmark	Save benchmark results	2025-12-22T16:58:44.5017154Z Uploaded bytes 75800
+benchmark	Save benchmark results	2025-12-22T16:58:44.5399016Z Finished uploading artifact content to blob storage!
+benchmark	Save benchmark results	2025-12-22T16:58:44.5402438Z SHA256 digest of uploaded artifact zip is af3b033f7cf35b4623fde8c730282ff6313552c889d49dfc68110785496c957b
+benchmark	Save benchmark results	2025-12-22T16:58:44.5405175Z Finalizing artifact upload
+benchmark	Save benchmark results	2025-12-22T16:58:44.6355946Z Artifact Benchmark results.zip successfully finalized. Artifact ID 4945508523
+benchmark	Save benchmark results	2025-12-22T16:58:44.6357082Z Artifact Benchmark results has been successfully uploaded! Final size is 75800 bytes. Artifact ID is 4945508523
+benchmark	Save benchmark results	2025-12-22T16:58:44.6363814Z Artifact download URL: https://github.com/linksplatform/Comparisons.Neo4jVSDoublets/actions/runs/20437258944/artifacts/4945508523
+benchmark	Post Checkout repository	﻿2025-12-22T16:58:44.6495963Z Post job cleanup.
+benchmark	Post Checkout repository	2025-12-22T16:58:44.7437410Z [command]/usr/bin/git version
+benchmark	Post Checkout repository	2025-12-22T16:58:44.7473078Z git version 2.52.0
+benchmark	Post Checkout repository	2025-12-22T16:58:44.7508946Z Copying '/home/runner/.gitconfig' to '/home/runner/work/_temp/4525154f-1fa8-4d47-a453-81760fd5fa5a/.gitconfig'
+benchmark	Post Checkout repository	2025-12-22T16:58:44.7518129Z Temporarily overriding HOME='/home/runner/work/_temp/4525154f-1fa8-4d47-a453-81760fd5fa5a' before making global git config changes
+benchmark	Post Checkout repository	2025-12-22T16:58:44.7519364Z Adding repository directory to the temporary git global config as a safe directory
+benchmark	Post Checkout repository	2025-12-22T16:58:44.7530445Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Comparisons.Neo4jVSDoublets/Comparisons.Neo4jVSDoublets
+benchmark	Post Checkout repository	2025-12-22T16:58:44.7563381Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+benchmark	Post Checkout repository	2025-12-22T16:58:44.7594506Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+benchmark	Post Checkout repository	2025-12-22T16:58:44.7815361Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+benchmark	Post Checkout repository	2025-12-22T16:58:44.7834633Z http.https://github.com/.extraheader
+benchmark	Post Checkout repository	2025-12-22T16:58:44.7847009Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+benchmark	Post Checkout repository	2025-12-22T16:58:44.7876848Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+benchmark	Post Checkout repository	2025-12-22T16:58:44.8093805Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+benchmark	Post Checkout repository	2025-12-22T16:58:44.8123521Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+benchmark	Stop containers	﻿2025-12-22T16:58:44.8425830Z Print service container logs: e1de33f50de84c378015e86f58034638_neo4j5150_e6d3e7
+benchmark	Stop containers	2025-12-22T16:58:44.8430187Z ##[command]/usr/bin/docker logs --details f6af5097f7dcb81c148de41c697c3355136b0014bd505d8e446e2f6eb878e013
+benchmark	Stop containers	2025-12-22T16:58:44.8549746Z  Changed password for user 'neo4j'. IMPORTANT: this change will only take effect if performed before the database is started for the first time.
+benchmark	Stop containers	2025-12-22T16:58:44.8550826Z  2025-12-22 16:06:50.740+0000 INFO  Logging config in use: File '/var/lib/neo4j/conf/user-logs.xml'
+benchmark	Stop containers	2025-12-22T16:58:44.8551249Z  2025-12-22 16:06:50.758+0000 INFO  Starting...
+benchmark	Stop containers	2025-12-22T16:58:44.8551937Z  2025-12-22 16:06:51.697+0000 INFO  This instance is ServerId{62eef48f} (62eef48f-2a9d-487f-98bb-fb9f75127163)
+benchmark	Stop containers	2025-12-22T16:58:44.8552409Z  2025-12-22 16:06:52.324+0000 INFO  ======== Neo4j 5.15.0 ========
+benchmark	Stop containers	2025-12-22T16:58:44.8552751Z  2025-12-22 16:06:53.890+0000 INFO  Bolt enabled on 0.0.0.0:7687.
+benchmark	Stop containers	2025-12-22T16:58:44.8553081Z  2025-12-22 16:06:54.522+0000 INFO  HTTP enabled on 0.0.0.0:7474.
+benchmark	Stop containers	2025-12-22T16:58:44.8553573Z  2025-12-22 16:06:54.523+0000 INFO  Remote interface available at http://localhost:7474/
+benchmark	Stop containers	2025-12-22T16:58:44.8554125Z  2025-12-22 16:06:54.525+0000 INFO  id: 3AF9F92C468F1C45F0A29A398E152FDD271508F5E3D3A91C1E54BADFA6A6998F
+benchmark	Stop containers	2025-12-22T16:58:44.8554550Z  2025-12-22 16:06:54.526+0000 INFO  name: system
+benchmark	Stop containers	2025-12-22T16:58:44.8554872Z  2025-12-22 16:06:54.526+0000 INFO  creationDate: 2025-12-22T16:06:52.807Z
+benchmark	Stop containers	2025-12-22T16:58:44.8555181Z  2025-12-22 16:06:54.526+0000 INFO  Started.
+benchmark	Stop containers	2025-12-22T16:58:44.8568473Z Stop and remove container: e1de33f50de84c378015e86f58034638_neo4j5150_e6d3e7
+benchmark	Stop containers	2025-12-22T16:58:44.8573158Z ##[command]/usr/bin/docker rm --force f6af5097f7dcb81c148de41c697c3355136b0014bd505d8e446e2f6eb878e013
+benchmark	Stop containers	2025-12-22T16:58:45.6158725Z f6af5097f7dcb81c148de41c697c3355136b0014bd505d8e446e2f6eb878e013
+benchmark	Stop containers	2025-12-22T16:58:45.6187770Z Remove container network: github_network_b908c7bcc79b45949467e7b1e3d11205
+benchmark	Stop containers	2025-12-22T16:58:45.6192194Z ##[command]/usr/bin/docker network rm github_network_b908c7bcc79b45949467e7b1e3d11205
+benchmark	Stop containers	2025-12-22T16:58:45.7328185Z github_network_b908c7bcc79b45949467e7b1e3d11205
+benchmark	Complete job	﻿2025-12-22T16:58:45.7386731Z Cleaning up orphan processes
