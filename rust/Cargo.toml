@@ -1,0 +1,17 @@
+[package]
+name = "linksneo4j"
+version = "0.1.0"
+edition = "2021"
+
+[[bench]]
+name = "bench"
+harness = false
+
+[dependencies]
+serde = { version = "=1.0.152", features = ["derive"] }
+serde_json = "=1.0.91"
+doublets = { git = "https://github.com/linksplatform/doublets-rs.git" }
+once_cell = "1.21"
+
+[dev-dependencies]
+criterion = "=0.4.0"
