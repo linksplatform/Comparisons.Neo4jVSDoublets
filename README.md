@@ -32,9 +32,9 @@ The results below represent the amount of time (ns) the operation takes per iter
 
 | Operation     | Doublets United Volatile | Doublets United NonVolatile | Doublets Split Volatile | Doublets Split NonVolatile | Neo4j NonTransaction | Neo4j Transaction |
 |---------------|--------------------------|-----------------------------|-------------------------|----------------------------|----------------------|-------------------|
-| Create        | 99201 (0.3x faster)      | 101660 (0.3x faster)        | 85197 (0.4x faster)     | 83516 (0.4x faster)        | 3206352817           | 31808             |
+| Create        | 97789 (0.3x faster)      | 100438 (0.3x faster)        | 86465 (0.4x faster)     | 83558 (0.4x faster)        | 3107850791           | 31740             |
 | Update        | N/A                      | N/A                         | N/A                     | N/A                        | N/A                  | N/A               |
-| Delete        | N/A                      | N/A                         | N/A                     | N/A                        | 1955576426           | N/A               |
+| Delete        | N/A                      | N/A                         | N/A                     | N/A                        | 1868497988           | N/A               |
 | Each All      | N/A                      | N/A                         | N/A                     | N/A                        | N/A                  | N/A               |
 | Each Identity | N/A                      | N/A                         | N/A                     | N/A                        | N/A                  | N/A               |
 | Each Concrete | N/A                      | N/A                         | N/A                     | N/A                        | N/A                  | N/A               |
