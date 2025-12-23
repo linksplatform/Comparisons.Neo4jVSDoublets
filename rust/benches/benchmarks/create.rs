@@ -8,7 +8,7 @@ use {
         split::{self, DataPart, IndexPart},
         unit, Doublets,
     },
-    linksneo4j::{bench, connect, Benched, Client, Exclusive, Fork, Transaction},
+    linksneo4j::{bench, connect, Benched, Client, Exclusive, Fork, Transaction, LINK_COUNT},
     std::{
         alloc::Global,
         time::{Duration, Instant},
@@ -22,7 +22,7 @@ fn bench<T: LinkType, B: Benched + Doublets<T>>(
 ) {
     group.bench_function(id, |bencher| {
         bench!(|fork| as B {
-            for _ in 0..1_000 {
+            for _ in 0..LINK_COUNT {
                 let _ = elapsed! {fork.create_point()?};
             }
         })(bencher, &mut benched);

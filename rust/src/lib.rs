@@ -45,7 +45,13 @@ mod transaction;
 
 pub type Result<T, E = Box<dyn error::Error + Sync + Send>> = result::Result<T, E>;
 
-pub const BACKGROUND_LINKS: usize = 3_000;
+/// Number of background links to create before each benchmark iteration.
+/// This simulates a database with existing data.
+pub const BACKGROUND_LINKS: usize = 10;
+
+/// Number of links to create/delete/update in each benchmark operation.
+/// Reduced from 1000 to 10 for faster iteration during development.
+pub const LINK_COUNT: usize = 10;
 
 /// Connect to Neo4j database
 pub fn connect<T: LinkType>() -> Result<Client<T>> {

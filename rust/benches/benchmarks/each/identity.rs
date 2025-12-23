@@ -24,13 +24,9 @@ fn bench<B: Benched + Doublets<usize>>(
     let any = LinksConstants::new().any;
     group.bench_function(id, |bencher| {
         bench!(|fork| as B {
-            for index in 1..=1_000 {
-                elapsed! {fork.each_by([index, any, any], handler)};
-            }
-            for index in 1_001..=2_000 {
-                elapsed! {fork.each_by([index, any, any], handler)};
-            }
-            for index in 2_001..=BACKGROUND_LINKS {
+            use linksneo4j::BACKGROUND_LINKS;
+            // Query all background links by identity
+            for index in 1..=BACKGROUND_LINKS {
                 elapsed! {fork.each_by([index, any, any], handler)};
             }
         })(bencher, &mut benched);
