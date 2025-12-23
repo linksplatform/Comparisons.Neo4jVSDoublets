@@ -100,10 +100,13 @@ impl<'a, T: LinkType> Benched for Exclusive<Transaction<'a, T>> {
     }
 
     fn fork(&mut self) -> Fork<Self> {
+        // Clean up any existing data before benchmark to ensure isolation
+        let _ = self.drop_table();
         Fork(self)
     }
 
     unsafe fn unfork(&mut self) {
-        // Transaction cleanup handled by client
+        // Clean up after benchmark iteration
+        let _ = self.drop_table();
     }
 }
