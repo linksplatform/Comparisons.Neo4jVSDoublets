@@ -1,0 +1,14 @@
+benchmark	UNKNOWN STEP	2025-12-22T19:56:20.3034820Z Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 2246.0s, or reduce sample count to 10.
+benchmark	UNKNOWN STEP	2025-12-22T20:18:16.1199246Z test Create/Neo4j_NonTransaction ... bench:  3263324097 ns/iter (+/- 111550082)
+benchmark	UNKNOWN STEP	2025-12-22T20:18:28.7521082Z Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 1262.6s, or reduce sample count to 10.
+benchmark	UNKNOWN STEP	2025-12-22T20:39:35.9665593Z test Create/Neo4j_Transaction ... bench:  3125736807 ns/iter (+/- 165413351)
+benchmark	UNKNOWN STEP	2025-12-22T20:39:49.1761404Z test Create/Doublets_United_Volatile ... bench:       97099 ns/iter (+/- 727)
+benchmark	UNKNOWN STEP	2025-12-22T20:40:02.4283815Z test Create/Doublets_United_NonVolatile ... bench:       99055 ns/iter (+/- 916)
+benchmark	UNKNOWN STEP	2025-12-22T20:40:14.4722387Z test Create/Doublets_Split_Volatile ... bench:       84602 ns/iter (+/- 2141)
+benchmark	UNKNOWN STEP	2025-12-22T20:40:26.4677685Z test Create/Doublets_Split_NonVolatile ... bench:       83718 ns/iter (+/- 998)
+benchmark	UNKNOWN STEP	2025-12-22T20:40:44.7338513Z Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 1824.2s, or reduce sample count to 10.
+benchmark	UNKNOWN STEP	2025-12-22T21:05:20.5087851Z test Delete/Neo4j_NonTransaction ... bench:  1988067696 ns/iter (+/- 102395488)
+benchmark	UNKNOWN STEP	2025-12-22T21:05:35.0288296Z Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 1450.3s, or reduce sample count to 10.
+benchmark	UNKNOWN STEP	2025-12-22T21:05:47.4576972Z thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: NotExists(4000)', benches/benchmarks/delete.rs:23:9
+benchmark	UNKNOWN STEP	2025-12-22T21:05:47.4578661Z test Delete/Neo4j_Transaction ... 
+benchmark	UNKNOWN STEP	2025-12-22T21:05:47.4583237Z [0m[0m[1m[31merror[0m[1m:[0m bench failed
