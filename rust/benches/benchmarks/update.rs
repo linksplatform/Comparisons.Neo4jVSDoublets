@@ -7,7 +7,7 @@ use {
         split::{self, DataPart, IndexPart},
         unit, Doublets,
     },
-    linksneo4j::{bench, connect, Benched, Client, Exclusive, Fork, Transaction, BACKGROUND_LINKS, LINK_COUNT},
+    linksneo4j::{bench, connect, Benched, Client, Exclusive, Fork, Transaction, LINK_COUNT},
     std::{
         alloc::Global,
         time::{Duration, Instant},
@@ -21,6 +21,7 @@ fn bench<B: Benched + Doublets<usize>>(
 ) {
     group.bench_function(id, |bencher| {
         bench!(|fork| as B {
+            use linksneo4j::BACKGROUND_LINKS;
             // Update the last LINK_COUNT links from background links
             let start_id = if BACKGROUND_LINKS > LINK_COUNT { BACKGROUND_LINKS - LINK_COUNT + 1 } else { 1 };
             for id in start_id..=BACKGROUND_LINKS {

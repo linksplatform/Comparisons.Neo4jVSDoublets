@@ -7,7 +7,7 @@ use {
         split::{self, DataPart, IndexPart},
         unit, Doublets,
     },
-    linksneo4j::{bench, connect, Benched, Client, Exclusive, Fork, Transaction, BACKGROUND_LINKS, LINK_COUNT},
+    linksneo4j::{bench, connect, Benched, Client, Exclusive, Fork, Transaction, LINK_COUNT},
     std::{
         alloc::Global,
         time::{Duration, Instant},
@@ -21,6 +21,7 @@ fn bench<B: Benched + Doublets<usize>>(
 ) {
     group.bench_function(id, |bencher| {
         bench!(|fork| as B {
+            use linksneo4j::BACKGROUND_LINKS;
             // Create additional links beyond background links to delete
             for _prepare in BACKGROUND_LINKS..BACKGROUND_LINKS + LINK_COUNT {
                 let _ = fork.create_point();

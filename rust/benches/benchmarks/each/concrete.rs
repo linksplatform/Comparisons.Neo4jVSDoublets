@@ -8,7 +8,7 @@ use {
         split::{self, DataPart, IndexPart},
         unit, Doublets,
     },
-    linksneo4j::{bench, connect, Benched, Client, Exclusive, Fork, Transaction, BACKGROUND_LINKS},
+    linksneo4j::{bench, connect, Benched, Client, Exclusive, Fork, Transaction},
     std::{
         alloc::Global,
         time::{Duration, Instant},
@@ -24,6 +24,7 @@ fn bench<B: Benched + Doublets<usize>>(
     let any = LinksConstants::new().any;
     group.bench_function(id, |bencher| {
         bench!(|fork| as B {
+            use linksneo4j::BACKGROUND_LINKS;
             // Query all background links by concrete source/target
             for index in 1..=BACKGROUND_LINKS {
                 elapsed! {fork.each_by([any, index, index], handler)};
