@@ -34,6 +34,8 @@ impl<T: LinkType> Sql for Transaction<'_, T> {
     fn drop_table(&mut self) -> Result<()> {
         // Delete all nodes - delegated to client
         let _ = self.client.execute_cypher("MATCH (l:Link) DETACH DELETE l", None);
+        // Reset the ID counter to ensure isolation between benchmark iterations
+        self.client.reset_next_id();
         Ok(())
     }
 }

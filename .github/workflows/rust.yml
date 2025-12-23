@@ -1,6 +1,10 @@
 name: Benchmark Rust version
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
+      - master
 
 env:
   toolchain: nightly-2024-01-01

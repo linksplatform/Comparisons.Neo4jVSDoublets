@@ -93,6 +93,11 @@ impl<T: LinkType> Client<T> {
         self.next_id.fetch_add(1, Ordering::SeqCst)
     }
 
+    /// Reset the next_id counter to 1 (used for benchmark isolation)
+    pub fn reset_next_id(&self) {
+        self.next_id.store(1, Ordering::SeqCst);
+    }
+
     pub fn new(uri: &str, user: &str, password: &str) -> Result<Self> {
         // Parse URI to extract host and port
         let uri = uri.replace("bolt://", "").replace("http://", "");
