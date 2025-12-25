@@ -132,19 +132,18 @@ def print_results_markdown():
 # Plots
 # ─────────────────────────────────────────────────────────────────────────────
 def bench1():
-    """Horizontal bars – scaled (divide by 10 000 000)."""
-    scale = lambda arr: [max(1, x // 10_000_000) for x in arr]
+    """Horizontal bars – raw values (pixel scale)."""
     y, w  = np.arange(len(ordered_ops)), 0.1
     fig, ax = plt.subplots(figsize=(12, 8))
 
-    ax.barh(y - 2*w, scale(du_volatile_arr),   w, label='Doublets United Volatile',   color='salmon')
-    ax.barh(y -   w, scale(du_nonvolatile_arr),w, label='Doublets United NonVolatile',color='red')
-    ax.barh(y      , scale(ds_volatile_arr),    w, label='Doublets Split Volatile',    color='lightgreen')
-    ax.barh(y +   w, scale(ds_nonvolatile_arr), w, label='Doublets Split NonVolatile', color='green')
-    ax.barh(y + 2*w, scale(neo4j_non_arr),      w, label='Neo4j NonTransaction',       color='lightblue')
-    ax.barh(y + 3*w, scale(neo4j_trans_arr),    w, label='Neo4j Transaction',          color='blue')
+    ax.barh(y - 2*w, du_volatile_arr,   w, label='Doublets United Volatile',   color='salmon')
+    ax.barh(y -   w, du_nonvolatile_arr,w, label='Doublets United NonVolatile',color='red')
+    ax.barh(y      , ds_volatile_arr,    w, label='Doublets Split Volatile',    color='lightgreen')
+    ax.barh(y +   w, ds_nonvolatile_arr, w, label='Doublets Split NonVolatile', color='green')
+    ax.barh(y + 2*w, neo4j_non_arr,      w, label='Neo4j NonTransaction',       color='lightblue')
+    ax.barh(y + 3*w, neo4j_trans_arr,    w, label='Neo4j Transaction',          color='blue')
 
-    ax.set_xlabel('Time (ns) – scaled')
+    ax.set_xlabel('Time (ns)')
     ax.set_title ('Benchmark Comparison: Neo4j vs Doublets (Rust)')
     ax.set_yticks(y); ax.set_yticklabels(ordered_ops); ax.legend()
     fig.tight_layout(); plt.savefig("bench_rust.png"); plt.close(fig)
