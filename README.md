@@ -32,14 +32,14 @@ The results below represent the amount of time (ns) the operation takes per iter
 
 | Operation     | Doublets United Volatile | Doublets United NonVolatile | Doublets Split Volatile | Doublets Split NonVolatile | Neo4j NonTransaction | Neo4j Transaction |
 |---------------|--------------------------|-----------------------------|-------------------------|----------------------------|----------------------|-------------------|
-| Create        | 611 (61154.8x faster)    | 627 (59594.2x faster)       | 834 (44802.8x faster)   | 826 (45236.8x faster)      | 67353721             | 37365570          |
-| Update        | 1435 (26744.7x faster)   | 1439 (26670.4x faster)      | 832 (46128.2x faster)   | 835 (45962.5x faster)      | 38378690             | 38625040          |
-| Delete        | 864 (22821.8x faster)    | 858 (22981.4x faster)       | 1460 (13505.5x faster)  | 1500 (13145.4x faster)     | 20491228             | 19718029          |
-| Each All      | 71 (12619.6x faster)     | 75 (11946.6x faster)        | 78 (11487.1x faster)    | 75 (11946.6x faster)       | 911366               | 895992            |
-| Each Identity | 348 (25839.9x faster)    | 348 (25839.9x faster)       | 348 (25839.9x faster)   | 348 (25839.9x faster)      | 9057924              | 8992288           |
-| Each Concrete | 438 (20347.9x faster)    | 436 (20441.2x faster)       | 455 (19587.6x faster)   | 454 (19630.8x faster)      | 8979834              | 8912371           |
-| Each Outgoing | 489 (18286.3x faster)    | 488 (18323.8x faster)       | 407 (21970.5x faster)   | 407 (21970.5x faster)      | 8941998              | 8987035           |
-| Each Incoming | 495 (18017.9x faster)    | 494 (18054.4x faster)       | 411 (21700.4x faster)   | 411 (21700.4x faster)      | 8918865              | 8934565           |
+| Create        | 81055 (42346.8x faster)  | 83846 (40937.2x faster)     | 72568 (47299.4x faster) | 71612 (47930.8x faster)    | 3459139258           | 3432423917        |
+| Update        | 1308 (33217.3x faster)   | 1344 (32327.6x faster)      | 674 (64463.3x faster)   | 711 (61108.7x faster)      | 43708416             | 43448259          |
+| Delete        | 130634 (16988.3x faster) | 130571 (16996.5x faster)    | 132360 (16766.8x faster) | 134435 (16508.0x faster)   | 2235068799           | 2219251214        |
+| Each All      | 63 (16560.2x faster)     | 71 (14694.3x faster)        | 81 (12880.2x faster)    | 80 (13041.2x faster)       | 1062528              | 1043293           |
+| Each Identity | 240 (42019.7x faster)    | 234 (43097.1x faster)       | 245 (41162.2x faster)   | 255 (39548.0x faster)      | 10097022             | 10084733          |
+| Each Concrete | 346 (29146.2x faster)    | 348 (28978.7x faster)       | 378 (26678.8x faster)   | 370 (27255.6x faster)      | 10138701             | 10084574          |
+| Each Outgoing | 437 (22980.0x faster)    | 436 (23032.7x faster)       | 339 (29623.2x faster)   | 330 (30431.1x faster)      | 10042277             | 10066860          |
+| Each Incoming | 444 (22453.1x faster)    | 440 (22657.2x faster)       | 359 (27769.3x faster)   | 357 (27924.9x faster)      | 10094595             | 9969185           |
 
 ## Conclusion
 
