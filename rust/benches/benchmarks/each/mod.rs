@@ -4,7 +4,8 @@ mod identity;
 mod incoming;
 mod outgoing;
 
-pub use {
-    all::each_all, concrete::each_concrete, identity::each_identity, incoming::each_incoming,
-    outgoing::each_outgoing,
-};
+pub use all::each_all;
+pub use concrete::each_concrete;
+pub use identity::each_identity;
+pub use incoming::each_incoming;
+pub use outgoing::each_outgoing;

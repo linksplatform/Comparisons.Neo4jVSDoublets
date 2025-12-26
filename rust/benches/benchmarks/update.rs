@@ -1,18 +1,18 @@
-use {
-    crate::tri,
-    criterion::{measurement::WallTime, BenchmarkGroup, Criterion},
-    doublets::{
-        mem::{Alloc, FileMapped},
-        parts::LinkPart,
-        split::{self, DataPart, IndexPart},
-        unit, Doublets,
-    },
-    linksneo4j::{bench, connect, Benched, Client, Exclusive, Fork, Transaction, LINK_COUNT},
-    std::{
-        alloc::Global,
-        time::{Duration, Instant},
-    },
+use std::{
+    alloc::Global,
+    time::{Duration, Instant},
 };
+
+use criterion::{measurement::WallTime, BenchmarkGroup, Criterion};
+use doublets::{
+    mem::{Alloc, FileMapped},
+    parts::LinkPart,
+    split::{self, DataPart, IndexPart},
+    unit, Doublets,
+};
+use linksneo4j::{bench, connect, Benched, Client, Exclusive, Fork, Transaction, LINK_COUNT};
+
+use crate::tri;
 
 fn bench<B: Benched + Doublets<usize>>(
     group: &mut BenchmarkGroup<WallTime>,
@@ -23,7 +23,7 @@ fn bench<B: Benched + Doublets<usize>>(
         bench!(|fork| as B {
             use linksneo4j::BACKGROUND_LINKS;
             // Update the last LINK_COUNT links from background links
-            let start_id = if BACKGROUND_LINKS > LINK_COUNT { BACKGROUND_LINKS - LINK_COUNT + 1 } else { 1 };
+            let start_id = if BACKGROUND_LINKS > *LINK_COUNT { BACKGROUND_LINKS - *LINK_COUNT + 1 } else { 1 };
             for id in start_id..=BACKGROUND_LINKS {
                 let _ = elapsed! {fork.update(id, 0, 0)?};
                 let _ = elapsed! {fork.update(id, id, id)?};

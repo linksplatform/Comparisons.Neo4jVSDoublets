@@ -1,14 +1,14 @@
-use {
-    crate::{map_file, Client, Exclusive, Fork, Result, Sql, Transaction},
-    doublets::{
-        data::LinkType,
-        mem::{Alloc, FileMapped},
-        split::{self, DataPart, IndexPart},
-        unit::{self, LinkPart},
-        Doublets,
-    },
-    std::alloc::Global,
+use std::alloc::Global;
+
+use doublets::{
+    data::LinkType,
+    mem::{Alloc, FileMapped},
+    split::{self, DataPart, IndexPart},
+    unit::{self, LinkPart},
+    Doublets,
 };
+
+use crate::{map_file, Client, Exclusive, Fork, Result, Sql, Transaction};
 
 pub trait Benched: Sized {
     type Builder<'params>;

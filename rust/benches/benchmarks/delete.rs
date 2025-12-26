@@ -1,18 +1,18 @@
-use {
-    crate::tri,
-    criterion::{measurement::WallTime, BenchmarkGroup, Criterion},
-    doublets::{
-        mem::{Alloc, FileMapped},
-        parts::LinkPart,
-        split::{self, DataPart, IndexPart},
-        unit, Doublets,
-    },
-    linksneo4j::{bench, connect, Benched, Client, Exclusive, Fork, Transaction, LINK_COUNT},
-    std::{
-        alloc::Global,
-        time::{Duration, Instant},
-    },
+use std::{
+    alloc::Global,
+    time::{Duration, Instant},
 };
+
+use criterion::{measurement::WallTime, BenchmarkGroup, Criterion};
+use doublets::{
+    mem::{Alloc, FileMapped},
+    parts::LinkPart,
+    split::{self, DataPart, IndexPart},
+    unit, Doublets,
+};
+use linksneo4j::{bench, connect, Benched, Client, Exclusive, Fork, Transaction, LINK_COUNT};
+
+use crate::tri;
 
 fn bench<B: Benched + Doublets<usize>>(
     group: &mut BenchmarkGroup<WallTime>,
@@ -23,11 +23,11 @@ fn bench<B: Benched + Doublets<usize>>(
         bench!(|fork| as B {
             use linksneo4j::BACKGROUND_LINKS;
             // Create additional links beyond background links to delete
-            for _prepare in BACKGROUND_LINKS..BACKGROUND_LINKS + LINK_COUNT {
+            for _prepare in BACKGROUND_LINKS..BACKGROUND_LINKS + *LINK_COUNT {
                 let _ = fork.create_point();
             }
             // Delete the links we just created (in reverse order)
-            for id in (BACKGROUND_LINKS + 1..=BACKGROUND_LINKS + LINK_COUNT).rev() {
+            for id in (BACKGROUND_LINKS + 1..=BACKGROUND_LINKS + *LINK_COUNT).rev() {
                 let _ = elapsed! {fork.delete(id)?};
             }
         })(bencher, &mut benched);

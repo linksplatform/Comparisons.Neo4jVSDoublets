@@ -1,19 +1,19 @@
-use {
-    crate::tri,
-    criterion::{measurement::WallTime, BenchmarkGroup, Criterion},
-    doublets::{
-        data::LinkType,
-        mem::{Alloc, FileMapped},
-        parts::LinkPart,
-        split::{self, DataPart, IndexPart},
-        unit, Doublets,
-    },
-    linksneo4j::{bench, connect, Benched, Client, Exclusive, Fork, Transaction, LINK_COUNT},
-    std::{
-        alloc::Global,
-        time::{Duration, Instant},
-    },
+use std::{
+    alloc::Global,
+    time::{Duration, Instant},
 };
+
+use criterion::{measurement::WallTime, BenchmarkGroup, Criterion};
+use doublets::{
+    data::LinkType,
+    mem::{Alloc, FileMapped},
+    parts::LinkPart,
+    split::{self, DataPart, IndexPart},
+    unit, Doublets,
+};
+use linksneo4j::{bench, connect, Benched, Client, Exclusive, Fork, Transaction, LINK_COUNT};
+
+use crate::tri;
 
 fn bench<T: LinkType, B: Benched + Doublets<T>>(
     group: &mut BenchmarkGroup<WallTime>,
@@ -22,7 +22,7 @@ fn bench<T: LinkType, B: Benched + Doublets<T>>(
 ) {
     group.bench_function(id, |bencher| {
         bench!(|fork| as B {
-            for _ in 0..LINK_COUNT {
+            for _ in 0..*LINK_COUNT {
                 let _ = elapsed! {fork.create_point()?};
             }
         })(bencher, &mut benched);

@@ -1,17 +1,17 @@
-use {
-    crate::{Exclusive, Result, Sql},
-    doublets::{
-        data::{Error, Flow, LinkType, LinksConstants, ReadHandler, WriteHandler},
-        Doublets, Link, Links,
-    },
-    serde::{Deserialize, Serialize},
-    serde_json::{json, Value},
-    std::{
-        io::{Read, Write},
-        net::TcpStream,
-        sync::atomic::{AtomicI64, Ordering},
-    },
+use std::{
+    io::{Read, Write},
+    net::TcpStream,
+    sync::atomic::{AtomicI64, Ordering},
 };
+
+use doublets::{
+    data::{Error, Flow, LinkType, LinksConstants, ReadHandler, WriteHandler},
+    Doublets, Link, Links,
+};
+use serde::{Deserialize, Serialize};
+use serde_json::{json, Value};
+
+use crate::{Exclusive, Result, Sql};
 
 /// Neo4j HTTP API client using raw TCP
 pub struct Client<T: LinkType> {
@@ -107,10 +107,7 @@ impl<T: LinkType> Client<T> {
         // Convert bolt port to HTTP port
         let port = if bolt_port == 7687 { 7474 } else { bolt_port };
 
-        let auth = format!(
-            "Basic {}",
-            base64_encode(&format!("{}:{}", user, password))
-        );
+        let auth = format!("Basic {}", base64_encode(&format!("{}:{}", user, password)));
 
         let client = Self {
             host,
@@ -182,13 +179,17 @@ impl<T: LinkType> Client<T> {
             body
         );
 
-        let mut stream = TcpStream::connect((&self.host[..], self.port))
+        let mut stream =
+            TcpStream::connect((&self.host[..], self.port)).map_err(|e| e.to_string())?;
+
+        stream
+            .write_all(http_request.as_bytes())
             .map_err(|e| e.to_string())?;
 
-        stream.write_all(http_request.as_bytes()).map_err(|e| e.to_string())?;
-
         let mut response = String::new();
-        stream.read_to_string(&mut response).map_err(|e| e.to_string())?;
+        stream
+            .read_to_string(&mut response)
+            .map_err(|e| e.to_string())?;
 
         // Parse HTTP response - find body after empty line
         let body_start = response.find("\r\n\r\n").ok_or("Invalid HTTP response")?;
@@ -282,7 +283,10 @@ impl<T: LinkType> Links<T> for Exclusive<Client<T>> {
             if query[0] == any {
                 "MATCH (l:Link) RETURN count(l) as count".to_string()
             } else {
-                format!("MATCH (l:Link {{id: {}}}) RETURN count(l) as count", query[0])
+                format!(
+                    "MATCH (l:Link {{id: {}}}) RETURN count(l) as count",
+                    query[0]
+                )
             }
         } else if query.len() == 3 {
             let mut conditions = Vec::new();
@@ -325,12 +329,16 @@ impl<T: LinkType> Links<T> for Exclusive<Client<T>> {
         }
     }
 
-    fn create_links(&mut self, _query: &[T], handler: WriteHandler<T>) -> std::result::Result<Flow, Error<T>> {
+    fn create_links(
+        &mut self,
+        _query: &[T],
+        handler: WriteHandler<T>,
+    ) -> std::result::Result<Flow, Error<T>> {
         let next_id = self.next_id.fetch_add(1, Ordering::SeqCst);
 
         let _ = self.execute_cypher(
             "CREATE (l:Link {id: $id, source: 0, target: 0})",
-            Some(json!({"id": next_id})),
+            Some(json!({ "id": next_id })),
         );
 
         Ok(handler(
@@ -346,7 +354,8 @@ impl<T: LinkType> Links<T> for Exclusive<Client<T>> {
             "MATCH (l:Link) RETURN l.id as id, l.source as source, l.target as target".to_string()
         } else if query.len() == 1 {
             if query[0] == any {
-                "MATCH (l:Link) RETURN l.id as id, l.source as source, l.target as target".to_string()
+                "MATCH (l:Link) RETURN l.id as id, l.source as source, l.target as target"
+                    .to_string()
             } else {
                 format!(
                     "MATCH (l:Link {{id: {}}}) RETURN l.id as id, l.source as source, l.target as target",
@@ -367,7 +376,8 @@ impl<T: LinkType> Links<T> for Exclusive<Client<T>> {
             }
 
             if conditions.is_empty() {
-                "MATCH (l:Link) RETURN l.id as id, l.source as source, l.target as target".to_string()
+                "MATCH (l:Link) RETURN l.id as id, l.source as source, l.target as target"
+                    .to_string()
             } else {
                 format!(
                     "MATCH (l:Link) WHERE {} RETURN l.id as id, l.source as source, l.target as target",
@@ -426,7 +436,10 @@ impl<T: LinkType> Links<T> for Exclusive<Client<T>> {
                         if row.row.len() >= 2 {
                             let s = row.row[0].as_i64().unwrap_or(0);
                             let t = row.row[1].as_i64().unwrap_or(0);
-                            (s.try_into().unwrap_or(T::ZERO), t.try_into().unwrap_or(T::ZERO))
+                            (
+                                s.try_into().unwrap_or(T::ZERO),
+                                t.try_into().unwrap_or(T::ZERO),
+                            )
                         } else {
                             (T::ZERO, T::ZERO)
                         }
@@ -456,7 +469,11 @@ impl<T: LinkType> Links<T> for Exclusive<Client<T>> {
         ))
     }
 
-    fn delete_links(&mut self, query: &[T], handler: WriteHandler<T>) -> std::result::Result<Flow, Error<T>> {
+    fn delete_links(
+        &mut self,
+        query: &[T],
+        handler: WriteHandler<T>,
+    ) -> std::result::Result<Flow, Error<T>> {
         let id = query[0];
 
         // Get old values before deleting
@@ -472,7 +489,10 @@ impl<T: LinkType> Links<T> for Exclusive<Client<T>> {
                         if row.row.len() >= 2 {
                             let s = row.row[0].as_i64().unwrap_or(0);
                             let t = row.row[1].as_i64().unwrap_or(0);
-                            (s.try_into().unwrap_or(T::ZERO), t.try_into().unwrap_or(T::ZERO))
+                            (
+                                s.try_into().unwrap_or(T::ZERO),
+                                t.try_into().unwrap_or(T::ZERO),
+                            )
                         } else {
                             return Err(Error::<T>::NotExists(id));
                         }
@@ -492,7 +512,10 @@ impl<T: LinkType> Links<T> for Exclusive<Client<T>> {
             Some(json!({"id": id.as_i64()})),
         );
 
-        Ok(handler(Link::new(id, old_source, old_target), Link::nothing()))
+        Ok(handler(
+            Link::new(id, old_source, old_target),
+            Link::nothing(),
+        ))
     }
 }
 
