@@ -1,19 +1,19 @@
-use {
-    crate::tri,
-    criterion::{measurement::WallTime, BenchmarkGroup, Criterion},
-    doublets::{
-        data::{Flow, LinksConstants},
-        mem::{Alloc, FileMapped},
-        parts::LinkPart,
-        split::{self, DataPart, IndexPart},
-        unit, Doublets,
-    },
-    linksneo4j::{bench, connect, Benched, Client, Exclusive, Fork, Transaction},
-    std::{
-        alloc::Global,
-        time::{Duration, Instant},
-    },
+use std::{
+    alloc::Global,
+    time::{Duration, Instant},
 };
+
+use criterion::{measurement::WallTime, BenchmarkGroup, Criterion};
+use doublets::{
+    data::{Flow, LinksConstants},
+    mem::{Alloc, FileMapped},
+    parts::LinkPart,
+    split::{self, DataPart, IndexPart},
+    unit, Doublets,
+};
+use linksneo4j::{bench, connect, Benched, Client, Exclusive, Fork, Transaction};
+
+use crate::tri;
 
 fn bench<B: Benched + Doublets<usize>>(
     group: &mut BenchmarkGroup<WallTime>,

@@ -1,12 +1,10 @@
 #![feature(allocator_api)]
 
-use {
-    benchmarks::{
-        create_links, delete_links, each_all, each_concrete, each_identity, each_incoming,
-        each_outgoing, update_links,
-    },
-    criterion::{criterion_group, criterion_main},
+use benchmarks::{
+    create_links, delete_links, each_all, each_concrete, each_identity, each_incoming,
+    each_outgoing, update_links,
 };
+use criterion::{criterion_group, criterion_main};
 
 mod benchmarks;
 

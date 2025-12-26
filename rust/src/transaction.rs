@@ -6,14 +6,13 @@
 // Neo4j operations, which in this implementation are semantically
 // equivalent to non-transactional operations.
 
-use {
-    crate::{Client, Exclusive, Result, Sql},
-    doublets::{
-        data::{Error, Flow, LinkType, LinksConstants, ReadHandler, WriteHandler},
-        Doublets, Link, Links,
-    },
-    serde_json::json,
+use doublets::{
+    data::{Error, Flow, LinkType, LinksConstants, ReadHandler, WriteHandler},
+    Doublets, Link, Links,
 };
+use serde_json::json;
+
+use crate::{Client, Exclusive, Result, Sql};
 
 pub struct Transaction<'a, T: LinkType> {
     client: &'a Client<T>,
@@ -33,7 +32,9 @@ impl<T: LinkType> Sql for Transaction<'_, T> {
 
     fn drop_table(&mut self) -> Result<()> {
         // Delete all nodes - delegated to client
-        let _ = self.client.execute_cypher("MATCH (l:Link) DETACH DELETE l", None);
+        let _ = self
+            .client
+            .execute_cypher("MATCH (l:Link) DETACH DELETE l", None);
         // Reset the ID counter to ensure isolation between benchmark iterations
         self.client.reset_next_id();
         Ok(())
@@ -55,7 +56,10 @@ impl<'a, T: LinkType> Links<T> for Exclusive<Transaction<'a, T>> {
             if query[0] == any {
                 "MATCH (l:Link) RETURN count(l) as count".to_string()
             } else {
-                format!("MATCH (l:Link {{id: {}}}) RETURN count(l) as count", query[0])
+                format!(
+                    "MATCH (l:Link {{id: {}}}) RETURN count(l) as count",
+                    query[0]
+                )
             }
         } else if query.len() == 3 {
             let mut conditions = Vec::new();
@@ -98,12 +102,16 @@ impl<'a, T: LinkType> Links<T> for Exclusive<Transaction<'a, T>> {
         }
     }
 
-    fn create_links(&mut self, _query: &[T], handler: WriteHandler<T>) -> std::result::Result<Flow, Error<T>> {
+    fn create_links(
+        &mut self,
+        _query: &[T],
+        handler: WriteHandler<T>,
+    ) -> std::result::Result<Flow, Error<T>> {
         let next_id = self.client.fetch_next_id();
 
         let _ = self.client.execute_cypher(
             "CREATE (l:Link {id: $id, source: 0, target: 0})",
-            Some(json!({"id": next_id})),
+            Some(json!({ "id": next_id })),
         );
 
         Ok(handler(
@@ -119,7 +127,8 @@ impl<'a, T: LinkType> Links<T> for Exclusive<Transaction<'a, T>> {
             "MATCH (l:Link) RETURN l.id as id, l.source as source, l.target as target".to_string()
         } else if query.len() == 1 {
             if query[0] == any {
-                "MATCH (l:Link) RETURN l.id as id, l.source as source, l.target as target".to_string()
+                "MATCH (l:Link) RETURN l.id as id, l.source as source, l.target as target"
+                    .to_string()
             } else {
                 format!(
                     "MATCH (l:Link {{id: {}}}) RETURN l.id as id, l.source as source, l.target as target",
@@ -140,7 +149,8 @@ impl<'a, T: LinkType> Links<T> for Exclusive<Transaction<'a, T>> {
             }
 
             if conditions.is_empty() {
-                "MATCH (l:Link) RETURN l.id as id, l.source as source, l.target as target".to_string()
+                "MATCH (l:Link) RETURN l.id as id, l.source as source, l.target as target"
+                    .to_string()
             } else {
                 format!(
                     "MATCH (l:Link) WHERE {} RETURN l.id as id, l.source as source, l.target as target",
@@ -199,7 +209,10 @@ impl<'a, T: LinkType> Links<T> for Exclusive<Transaction<'a, T>> {
                         if row.row.len() >= 2 {
                             let s = row.row[0].as_i64().unwrap_or(0);
                             let t = row.row[1].as_i64().unwrap_or(0);
-                            (s.try_into().unwrap_or(T::ZERO), t.try_into().unwrap_or(T::ZERO))
+                            (
+                                s.try_into().unwrap_or(T::ZERO),
+                                t.try_into().unwrap_or(T::ZERO),
+                            )
                         } else {
                             (T::ZERO, T::ZERO)
                         }
@@ -229,7 +242,11 @@ impl<'a, T: LinkType> Links<T> for Exclusive<Transaction<'a, T>> {
         ))
     }
 
-    fn delete_links(&mut self, query: &[T], handler: WriteHandler<T>) -> std::result::Result<Flow, Error<T>> {
+    fn delete_links(
+        &mut self,
+        query: &[T],
+        handler: WriteHandler<T>,
+    ) -> std::result::Result<Flow, Error<T>> {
         let id = query[0];
 
         // Get old values before deleting
@@ -245,7 +262,10 @@ impl<'a, T: LinkType> Links<T> for Exclusive<Transaction<'a, T>> {
                         if row.row.len() >= 2 {
                             let s = row.row[0].as_i64().unwrap_or(0);
                             let t = row.row[1].as_i64().unwrap_or(0);
-                            (s.try_into().unwrap_or(T::ZERO), t.try_into().unwrap_or(T::ZERO))
+                            (
+                                s.try_into().unwrap_or(T::ZERO),
+                                t.try_into().unwrap_or(T::ZERO),
+                            )
                         } else {
                             return Err(Error::<T>::NotExists(id));
                         }
@@ -265,7 +285,10 @@ impl<'a, T: LinkType> Links<T> for Exclusive<Transaction<'a, T>> {
             Some(json!({"id": id.as_i64()})),
         );
 
-        Ok(handler(Link::new(id, old_source, old_target), Link::nothing()))
+        Ok(handler(
+            Link::new(id, old_source, old_target),
+            Link::nothing(),
+        ))
     }
 }
 

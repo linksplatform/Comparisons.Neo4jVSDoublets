@@ -30,12 +30,14 @@ macro_rules! bench {
     }
 }
 
-pub use {benched::Benched, client::Client, exclusive::Exclusive, fork::Fork, transaction::Transaction};
+use std::{error, fs::File, io, result};
 
-use {
-    doublets::{data::LinkType, mem::FileMapped},
-    std::{error, fs::File, io, result},
-};
+pub use benched::Benched;
+pub use client::Client;
+use doublets::{data::LinkType, mem::FileMapped};
+pub use exclusive::Exclusive;
+pub use fork::Fork;
+pub use transaction::Transaction;
 
 mod benched;
 mod client;
@@ -50,8 +52,18 @@ pub type Result<T, E = Box<dyn error::Error + Sync + Send>> = result::Result<T, 
 pub const BACKGROUND_LINKS: usize = 10;
 
 /// Number of links to create/delete/update in each benchmark operation.
-/// Reduced from 1000 to 10 for faster iteration during development.
-pub const LINK_COUNT: usize = 10;
+/// Can be configured via BENCHMARK_LINK_COUNT environment variable.
+/// Defaults to 10 for faster iteration in pull requests, but should be set to 1000 for main branch benchmarks.
+pub fn link_count() -> usize {
+    std::env::var("BENCHMARK_LINK_COUNT")
+        .ok()
+        .and_then(|v| v.parse().ok())
+        .unwrap_or(10)
+}
+
+/// Lazy static to cache the link count value
+pub use once_cell::sync::Lazy;
+pub static LINK_COUNT: Lazy<usize> = Lazy::new(link_count);
 
 /// Connect to Neo4j database
 pub fn connect<T: LinkType>() -> Result<Client<T>> {
@@ -63,7 +75,11 @@ pub fn connect<T: LinkType>() -> Result<Client<T>> {
 }
 
 pub fn map_file<T: Default>(filename: &str) -> io::Result<FileMapped<T>> {
-    let file = File::options().create(true).write(true).read(true).open(filename)?;
+    let file = File::options()
+        .create(true)
+        .write(true)
+        .read(true)
+        .open(filename)?;
     FileMapped::new(file)
 }
 

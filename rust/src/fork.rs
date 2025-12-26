@@ -1,7 +1,6 @@
-use {
-    crate::Benched,
-    std::ops::{Deref, DerefMut, Drop},
-};
+use std::ops::{Deref, DerefMut, Drop};
+
+use crate::Benched;
 
 pub struct Fork<'f, B: Benched>(pub(crate) &'f mut B);
 
