@@ -131,17 +131,40 @@ def print_results_markdown():
 # ─────────────────────────────────────────────────────────────────────────────
 # Plots
 # ─────────────────────────────────────────────────────────────────────────────
+def ensure_min_visible(arr, min_val):
+    """Ensure non-zero values are at least min_val for visibility on graph."""
+    return [max(v, min_val) if v > 0 else 0 for v in arr]
+
 def bench1():
     """Horizontal bars – raw values (pixel scale)."""
     y, w  = np.arange(len(ordered_ops)), 0.1
     fig, ax = plt.subplots(figsize=(12, 8))
 
-    ax.barh(y - 2*w, du_volatile_arr,   w, label='Doublets United Volatile',   color='salmon')
-    ax.barh(y -   w, du_nonvolatile_arr,w, label='Doublets United NonVolatile',color='red')
-    ax.barh(y      , ds_volatile_arr,    w, label='Doublets Split Volatile',    color='lightgreen')
-    ax.barh(y +   w, ds_nonvolatile_arr, w, label='Doublets Split NonVolatile', color='green')
-    ax.barh(y + 2*w, neo4j_non_arr,      w, label='Neo4j NonTransaction',       color='lightblue')
-    ax.barh(y + 3*w, neo4j_trans_arr,    w, label='Neo4j Transaction',          color='blue')
+    # Calculate maximum value across all data series to determine scale
+    all_values = (du_volatile_arr + du_nonvolatile_arr + ds_volatile_arr +
+                  ds_nonvolatile_arr + neo4j_non_arr + neo4j_trans_arr)
+    max_val = max(all_values) if all_values else 1
+
+    # Minimum visible bar width: ~0.5% of max value ensures at least 2 pixels
+    # on typical 12-inch wide figure at 100 DPI (~900px plot area)
+    min_visible = max_val * 0.005
+    if DEBUG:
+        logging.info("bench1: max_val=%d, min_visible=%d", max_val, min_visible)
+
+    # Apply minimum visibility to all data series
+    du_volatile_vis    = ensure_min_visible(du_volatile_arr, min_visible)
+    du_nonvolatile_vis = ensure_min_visible(du_nonvolatile_arr, min_visible)
+    ds_volatile_vis    = ensure_min_visible(ds_volatile_arr, min_visible)
+    ds_nonvolatile_vis = ensure_min_visible(ds_nonvolatile_arr, min_visible)
+    neo4j_non_vis      = ensure_min_visible(neo4j_non_arr, min_visible)
+    neo4j_trans_vis    = ensure_min_visible(neo4j_trans_arr, min_visible)
+
+    ax.barh(y - 2*w, du_volatile_vis,   w, label='Doublets United Volatile',   color='salmon')
+    ax.barh(y -   w, du_nonvolatile_vis,w, label='Doublets United NonVolatile',color='red')
+    ax.barh(y      , ds_volatile_vis,    w, label='Doublets Split Volatile',    color='lightgreen')
+    ax.barh(y +   w, ds_nonvolatile_vis, w, label='Doublets Split NonVolatile', color='green')
+    ax.barh(y + 2*w, neo4j_non_vis,      w, label='Neo4j NonTransaction',       color='lightblue')
+    ax.barh(y + 3*w, neo4j_trans_vis,    w, label='Neo4j Transaction',          color='blue')
 
     ax.set_xlabel('Time (ns)')
     ax.set_title ('Benchmark Comparison: Neo4j vs Doublets (Rust)')
