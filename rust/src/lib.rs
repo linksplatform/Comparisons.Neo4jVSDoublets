@@ -6,6 +6,17 @@
 //! database operations. It defines a common trait that both databases implement,
 //! making it crystal clear what logic is being benchmarked against what.
 //!
+//! ## Detailed Implementation Documentation
+//!
+//! For detailed documentation on how each database implements the common interface,
+//! see the separate implementation modules:
+//!
+//! - **[`doublets_impl`]** - How Doublets implements each operation with direct memory access
+//! - **[`neo4j_impl`]** - How Neo4j implements each operation with Cypher queries
+//!
+//! These modules provide side-by-side comparison of the same logic implemented
+//! in both databases.
+//!
 //! ## The Common Interface
 //!
 //! Both Neo4j and Doublets implement the same operations through the [`Doublets<T>`]
@@ -22,18 +33,6 @@
 //! | Each Concrete   | `each_by([*,s,t], h)`   | Find links by source AND target                |
 //! | Each Outgoing   | `each_by([*,s,*], h)`   | Find links by source (outgoing edges)          |
 //! | Each Incoming   | `each_by([*,*,t], h)`   | Find links by target (incoming edges)          |
-//!
-//! ## Implementation Comparison
-//!
-//! ### Doublets Implementation
-//! - Uses in-memory or file-mapped storage with specialized link data structures
-//! - Direct memory access for O(1) link retrieval by ID
-//! - Maintains source/target indexes for fast queries
-//!
-//! ### Neo4j Implementation
-//! - Uses HTTP API to execute Cypher queries
-//! - Links stored as Neo4j nodes with `id`, `source`, `target` properties
-//! - Indexes created on `id`, `source`, and `target` for query performance
 //!
 //! ## Benchmarked Implementations
 //!
@@ -103,8 +102,10 @@ pub use transaction::Transaction;
 
 mod benched;
 mod client;
+pub mod doublets_impl;
 mod exclusive;
 mod fork;
+pub mod neo4j_impl;
 mod transaction;
 
 pub type Result<T, E = Box<dyn error::Error + Sync + Send>> = result::Result<T, E>;
