@@ -1,3 +1,28 @@
+//! # Each Identity Benchmark
+//!
+//! Measures the performance of looking up links by their ID (primary key).
+//! This is equivalent to a primary key lookup with constraint `[id, *, *]`.
+//!
+//! ## Common Interface Method
+//!
+//! ```rust,ignore
+//! // Query by ID (identity constraint)
+//! store.each_by([id, any, any], |link| Flow::Continue);
+//! ```
+//!
+//! ## How Each Database Implements It
+//!
+//! ### Doublets
+//! - Direct array index access: O(1)
+//! - Returns link at `links[id]` if it exists
+//!
+//! ### Neo4j
+//! ```cypher
+//! MATCH (l:Link {id: $id}) RETURN l.id, l.source, l.target
+//! ```
+//! - Uses unique constraint index on `id` property
+//! - Time complexity: O(log n) + network overhead
+
 use std::{
     alloc::Global,
     time::{Duration, Instant},
@@ -15,6 +40,7 @@ use linksneo4j::{bench, connect, Benched, Client, Exclusive, Fork, Transaction};
 
 use crate::tri;
 
+/// Runs the each_identity benchmark on a specific storage backend.
 fn bench<B: Benched + Doublets<usize>>(
     group: &mut BenchmarkGroup<WallTime>,
     id: &str,
@@ -25,7 +51,8 @@ fn bench<B: Benched + Doublets<usize>>(
     group.bench_function(id, |bencher| {
         bench!(|fork| as B {
             use linksneo4j::BACKGROUND_LINKS;
-            // Query all background links by identity
+            // The benchmarked operation: query each link by its ID
+            // This calls the same interface method on both Doublets and Neo4j
             for index in 1..=BACKGROUND_LINKS {
                 elapsed! {fork.each_by([index, any, any], handler)};
             }
@@ -33,8 +60,15 @@ fn bench<B: Benched + Doublets<usize>>(
     });
 }
 
+/// Creates benchmark comparing all storage backends on ID lookup.
 pub fn each_identity(c: &mut Criterion) {
     let mut group = c.benchmark_group("Each_Identity");
+
+    // =========================================================================
+    // NEO4J BACKENDS
+    // =========================================================================
+    // Neo4j executes: MATCH (l:Link {id: $id}) RETURN l.id, l.source, l.target
+
     tri! {
         bench(&mut group, "Neo4j_NonTransaction", Exclusive::<Client<usize>>::setup(()).unwrap());
     }
@@ -46,6 +80,12 @@ pub fn each_identity(c: &mut Criterion) {
             Exclusive::<Transaction<'_, usize>>::setup(&client).unwrap(),
         );
     }
+
+    // =========================================================================
+    // DOUBLETS BACKENDS
+    // =========================================================================
+    // Doublets uses direct array indexing: links[id]
+
     tri! {
         bench(
             &mut group,

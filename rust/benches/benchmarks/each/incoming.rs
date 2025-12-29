@@ -1,3 +1,26 @@
+//! # Each Incoming Benchmark
+//!
+//! Measures the performance of querying links by target (incoming edges).
+//! This uses constraint `[*, *, target]` - finding all edges TO a node.
+//!
+//! ## Common Interface Method
+//!
+//! ```rust,ignore
+//! store.each_by([any, any, target], |link| Flow::Continue);
+//! ```
+//!
+//! ## How Each Database Implements It
+//!
+//! ### Doublets
+//! - Uses target index tree to find all links with given target
+//! - Time complexity: O(log n + k) where k = matching links
+//!
+//! ### Neo4j
+//! ```cypher
+//! MATCH (l:Link) WHERE l.target = $target
+//! RETURN l.id, l.source, l.target
+//! ```
+
 use std::{
     alloc::Global,
     time::{Duration, Instant},
@@ -15,6 +38,7 @@ use linksneo4j::{bench, connect, Benched, Client, Exclusive, Fork, Transaction};
 
 use crate::tri;
 
+/// Runs the each_incoming benchmark on a specific storage backend.
 fn bench<B: Benched + Doublets<usize>>(
     group: &mut BenchmarkGroup<WallTime>,
     id: &str,
@@ -25,7 +49,8 @@ fn bench<B: Benched + Doublets<usize>>(
     group.bench_function(id, |bencher| {
         bench!(|fork| as B {
             use linksneo4j::BACKGROUND_LINKS;
-            // Query all background links by incoming (target)
+            // The benchmarked operation: query by target (incoming)
+            // This calls the same interface method on both Doublets and Neo4j
             for index in 1..=BACKGROUND_LINKS {
                 elapsed! {fork.each_by([any, any, index], handler)};
             }
