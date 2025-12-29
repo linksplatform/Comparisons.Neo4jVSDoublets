@@ -1,25 +1,12 @@
-//! # Each Outgoing Benchmark
+//! # Doublets Each Outgoing Benchmark
 //!
-//! Measures the performance of querying links by source (outgoing edges).
-//! This uses constraint `[*, source, *]` - finding all edges FROM a node.
+//! Measures the performance of querying links by source (outgoing edges) in Doublets.
 //!
-//! ## Common Interface Method
+//! ## Implementation
 //!
-//! ```rust,ignore
-//! store.each_by([any, source, any], |link| Flow::Continue);
-//! ```
-//!
-//! ## How Each Database Implements It
-//!
-//! ### Doublets
-//! - Uses source index tree to find all links with given source
+//! Doublets queries by source using:
+//! - Source index tree to find all links with given source
 //! - Time complexity: O(log n + k) where k = matching links
-//!
-//! ### Neo4j
-//! ```cypher
-//! MATCH (l:Link) WHERE l.source = $source
-//! RETURN l.id, l.source, l.target
-//! ```
 
 use std::{
     alloc::Global,
@@ -27,18 +14,18 @@ use std::{
 };
 
 use criterion::{measurement::WallTime, BenchmarkGroup, Criterion};
+use doublets::data::{Flow, LinksConstants};
 use doublets::{
-    data::{Flow, LinksConstants},
     mem::{Alloc, FileMapped},
     parts::LinkPart,
     split::{self, DataPart, IndexPart},
     unit, Doublets,
 };
-use linksneo4j::{bench, connect, Benched, Client, Exclusive, Fork, Transaction};
+use linksneo4j::{bench, Benched, Fork};
 
 use crate::tri;
 
-/// Runs the each_outgoing benchmark on a specific storage backend.
+/// Runs the each_outgoing benchmark on a Doublets backend.
 fn bench<B: Benched + Doublets<usize>>(
     group: &mut BenchmarkGroup<WallTime>,
     id: &str,
@@ -49,8 +36,6 @@ fn bench<B: Benched + Doublets<usize>>(
     group.bench_function(id, |bencher| {
         bench!(|fork| as B {
             use linksneo4j::BACKGROUND_LINKS;
-            // The benchmarked operation: query by source (outgoing)
-            // This calls the same interface method on both Doublets and Neo4j
             for index in 1..=BACKGROUND_LINKS {
                 let _ = elapsed! {fork.each_by([any, index, any], handler)};
             }
@@ -58,19 +43,10 @@ fn bench<B: Benched + Doublets<usize>>(
     });
 }
 
+/// Creates benchmark for Doublets backends on source index lookup.
 pub fn each_outgoing(c: &mut Criterion) {
     let mut group = c.benchmark_group("Each_Outgoing");
-    tri! {
-        bench(&mut group, "Neo4j_NonTransaction", Exclusive::<Client<usize>>::setup(()).unwrap());
-    }
-    tri! {
-        let client = connect().unwrap();
-        bench(
-            &mut group,
-            "Neo4j_Transaction",
-            Exclusive::<Transaction<'_, usize>>::setup(&client).unwrap(),
-        );
-    }
+
     tri! {
         bench(
             &mut group,
@@ -99,5 +75,6 @@ pub fn each_outgoing(c: &mut Criterion) {
             split::Store::<usize, FileMapped<_>, FileMapped<_>>::setup(("split_index.links", "split_data.links")).unwrap()
         )
     }
+
     group.finish();
 }

@@ -1,26 +1,12 @@
-//! # Each Concrete Benchmark
+//! # Doublets Each Identity Benchmark
 //!
-//! Measures the performance of querying links by BOTH source AND target.
-//! This uses constraint `[*, source, target]` - a composite index lookup.
+//! Measures the performance of looking up links by ID in Doublets.
 //!
-//! ## Common Interface Method
+//! ## Implementation
 //!
-//! ```rust,ignore
-//! store.each_by([any, source, target], |link| Flow::Continue);
-//! ```
-//!
-//! ## How Each Database Implements It
-//!
-//! ### Doublets
-//! - Uses source OR target index tree to find candidates
-//! - Filters by the other field
-//! - Time complexity: O(log n) for tree traversal
-//!
-//! ### Neo4j
-//! ```cypher
-//! MATCH (l:Link) WHERE l.source = $s AND l.target = $t
-//! RETURN l.id, l.source, l.target
-//! ```
+//! Doublets looks up by ID using:
+//! - Direct array index access: O(1)
+//! - Returns link at `links[id]` if it exists
 
 use std::{
     alloc::Global,
@@ -28,18 +14,18 @@ use std::{
 };
 
 use criterion::{measurement::WallTime, BenchmarkGroup, Criterion};
+use doublets::data::{Flow, LinksConstants};
 use doublets::{
-    data::{Flow, LinksConstants},
     mem::{Alloc, FileMapped},
     parts::LinkPart,
     split::{self, DataPart, IndexPart},
     unit, Doublets,
 };
-use linksneo4j::{bench, connect, Benched, Client, Exclusive, Fork, Transaction};
+use linksneo4j::{bench, Benched, Fork};
 
 use crate::tri;
 
-/// Runs the each_concrete benchmark on a specific storage backend.
+/// Runs the each_identity benchmark on a Doublets backend.
 fn bench<B: Benched + Doublets<usize>>(
     group: &mut BenchmarkGroup<WallTime>,
     id: &str,
@@ -50,28 +36,17 @@ fn bench<B: Benched + Doublets<usize>>(
     group.bench_function(id, |bencher| {
         bench!(|fork| as B {
             use linksneo4j::BACKGROUND_LINKS;
-            // The benchmarked operation: query by source AND target
-            // This calls the same interface method on both Doublets and Neo4j
             for index in 1..=BACKGROUND_LINKS {
-                elapsed! {fork.each_by([any, index, index], handler)};
+                elapsed! {fork.each_by([index, any, any], handler)};
             }
         })(bencher, &mut benched);
     });
 }
 
-pub fn each_concrete(c: &mut Criterion) {
-    let mut group = c.benchmark_group("Each_Concrete");
-    tri! {
-        bench(&mut group, "Neo4j_NonTransaction", Exclusive::<Client<usize>>::setup(()).unwrap());
-    }
-    tri! {
-        let client = connect().unwrap();
-        bench(
-            &mut group,
-            "Neo4j_Transaction",
-            Exclusive::<Transaction<'_, usize>>::setup(&client).unwrap(),
-        );
-    }
+/// Creates benchmark for Doublets backends on ID lookup.
+pub fn each_identity(c: &mut Criterion) {
+    let mut group = c.benchmark_group("Each_Identity");
+
     tri! {
         bench(
             &mut group,
@@ -100,5 +75,6 @@ pub fn each_concrete(c: &mut Criterion) {
             split::Store::<usize, FileMapped<_>, FileMapped<_>>::setup(("split_index.links", "split_data.links")).unwrap()
         )
     }
+
     group.finish();
 }
