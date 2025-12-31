@@ -1,3 +1,15 @@
+//! # Doublets Create Links Benchmark
+//!
+//! This benchmark measures the performance of creating new links in Doublets.
+//!
+//! ## Implementation
+//!
+//! Doublets creates links by:
+//! - Allocating next available ID from internal counter
+//! - Writing (id, id, id) tuple directly to memory/file
+//! - Updating source and target indexes
+//! - Time complexity: O(log n) for index updates
+
 use std::{
     alloc::Global,
     time::{Duration, Instant},
@@ -10,10 +22,11 @@ use doublets::{
     split::{self, DataPart, IndexPart},
     unit, Doublets,
 };
-use linksneo4j::{bench, connect, Benched, Client, Exclusive, Fork, Transaction, LINK_COUNT};
+use linksneo4j::{bench, Benched, Fork, LINK_COUNT};
 
 use crate::tri;
 
+/// Runs the create benchmark on a Doublets backend.
 fn bench<B: Benched + Doublets<usize>>(
     group: &mut BenchmarkGroup<WallTime>,
     id: &str,
@@ -21,30 +34,17 @@ fn bench<B: Benched + Doublets<usize>>(
 ) {
     group.bench_function(id, |bencher| {
         bench!(|fork| as B {
-            use linksneo4j::BACKGROUND_LINKS;
-            // Update the last LINK_COUNT links from background links
-            let start_id = if BACKGROUND_LINKS > *LINK_COUNT { BACKGROUND_LINKS - *LINK_COUNT + 1 } else { 1 };
-            for id in start_id..=BACKGROUND_LINKS {
-                let _ = elapsed! {fork.update(id, 0, 0)?};
-                let _ = elapsed! {fork.update(id, id, id)?};
+            for _ in 0..*LINK_COUNT {
+                let _ = elapsed! {fork.create_point()?};
             }
         })(bencher, &mut benched);
     });
 }
 
-pub fn update_links(c: &mut Criterion) {
-    let mut group = c.benchmark_group("Update");
-    tri! {
-        bench(&mut group, "Neo4j_NonTransaction", Exclusive::<Client<usize>>::setup(()).unwrap());
-    }
-    tri! {
-        let client = connect().unwrap();
-        bench(
-            &mut group,
-            "Neo4j_Transaction",
-            Exclusive::<Transaction<'_, usize>>::setup(&client).unwrap(),
-        );
-    }
+/// Creates benchmark for Doublets backends on link creation.
+pub fn create_links(c: &mut Criterion) {
+    let mut group = c.benchmark_group("Create");
+
     tri! {
         bench(
             &mut group,
@@ -73,5 +73,6 @@ pub fn update_links(c: &mut Criterion) {
             split::Store::<usize, FileMapped<_>, FileMapped<_>>::setup(("split_index.links", "split_data.links")).unwrap()
         )
     }
+
     group.finish();
 }

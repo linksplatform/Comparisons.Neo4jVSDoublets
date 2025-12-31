@@ -1,3 +1,15 @@
+//! # Doublets Delete Links Benchmark
+//!
+//! This benchmark measures the performance of deleting links by ID in Doublets.
+//!
+//! ## Implementation
+//!
+//! Doublets deletes links by:
+//! - Looking up link by ID (O(1) array access)
+//! - Removing from source and target indexes
+//! - Marking slot as free for reuse
+//! - Time complexity: O(log n) for index updates
+
 use std::{
     alloc::Global,
     time::{Duration, Instant},
@@ -5,47 +17,38 @@ use std::{
 
 use criterion::{measurement::WallTime, BenchmarkGroup, Criterion};
 use doublets::{
-    data::{Flow, LinksConstants},
     mem::{Alloc, FileMapped},
     parts::LinkPart,
     split::{self, DataPart, IndexPart},
     unit, Doublets,
 };
-use linksneo4j::{bench, connect, Benched, Client, Exclusive, Fork, Transaction};
+use linksneo4j::{bench, Benched, Fork, LINK_COUNT};
 
 use crate::tri;
 
+/// Runs the delete benchmark on a Doublets backend.
 fn bench<B: Benched + Doublets<usize>>(
     group: &mut BenchmarkGroup<WallTime>,
     id: &str,
     mut benched: B,
 ) {
-    let handler = |_| Flow::Continue;
-    let any = LinksConstants::new().any;
     group.bench_function(id, |bencher| {
         bench!(|fork| as B {
             use linksneo4j::BACKGROUND_LINKS;
-            // Query all background links by concrete source/target
-            for index in 1..=BACKGROUND_LINKS {
-                elapsed! {fork.each_by([any, index, index], handler)};
+            for _prepare in BACKGROUND_LINKS..BACKGROUND_LINKS + *LINK_COUNT {
+                let _ = fork.create_point();
+            }
+            for id in (BACKGROUND_LINKS + 1..=BACKGROUND_LINKS + *LINK_COUNT).rev() {
+                let _ = elapsed! {fork.delete(id)?};
             }
         })(bencher, &mut benched);
     });
 }
 
-pub fn each_concrete(c: &mut Criterion) {
-    let mut group = c.benchmark_group("Each_Concrete");
-    tri! {
-        bench(&mut group, "Neo4j_NonTransaction", Exclusive::<Client<usize>>::setup(()).unwrap());
-    }
-    tri! {
-        let client = connect().unwrap();
-        bench(
-            &mut group,
-            "Neo4j_Transaction",
-            Exclusive::<Transaction<'_, usize>>::setup(&client).unwrap(),
-        );
-    }
+/// Creates benchmark for Doublets backends on link deletion.
+pub fn delete_links(c: &mut Criterion) {
+    let mut group = c.benchmark_group("Delete");
+
     tri! {
         bench(
             &mut group,
@@ -74,5 +77,6 @@ pub fn each_concrete(c: &mut Criterion) {
             split::Store::<usize, FileMapped<_>, FileMapped<_>>::setup(("split_index.links", "split_data.links")).unwrap()
         )
     }
+
     group.finish();
 }
