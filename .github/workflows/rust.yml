@@ -70,10 +70,10 @@ jobs:
   benchmark-neo4j:
     needs: test
     runs-on: ubuntu-latest
-    timeout-minutes: 120
+    timeout-minutes: 240
     strategy:
       matrix:
-        background: ${{ fromJSON(github.event_name == 'pull_request' && '[1000]' || '[10000, 100000, 1000000]') }}
+        background: ${{ fromJSON(github.event_name == 'pull_request' && '[1000]' || '[10000, 100000, 1000000, 10000000]') }}
     services:
       neo4j: *neo4j
     defaults:
@@ -100,10 +100,10 @@ jobs:
   benchmark-doublets:
     needs: test
     runs-on: ubuntu-latest
-    timeout-minutes: 120
+    timeout-minutes: 240
     strategy:
       matrix:
-        background: ${{ fromJSON(github.event_name == 'pull_request' && '[1000]' || '[10000, 100000, 1000000]') }}
+        background: ${{ fromJSON(github.event_name == 'pull_request' && '[1000]' || '[10000, 100000, 1000000, 10000000]') }}
     defaults:
       run:
         working-directory: rust
