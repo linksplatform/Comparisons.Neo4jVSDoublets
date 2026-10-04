@@ -80,5 +80,18 @@
 //! A concrete query returns at most one link, because doublets treats a
 //! `(source, target)` pair as unique. The benchmarks never create two links
 //! with the same pair.
+//!
+//! ## Capacity
+//!
+//! The doublets 0.5.0 stores hold at most [`MAX_LINKS`] links. A store
+//! reserves space for `2^20` array elements in steps: first `8192`, then the
+//! rest. `platform-mem` 0.3.0 returns only the newly added part of the memory
+//! from the second step, and the store uses that part as the whole array, so
+//! `8192` elements are missing and creating link number `2^20 - 8192`
+//! panics ("Data part should be in data memory" in the united store, "Index
+//! part should be in index memory" in the split store) instead of growing the
+//! array (see `experiments/store-capacity`). All four stores are affected.
 
-// This is a documentation-only module.
+/// The largest number of links that a doublets 0.5.0 store can hold:
+/// `2^20 - 8192 - 1` (see [Capacity](self#capacity)).
+pub const MAX_LINKS: usize = (1 << 20) - 8192 - 1;

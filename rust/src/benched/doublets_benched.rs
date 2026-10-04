@@ -19,12 +19,21 @@ use doublets::{
 };
 
 use super::Benched;
-use crate::{map_file, Fork};
+use crate::{doublets_impl::MAX_LINKS, map_file, Fork};
 
 /// Implements the lifecycle that is the same for all Doublets stores.
 macro_rules! doublets_lifecycle {
     () => {
         fn fork(&mut self, background_links: usize) -> crate::Result<Fork<'_, Self>> {
+            // The Create benchmark adds `benchmark_links()` links to the background links.
+            let links = background_links + crate::benchmark_links();
+            if links > MAX_LINKS {
+                return Err(format!(
+                    "{links} links do not fit into a doublets 0.5.0 store, \
+                     which holds at most {MAX_LINKS} links (see `doublets_impl`)"
+                )
+                .into());
+            }
             for _ in 0..background_links {
                 self.create_point()?;
             }

@@ -93,9 +93,10 @@ The exact statements and data structures are documented in
   ([`rust/tests/same_behavior.rs`](rust/tests/same_behavior.rs)).
 
 Benchmarks on the main branch use `N = 1,000` and `B` = 10,000, 100,000 and
-1,000,000. Larger `B` are not run because creating and removing the
-background links of the 16 Neo4j benchmarks would not fit into the 6-hour
-limit of a GitHub Actions job.
+1,000,000; such a run takes about 12 minutes on GitHub Actions (the longest
+job, Neo4j with 1,000,000 background links, about 10 minutes). Pull requests
+run a quick check with `N = 100` and `B = 1,000`. Larger `B` are not possible
+with doublets 0.5.0 (see [Limitations](#limitations)).
 
 ## Results
 
@@ -121,6 +122,12 @@ The results will appear here after the benchmarks run on the main branch.
 - **Each Concrete** returns at most one link in Doublets, which treats a
   `(source, target)` pair as unique; the benchmarks never create two links
   with the same pair.
+- **At most 1,040,383 links.** The doublets 0.5.0 stores panic when link
+  number 1,040,384 is created: after growing their memory, they use only the
+  newly added part of it as the whole array (see
+  [`experiments/store-capacity`](experiments/store-capacity) and the
+  "Capacity" section of [`rust/src/doublets_impl.rs`](rust/src/doublets_impl.rs)).
+  This is why `B` stops at 1,000,000.
 - **Point links only.** The doublets 0.5.0 Split store does not find links
   with `source != target` by `[*, source, *]` and `[*, source, target]` queries
   after an `update` (see
