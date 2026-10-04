@@ -98,6 +98,10 @@ pub struct Neo4j<T: LinkReference> {
     next_id: T,
 }
 
+/// Number of links created or deleted per transaction by
+/// [`Neo4j::create_points`] and [`Neo4j::clear`].
+pub const BATCH_SIZE: usize = 10_000;
+
 /// Result of a driver call.
 type Neo4jResult<T> = Result<T, neo4rs::Error>;
 
@@ -144,16 +148,20 @@ impl<T: LinkReference> Neo4j<T> {
         self.mode
     }
 
-    /// Creates the point links `1..=count` with a single statement.
+    /// Creates `count` point links with the next ids, committing every
+    /// [`BATCH_SIZE`] links, so that millions of links do not have to fit into
+    /// the memory of one transaction.
     ///
     /// Used to prepare the background links outside of the measured time.
     pub fn create_points(&mut self, count: usize) -> crate::Result<()> {
         let first = id_to_i64(self.next_id);
         let last = first + count as i64 - 1;
         self.run_auto_commit(
-            query(
-                "UNWIND range($first, $last) AS id CREATE (:Link {id: id, source: id, target: id})",
-            )
+            query(&format!(
+                "UNWIND range($first, $last) AS id \
+                 CALL (id) {{ CREATE (:Link {{id: id, source: id, target: id}}) }} \
+                 IN TRANSACTIONS OF {BATCH_SIZE} ROWS"
+            ))
             .param("first", first)
             .param("last", last),
         )?;
@@ -178,12 +186,15 @@ impl<T: LinkReference> Neo4j<T> {
         Ok(())
     }
 
-    /// Rolls back the open transaction, if any, and deletes all links.
+    /// Rolls back the open transaction, if any, and deletes all links,
+    /// committing every [`BATCH_SIZE`] links.
     pub fn clear(&mut self) -> crate::Result<()> {
         if let Some(transaction) = self.transaction().take() {
             self.runtime.block_on(transaction.rollback())?;
         }
-        self.run_auto_commit(query("MATCH (l:Link) DETACH DELETE l"))?;
+        self.run_auto_commit(query(&format!(
+            "MATCH (l:Link) CALL (l) {{ DELETE l }} IN TRANSACTIONS OF {BATCH_SIZE} ROWS"
+        )))?;
         self.next_id = T::from_byte(1);
         Ok(())
     }

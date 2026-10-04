@@ -97,9 +97,10 @@ pub fn doublets_group<'a>(c: &'a mut Criterion, name: &str) -> BenchmarkGroup<'a
 /// Measures `operation` on a store that contains [`background_links`] point
 /// links.
 ///
-/// The background links are created once. After every iteration `undo` puts
-/// the store back into the same state, so every iteration starts from the
-/// same links. Neither of them is measured.
+/// The background links are created once, when Criterion first runs the
+/// benchmark (so benchmarks skipped by a filter create no links). After every
+/// iteration `undo` puts the store back into the same state, so every
+/// iteration starts from the same links. Neither of them is measured.
 fn measure<B: Benched>(
     group: &mut BenchmarkGroup<WallTime>,
     id: &str,
@@ -107,25 +108,30 @@ fn measure<B: Benched>(
     mut operation: impl FnMut(&mut B) -> Result<()>,
     mut undo: impl FnMut(&mut B) -> Result<()>,
 ) {
-    let mut store = benched
-        .fork(background_links())
-        .expect("failed to create the background links");
-    let mut iteration = || -> Result<Duration> {
+    let mut benched = Some(benched);
+    let mut store = None;
+    let mut iteration = |store: &mut B| -> Result<Duration> {
         let started = Instant::now();
         store.begin()?;
-        operation(&mut store)?;
+        operation(store)?;
         store.commit()?;
         let elapsed = started.elapsed();
 
         store.begin()?;
-        undo(&mut store)?;
+        undo(store)?;
         store.commit()?;
         Ok(elapsed)
     };
     group.bench_function(id, |bencher| {
+        let store = store.get_or_insert_with(|| {
+            let benched = benched.take().expect("the store is forked only once");
+            benched
+                .fork(background_links())
+                .expect("failed to create the background links")
+        });
         bencher.iter_custom(|iterations| {
             (0..iterations)
-                .map(|_| iteration().expect("benchmark iteration failed"))
+                .map(|_| iteration(store).expect("benchmark iteration failed"))
                 .sum()
         })
     });

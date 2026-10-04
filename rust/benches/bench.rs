@@ -18,7 +18,7 @@ use benchmarks::{
     neo4j_each_outgoing,
     neo4j_update_links,
 };
-use criterion::{criterion_group, criterion_main};
+use criterion::{criterion_group, Criterion};
 
 mod benchmarks;
 
@@ -48,4 +48,19 @@ criterion_group!(
     doublets_update_links
 );
 
-criterion_main!(neo4j_benches, doublets_benches);
+/// Runs the benchmarks of both databases, or only of the one named by the
+/// `BENCHMARK_BACKEND` environment variable (`neo4j` or `doublets`), so that
+/// they can run in parallel CI jobs and the Doublets job needs no Neo4j server.
+fn main() {
+    let backend = std::env::var("BENCHMARK_BACKEND").unwrap_or_default();
+    match backend.as_str() {
+        "" => {
+            neo4j_benches();
+            doublets_benches();
+        }
+        "neo4j" => neo4j_benches(),
+        "doublets" => doublets_benches(),
+        _ => panic!("BENCHMARK_BACKEND must be `neo4j` or `doublets`, got `{backend}`"),
+    }
+    Criterion::default().configure_from_args().final_summary();
+}
