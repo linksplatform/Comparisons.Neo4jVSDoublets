@@ -53,6 +53,24 @@
 //! reused (Doublets reuses them too); the benchmarks only delete the links with
 //! the highest ids, so both databases always assign the same ids.
 //!
+//! ## Batches
+//!
+//! The `Neo4j_Batch` benchmarks send the parameters of all `N` operations of
+//! an iteration as one list, so the round trips, parsing and planning of a
+//! statement and the commit are paid once per list instead of once per link:
+//!
+//! | Method                | Cypher                                                                        |
+//! |-----------------------|-------------------------------------------------------------------------------|
+//! | `create_points_batch` | `UNWIND range($first, $last) AS id CREATE (:Link {id: id, source: id, target: id})` |
+//! | `update_batch`        | `UNWIND $links AS link MATCH (l:Link {id: link[0]}) SET l.source = link[1], l.target = link[2] RETURN count(l) AS updated` |
+//! | `delete_batch`        | `UNWIND $ids AS id MATCH (l:Link {id: id}) DELETE l RETURN count(l) AS deleted` |
+//! | `each_by_batch`       | `UNWIND $queries AS q MATCH (l:Link) WHERE <constraints> RETURN ...`, `q` holds the constrained parts of one query |
+//!
+//! Neo4j finds every link of a list with the same index seek as the single
+//! statement does. The batch benchmarks use [`Mode::AutoCommit`], so every
+//! statement is one transaction. The Doublets interface has no batch methods,
+//! so these are methods of [`Neo4j`] only.
+//!
 //! ## Transaction modes
 //!
 //! | [`Mode`]                 | What happens                                                         |
@@ -244,26 +262,163 @@ impl<T: LinkReference> Neo4j<T> {
     /// Builds `MATCH (l:Link) WHERE ...` for a doublets query
     /// (`[]`, `[id]` or `[id, source, target]`, where `any` matches everything).
     fn match_query(&self, query: &[T], returns: &str) -> Query {
-        let any = self.constants.any;
-        let names = ["id", "source", "target"];
-        let mut conditions = Vec::new();
-        let mut params = Vec::new();
-        for (name, &value) in names.iter().zip(query) {
-            if value != any {
-                conditions.push(format!("l.{name} = ${name}"));
-                params.push((*name, id_to_i64(value)));
-            }
-        }
-        let filter = if conditions.is_empty() {
+        let filter = self.filter(query, |part| format!("${}", PARTS[part]));
+        PARTS
+            .iter()
+            .zip(query)
+            .filter(|&(_, &value)| value != self.constants.any)
+            .fold(
+                neo4rs::query(&format!("MATCH (l:Link){filter} RETURN {returns}")),
+                |q, (name, &value)| q.param(name, id_to_i64(value)),
+            )
+    }
+
+    /// Builds the ` WHERE ...` clause with one condition per part of `query`
+    /// that is not `any`; `value(part)` is the Cypher expression the property
+    /// is compared with.
+    fn filter(&self, query: &[T], value: impl Fn(usize) -> String) -> String {
+        let conditions: Vec<_> = PARTS
+            .iter()
+            .zip(query)
+            .enumerate()
+            .filter(|&(_, (_, &part))| part != self.constants.any)
+            .map(|(part, (name, _))| format!("l.{name} = {}", value(part)))
+            .collect();
+        if conditions.is_empty() {
             String::new()
         } else {
             format!(" WHERE {}", conditions.join(" AND "))
-        };
-        params.into_iter().fold(
-            neo4rs::query(&format!("MATCH (l:Link){filter} RETURN {returns}")),
-            |q, (name, value)| q.param(name, value),
-        )
+        }
     }
+
+    // ------------------------------------------------------------------
+    // Batches: one statement for many links (the `Neo4j_Batch` benchmarks)
+    // ------------------------------------------------------------------
+
+    /// Creates the point links with the next `count` ids with one statement.
+    pub fn create_points_batch(&mut self, count: usize) -> crate::Result<()> {
+        let first = id_to_i64(self.next_id);
+        let last = first + count as i64 - 1;
+        self.fetch_all(
+            query(
+                "UNWIND range($first, $last) AS id \
+                 CREATE (:Link {id: id, source: id, target: id})",
+            )
+            .param("first", first)
+            .param("last", last),
+        )?;
+        self.next_id = id_from_i64(last + 1);
+        Ok(())
+    }
+
+    /// Sets `source` and `target` of every link in `links` (found by its
+    /// `index`) with one statement.
+    pub fn update_batch(&mut self, links: &[Link<T>]) -> crate::Result<()> {
+        let expected = links.len();
+        let links: Vec<_> = links
+            .iter()
+            .map(|link| {
+                [link.index, link.source, link.target]
+                    .map(id_to_i64)
+                    .to_vec()
+            })
+            .collect();
+        let rows = self.fetch_all(
+            query(
+                "UNWIND $links AS link \
+                 MATCH (l:Link {id: link[0]}) \
+                 SET l.source = link[1], l.target = link[2] \
+                 RETURN count(l) AS updated",
+            )
+            .param("links", links),
+        )?;
+        expect_count(&rows, "updated", expected)
+    }
+
+    /// Deletes the links with the given ids with one statement.
+    pub fn delete_batch(&mut self, ids: &[T]) -> crate::Result<()> {
+        let rows = self.fetch_all(
+            query(
+                "UNWIND $ids AS id \
+                 MATCH (l:Link {id: id}) \
+                 DELETE l \
+                 RETURN count(l) AS deleted",
+            )
+            .param(
+                "ids",
+                ids.iter().copied().map(id_to_i64).collect::<Vec<_>>(),
+            ),
+        )?;
+        expect_count(&rows, "deleted", ids.len())?;
+        // The same rule as in `delete_links`, applied from the highest id.
+        let mut ids = ids.to_vec();
+        ids.sort_unstable_by(|a, b| b.cmp(a));
+        for id in ids {
+            if id + T::from_byte(1) == self.next_id {
+                self.next_id = id;
+            }
+        }
+        Ok(())
+    }
+
+    /// Runs all `queries` with one statement and passes every found link to
+    /// `handler`.
+    ///
+    /// All queries must constrain the same parts (for example, all are
+    /// `[*, source, *]`), because they share one `WHERE` clause.
+    pub fn each_by_batch(
+        &self,
+        queries: &[[T; 3]],
+        mut handler: impl FnMut(Link<T>),
+    ) -> crate::Result<()> {
+        let Some(first) = queries.first() else {
+            return Ok(());
+        };
+        let any = self.constants.any;
+        if queries
+            .iter()
+            .any(|query| (0..3).any(|part| (query[part] == any) != (first[part] == any)))
+        {
+            return Err("all queries of a batch must constrain the same parts".into());
+        }
+        // Only the constrained parts are sent: `q[0]` is the first of them.
+        let parts: Vec<_> = (0..3).filter(|&part| first[part] != any).collect();
+        let filter = self.filter(first, |part| {
+            let position = parts.iter().position(|&p| p == part);
+            format!("q[{}]", position.expect("a constrained part"))
+        });
+        let queries: Vec<_> = queries
+            .iter()
+            .map(|query| {
+                parts
+                    .iter()
+                    .map(|&part| id_to_i64(query[part]))
+                    .collect::<Vec<_>>()
+            })
+            .collect();
+        self.fetch(
+            query(&format!(
+                "UNWIND $queries AS q \
+                 MATCH (l:Link){filter} \
+                 RETURN l.id AS id, l.source AS source, l.target AS target"
+            ))
+            .param("queries", queries),
+            |row| handler(link_from_row(&row)),
+        )?;
+        Ok(())
+    }
+}
+
+/// Names of the parts of a link, in the order of a doublets query.
+const PARTS: [&str; 3] = ["id", "source", "target"];
+
+/// Checks that the `column` of the single row of `rows` equals `expected`.
+fn expect_count(rows: &[Row], column: &str, expected: usize) -> crate::Result<()> {
+    let count: i64 = rows[0].get(column)?;
+    if count != expected as i64 {
+        return Err(format!("{count} links {column}, expected {expected}").into());
+    }
+    Ok(())
 }
 
 impl<T: LinkReference> Links<T> for Neo4j<T> {

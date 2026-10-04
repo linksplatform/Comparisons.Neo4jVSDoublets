@@ -126,11 +126,69 @@ fn doublets_split_non_volatile() {
     );
 }
 
-/// Both modes share one database, so they run one after another in one test.
+/// All modes share one database, so they run one after another in one test.
 #[test]
 #[ignore = "needs a running Neo4j server"]
 fn neo4j() {
     for mode in [Mode::AutoCommit, Mode::Transaction] {
         check(&mut Neo4j::<usize>::setup(mode).unwrap());
     }
+    check_batch(&mut Neo4j::setup(Mode::AutoCommit).unwrap());
+}
+
+/// Checks that the batch methods of Neo4j give the same results as the
+/// single operations in [`check`], and that undoing them restores the
+/// background links.
+fn check_batch(neo4j: &mut Neo4j<usize>) {
+    let any = LinksConstants::<usize>::new().any;
+    let mut store = neo4j.fork(BACKGROUND).unwrap();
+    let background = points(1..=BACKGROUND);
+
+    // Create, undone by Delete.
+    store.create_points_batch(LINKS).unwrap();
+    assert_eq!(all_links(&*store), points(1..=BACKGROUND + LINKS));
+    let created: Vec<_> = (BACKGROUND + 1..=BACKGROUND + LINKS).collect();
+    store.delete_batch(&created).unwrap();
+    assert_eq!(all_links(&*store), background);
+
+    // Delete, undone by Create.
+    let deleted: Vec<_> = (BACKGROUND - LINKS + 1..=BACKGROUND).collect();
+    store.delete_batch(&deleted).unwrap();
+    assert_eq!(all_links(&*store), points(1..=BACKGROUND - LINKS));
+    store.create_points_batch(LINKS).unwrap();
+    assert_eq!(all_links(&*store), background);
+
+    // Update, restored by the second update.
+    let ids = 1..=LINKS;
+    let zeros: Vec<_> = ids.clone().map(|id| Link::new(id, 0, 0)).collect();
+    store.update_batch(&zeros).unwrap();
+    assert_eq!(query(&*store, [any, 0, 0]), zeros);
+    store.update_batch(&points(ids)).unwrap();
+    assert_eq!(all_links(&*store), background);
+
+    // A missing link is an error, not silently skipped.
+    assert!(store.delete_batch(&[BACKGROUND + 1]).is_err());
+    assert!(store.update_batch(&[Link::point(BACKGROUND + 1)]).is_err());
+
+    // The queries of the benchmarks.
+    let queries: [fn(usize, usize) -> [usize; 3]; 4] = [
+        |id, any| [id, any, any],
+        |id, any| [any, id, id],
+        |id, any| [any, id, any],
+        |id, any| [any, any, id],
+    ];
+    for query in queries {
+        let queries: Vec<_> = (1..=BACKGROUND).map(|id| query(id, any)).collect();
+        let mut found = Vec::new();
+        store
+            .each_by_batch(&queries, |link| found.push(link))
+            .unwrap();
+        found.sort_by_key(|link| link.index);
+        assert_eq!(found, background);
+    }
+    assert!(
+        store
+            .each_by_batch(&[[1, any, any], [any, 1, any]], |_| {})
+            .is_err()
+    );
 }
