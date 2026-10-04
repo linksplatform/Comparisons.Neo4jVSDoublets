@@ -109,10 +109,11 @@ The results will appear here after the benchmarks run on the main branch.
 ## Limitations
 
 - **Driver round trips.** neo4rs needs 3 network round trips for a statement
-  outside of an explicit transaction and 2 inside one (measured in
-  [`experiments/bolt-round-trips`](experiments/bolt-round-trips)). Neo4j does
-  not publish an official Rust driver; the official drivers for other
-  languages may need fewer round trips.
+  outside of an explicit transaction and 2 inside one. The
+  [`neo4j`](https://crates.io/crates/neo4j) crate, which follows the API of the
+  official drivers, needs 2 and 1 because it sends several Bolt messages at
+  once ([`experiments`](experiments)). Neo4j does not publish an official Rust
+  driver.
 - **One client.** The benchmarks run operations one after another from one
   thread. Throughput with concurrent clients or batched statements (for
   example `UNWIND`) is not measured.

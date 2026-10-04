@@ -1,0 +1,3 @@
+Session::auto_commit  2.00 round trips/query
+Driver::execute_query 2.00 round trips/query
+Transaction::query (+begin/commit) 1.02 round trips/query

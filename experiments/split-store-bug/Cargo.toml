@@ -1,0 +1,9 @@
+[package]
+name = "split-store-bug"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+doublets = "0.5.0"
+
+[workspace]

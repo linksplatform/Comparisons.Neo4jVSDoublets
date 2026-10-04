@@ -1,0 +1,26 @@
+    Finished `release` profile [optimized] target(s) in 0.48s
+     Running unittests src/lib.rs (target/release/deps/linksneo4j-840459c6a2500097)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/same_behavior.rs (target/release/deps/same_behavior-2e2669b750c896ea)
+
+running 5 tests
+test doublets_united_volatile ... ok
+test doublets_split_volatile ... ok
+test doublets_united_non_volatile ... ok
+test doublets_split_non_volatile ... ok
+test neo4j ... ok
+
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.35s
+
+   Doc-tests linksneo4j
+
+running 2 tests
+test src/doublets_impl.rs - doublets_impl (line 27) ... ok
+test src/doublets_impl.rs - doublets_impl (line 47) ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.80s
+
