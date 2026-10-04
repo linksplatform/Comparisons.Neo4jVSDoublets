@@ -28,3 +28,6 @@ rust/results/
 rust/results.md
 rust/*-neo4j.txt
 rust/*-doublets.txt
+
+# CI logs downloaded locally while investigating runs
+ci-logs/
