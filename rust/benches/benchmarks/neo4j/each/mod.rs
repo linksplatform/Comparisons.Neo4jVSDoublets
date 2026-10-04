@@ -1,16 +1,7 @@
 //! # Neo4j Query (Each) Benchmarks
 //!
-//! This module contains benchmarks for querying/iterating links in Neo4j.
-//!
-//! ## Cypher Queries Used
-//!
-//! | Query       | Cypher                                                          |
-//! |-------------|-----------------------------------------------------------------|
-//! | All         | `MATCH (l:Link) RETURN l.id, l.source, l.target`                |
-//! | Identity    | `MATCH (l:Link {id: $id}) RETURN l.id, l.source, l.target`      |
-//! | Concrete    | `MATCH (l:Link) WHERE l.source = $s AND l.target = $t RETURN...`|
-//! | Outgoing    | `MATCH (l:Link) WHERE l.source = $source RETURN...`             |
-//! | Incoming    | `MATCH (l:Link) WHERE l.target = $target RETURN...`             |
+//! Every query is one `MATCH (l:Link) WHERE ... RETURN ...` statement; the
+//! `WHERE` clause contains one condition per constrained part of the link.
 
 mod all;
 mod concrete;

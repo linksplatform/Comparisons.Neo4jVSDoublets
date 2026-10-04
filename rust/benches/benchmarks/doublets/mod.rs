@@ -1,28 +1,15 @@
-//! # Doublets Benchmark Implementations
+//! # Doublets Benchmarks
 //!
-//! This module contains all benchmark implementations for Doublets.
-//! Each benchmark tests a specific database operation using direct memory access
-//! to specialized data structures.
+//! Every operation runs on four stores:
 //!
-//! ## Benchmarked Operations
+//! | Benchmark name                | Store                                    |
+//! |-------------------------------|------------------------------------------|
+//! | `Doublets_United_Volatile`    | unit store in RAM                        |
+//! | `Doublets_United_NonVolatile` | unit store in a memory-mapped file       |
+//! | `Doublets_Split_Volatile`     | split store in RAM                       |
+//! | `Doublets_Split_NonVolatile`  | split store in memory-mapped files       |
 //!
-//! | Benchmark       | Implementation                                  |
-//! |-----------------|-------------------------------------------------|
-//! | `create_links`  | Allocate ID, write to memory, update indexes    |
-//! | `delete_links`  | Remove from indexes, mark slot as free          |
-//! | `update_links`  | Update storage, re-index if values changed      |
-//! | `each_all`      | Sequential array iteration                      |
-//! | `each_identity` | Direct array access: `links[id]`                |
-//! | `each_concrete` | Index tree lookup + filter                      |
-//! | `each_outgoing` | Source index tree traversal                     |
-//! | `each_incoming` | Target index tree traversal                     |
-//!
-//! ## Storage Backends Tested
-//!
-//! - `Doublets_United_Volatile` - In-memory unit storage
-//! - `Doublets_United_NonVolatile` - File-mapped unit storage
-//! - `Doublets_Split_Volatile` - In-memory split storage (separate data/index)
-//! - `Doublets_Split_NonVolatile` - File-mapped split storage
+//! See [`linksneo4j::doublets_impl`] for how every operation is implemented.
 
 mod create;
 mod delete;
@@ -33,3 +20,40 @@ pub use create::create_links;
 pub use delete::delete_links;
 pub use each::*;
 pub use update::update_links;
+
+/// Runs `$operation` on all four Doublets stores.
+///
+/// A macro is used because every store is a different type.
+#[macro_export]
+macro_rules! run_doublets {
+    ($c:expr, $group_name:literal, $operation:path) => {{
+        use linksneo4j::{
+            Benched, DoubletsSplitNonVolatile, DoubletsSplitVolatile, DoubletsUnitedNonVolatile,
+            DoubletsUnitedVolatile,
+        };
+
+        let mut group = $crate::benchmarks::doublets_group($c, $group_name);
+        $operation(
+            &mut group,
+            "Doublets_United_Volatile",
+            &mut DoubletsUnitedVolatile::setup(()).unwrap(),
+        );
+        $operation(
+            &mut group,
+            "Doublets_United_NonVolatile",
+            &mut DoubletsUnitedNonVolatile::setup("united.links").unwrap(),
+        );
+        $operation(
+            &mut group,
+            "Doublets_Split_Volatile",
+            &mut DoubletsSplitVolatile::setup(()).unwrap(),
+        );
+        $operation(
+            &mut group,
+            "Doublets_Split_NonVolatile",
+            &mut DoubletsSplitNonVolatile::setup(("split_data.links", "split_index.links"))
+                .unwrap(),
+        );
+        group.finish();
+    }};
+}

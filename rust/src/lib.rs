@@ -1,27 +1,17 @@
-#![feature(allocator_api, generic_associated_types)]
-
 //! # Comparisons.Neo4jVSDoublets
 //!
-//! This crate provides a unified interface for comparing Neo4j and Doublets
-//! database operations. It defines a common trait that both databases implement,
-//! making it crystal clear what logic is being benchmarked against what.
+//! This crate measures how long basic link operations take when the links are
+//! stored in Neo4j and when they are stored in Doublets.
 //!
-//! ## Detailed Implementation Documentation
+//! Both databases implement the same [`Doublets`](doublets::Doublets) trait,
+//! and every benchmark calls the same trait methods on every backend:
 //!
-//! For detailed documentation on how each database implements the common interface,
-//! see the separate implementation modules:
+//! - **[`neo4j_impl`]** - how Neo4j implements each operation (Cypher via the
+//!   neo4rs Bolt driver)
+//! - **[`doublets_impl`]** - how Doublets implements each operation (direct
+//!   access to its in-process data structures)
 //!
-//! - **[`doublets_impl`]** - How Doublets implements each operation with direct memory access
-//! - **[`neo4j_impl`]** - How Neo4j implements each operation with Cypher queries
-//!
-//! These modules provide side-by-side comparison of the same logic implemented
-//! in both databases.
-//!
-//! ## The Common Interface
-//!
-//! Both Neo4j and Doublets implement the same operations through the [`Doublets<T>`]
-//! trait from the `doublets` crate. This benchmark compares how each database
-//! implements these core link operations:
+//! ## Operations
 //!
 //! | Operation       | Method                  | Description                                    |
 //! |-----------------|-------------------------|------------------------------------------------|
@@ -36,206 +26,104 @@
 //!
 //! ## Benchmarked Implementations
 //!
-//! | Implementation                | Backend Type            | Description                           |
-//! |-------------------------------|-------------------------|---------------------------------------|
-//! | `Doublets_United_Volatile`    | In-memory (unit store)  | Fast, RAM-only storage                |
-//! | `Doublets_United_NonVolatile` | File-mapped (unit)      | Persistent, memory-mapped file        |
-//! | `Doublets_Split_Volatile`     | In-memory (split store) | Separate data/index in RAM            |
-//! | `Doublets_Split_NonVolatile`  | File-mapped (split)     | Separate data/index files             |
-//! | `Neo4j_NonTransaction`        | HTTP auto-commit        | Each operation is separate request    |
-//! | `Neo4j_Transaction`           | HTTP auto-commit (same) | Uses transaction wrapper (same impl)  |
+//! | Implementation                | Backend                          | Durability of a finished operation        |
+//! |-------------------------------|----------------------------------|-------------------------------------------|
+//! | `Doublets_United_Volatile`    | in-process, RAM, unit store      | none (RAM only)                           |
+//! | `Doublets_United_NonVolatile` | in-process, memory-mapped file   | in the OS page cache, no `fsync`          |
+//! | `Doublets_Split_Volatile`     | in-process, RAM, split store     | none (RAM only)                           |
+//! | `Doublets_Split_NonVolatile`  | in-process, memory-mapped files  | in the OS page cache, no `fsync`          |
+//! | `Neo4j_NonTransaction`        | Neo4j server over Bolt           | committed (auto-commit per statement)     |
+//! | `Neo4j_Transaction`           | Neo4j server over Bolt           | committed once per iteration              |
 //!
 //! ## How the Benchmark Works
 //!
-//! Each benchmark iteration:
-//! 1. Sets up a fresh storage backend (via [`Benched::setup`])
-//! 2. Creates [`BACKGROUND_LINKS`] links to simulate a populated database
-//! 3. Executes the benchmarked operation ([`LINK_COUNT`] times for CRUD operations)
-//! 4. Cleans up via [`Benched::unfork`]
-//!
-//! The [`Benched`] trait provides the setup/teardown lifecycle, while [`Doublets<T>`]
-//! provides the actual database operations being measured.
+//! For every operation and store:
+//! 1. [`Benched::fork`] creates [`background_links`] point links (not measured)
+//! 2. every iteration runs the operation [`benchmark_links`] times between
+//!    [`Benched::begin`] and [`Benched::commit`] (measured), and then undoes
+//!    its changes (not measured), so all iterations start from the same links
+//! 3. [`Benched::unfork`] removes all links (not measured)
 
-#[macro_export]
-macro_rules! bench {
-    {|$fork:ident| as $B:ident { $($body:tt)* }} => {
-        (move |bencher: &mut criterion::Bencher, benched: &mut _| {
-            bencher.iter_custom(|iters| {
-                let mut __bench_duration = Duration::ZERO;
-                macro_rules! elapsed {
-                    {$expr:expr} => {{
-                        let __instant = Instant::now();
-                        let __ret = {$expr};
-                        __bench_duration += __instant.elapsed();
-                        __ret
-                    }};
-                }
-                crate::tri! {
-                    use linksneo4j::BACKGROUND_LINKS;
-                    for _iter in 0..iters {
-                        let mut $fork: Fork<$B> = Benched::fork(&mut *benched);
-                        for _ in 0..BACKGROUND_LINKS {
-                            let _ = $fork.create_point()?;
-                        }
-                        $($body)*
-                    }
-                }
-                __bench_duration
-            });
-        })
-    }
-}
-
-use std::{alloc::Global, error, fs::File, io, result};
+use std::{env, error, fs::File, io, result};
 
 pub use benched::Benched;
-pub use client::Client;
 use doublets::{
-    data::LinkType,
-    mem::{Alloc, FileMapped},
+    mem::{FileMapped, Global},
     split::{self, DataPart, IndexPart},
     unit::{self, LinkPart},
 };
-pub use exclusive::Exclusive;
 pub use fork::Fork;
-pub use transaction::Transaction;
+pub use neo4j_impl::{Mode, Neo4j};
 
 mod benched;
-mod client;
 pub mod doublets_impl;
-mod exclusive;
 mod fork;
 pub mod neo4j_impl;
-mod transaction;
 
 pub type Result<T, E = Box<dyn error::Error + Sync + Send>> = result::Result<T, E>;
 
-/// Number of background links to create before each benchmark iteration.
-/// This simulates a database with existing data.
-pub const BACKGROUND_LINKS: usize = 10;
-
-/// Number of links to create/delete/update in each benchmark operation.
-/// Can be configured via BENCHMARK_LINK_COUNT environment variable.
-/// Defaults to 10 for faster iteration in pull requests, but should be set to 1000 for main branch benchmarks.
-pub fn link_count() -> usize {
-    std::env::var("BENCHMARK_LINK_COUNT")
-        .ok()
-        .and_then(|v| v.parse().ok())
-        .unwrap_or(10)
+/// Number of point links that exist before the measured operations start.
+///
+/// Configurable via the `BENCHMARK_BACKGROUND_LINKS` environment variable.
+pub fn background_links() -> usize {
+    env_usize("BENCHMARK_BACKGROUND_LINKS", 1000)
 }
 
-/// Lazy static to cache the link count value
-pub use once_cell::sync::Lazy;
-pub static LINK_COUNT: Lazy<usize> = Lazy::new(link_count);
+/// Number of links that each benchmark iteration creates, updates, deletes or
+/// looks up.
+///
+/// Configurable via the `BENCHMARK_LINKS` environment variable. Update and
+/// Delete work on existing background links, so this value must not exceed
+/// [`background_links`].
+pub fn benchmark_links() -> usize {
+    let links = env_usize("BENCHMARK_LINKS", 100);
+    assert!(
+        links <= background_links(),
+        "BENCHMARK_LINKS ({links}) must not exceed BENCHMARK_BACKGROUND_LINKS ({})",
+        background_links()
+    );
+    links
+}
 
-/// Connect to Neo4j database
-pub fn connect<T: LinkType>() -> Result<Client<T>> {
-    // Default Neo4j connection parameters
-    let uri = std::env::var("NEO4J_URI").unwrap_or_else(|_| "bolt://localhost:7687".to_string());
-    let user = std::env::var("NEO4J_USER").unwrap_or_else(|_| "neo4j".to_string());
-    let password = std::env::var("NEO4J_PASSWORD").unwrap_or_else(|_| "password".to_string());
-    Client::new(&uri, &user, &password)
+fn env_usize(name: &str, default: usize) -> usize {
+    match env::var(name) {
+        Ok(value) => value
+            .parse()
+            .unwrap_or_else(|_| panic!("{name} must be a non-negative integer, got `{value}`")),
+        Err(_) => default,
+    }
 }
 
 pub fn map_file<T: Default>(filename: &str) -> io::Result<FileMapped<T>> {
     let file = File::options()
         .create(true)
+        .truncate(false)
         .write(true)
         .read(true)
         .open(filename)?;
     FileMapped::new(file)
 }
 
-pub trait Sql {
-    fn create_table(&mut self) -> Result<()>;
-    fn drop_table(&mut self) -> Result<()>;
-}
-
 // ============================================================================
 // BENCHMARKED STORAGE TYPE ALIASES
 // ============================================================================
-//
-// These type aliases provide clear names for each storage implementation being
-// benchmarked. All types implement the `Doublets<T>` trait, which provides the
-// common interface for link operations.
 
-/// Doublets United (unit) store with volatile (in-memory) storage.
+/// Doublets United (unit) store in RAM.
 ///
-/// ## Storage Structure
-/// Each link is stored as a single contiguous unit containing `(id, source, target)`.
-/// Uses direct array indexing for O(1) access by link ID.
-///
-/// ## Cypher equivalent (what Neo4j does for the same operation)
-/// ```cypher
-/// // Create point link:
-/// CREATE (l:Link {id: $id, source: $id, target: $id})
-///
-/// // Read link by ID:
-/// MATCH (l:Link {id: $id}) RETURN l.id, l.source, l.target
-/// ```
-pub type DoubletsUnitedVolatile<T = usize> = unit::Store<T, Alloc<LinkPart<T>, Global>>;
+/// Each array element holds `(source, target)` of one link together with its
+/// index tree nodes; the id is the position in the array.
+pub type DoubletsUnitedVolatile<T = usize> = unit::Store<T, Global<LinkPart<T>>>;
 
-/// Doublets United (unit) store with non-volatile (file-mapped) storage.
-///
-/// Same as [`DoubletsUnitedVolatile`] but uses memory-mapped files for persistence.
-/// Changes are automatically synced to disk.
+/// Doublets United (unit) store in a memory-mapped file.
 pub type DoubletsUnitedNonVolatile<T = usize> = unit::Store<T, FileMapped<LinkPart<T>>>;
 
-/// Doublets Split store with volatile (in-memory) storage.
+/// Doublets Split store in RAM.
 ///
-/// ## Storage Structure
-/// Separates data and index into different memory regions:
-/// - **DataPart**: Contains `(source, target)` pairs
-/// - **IndexPart**: Contains trees for fast source/target lookups
-///
-/// This separation improves cache efficiency for index-heavy operations.
+/// Data (`source`, `target`) and index trees are kept in separate memory
+/// regions.
 pub type DoubletsSplitVolatile<T = usize> =
-    split::Store<T, Alloc<DataPart<T>, Global>, Alloc<IndexPart<T>, Global>>;
+    split::Store<T, Global<DataPart<T>>, Global<IndexPart<T>>>;
 
-/// Doublets Split store with non-volatile (file-mapped) storage.
-///
-/// Same as [`DoubletsSplitVolatile`] but uses memory-mapped files for persistence.
-/// Data and index are stored in separate files.
+/// Doublets Split store in two memory-mapped files.
 pub type DoubletsSplitNonVolatile<T = usize> =
     split::Store<T, FileMapped<DataPart<T>>, FileMapped<IndexPart<T>>>;
-
-/// Neo4j client (non-transactional mode).
-///
-/// ## Implementation Details
-/// Uses HTTP API to execute Cypher queries against Neo4j. Each operation makes
-/// a separate HTTP request to `/db/neo4j/tx/commit` endpoint.
-///
-/// ## Cypher commands used for benchmarked operations
-/// ```cypher
-/// // Create point link:
-/// CREATE (l:Link {id: $id, source: 0, target: 0})
-///
-/// // Update link:
-/// MATCH (l:Link {id: $id}) SET l.source = $source, l.target = $target
-///
-/// // Delete link:
-/// MATCH (l:Link {id: $id}) DELETE l
-///
-/// // Query by ID (Each Identity):
-/// MATCH (l:Link {id: $id}) RETURN l.id, l.source, l.target
-///
-/// // Query by source (Each Outgoing):
-/// MATCH (l:Link) WHERE l.source = $source RETURN l.id, l.source, l.target
-///
-/// // Query by target (Each Incoming):
-/// MATCH (l:Link) WHERE l.target = $target RETURN l.id, l.source, l.target
-///
-/// // Query by source AND target (Each Concrete):
-/// MATCH (l:Link) WHERE l.source = $s AND l.target = $t RETURN l.id, l.source, l.target
-///
-/// // Query all (Each All):
-/// MATCH (l:Link) RETURN l.id, l.source, l.target
-/// ```
-pub type Neo4jNonTransaction<T = usize> = Exclusive<Client<T>>;
-
-/// Neo4j transaction wrapper.
-///
-/// Uses the same HTTP API as [`Neo4jNonTransaction`] since the `/db/neo4j/tx/commit`
-/// endpoint auto-commits each request. The transaction wrapper exists for API
-/// compatibility and to measure any overhead from the wrapper itself.
-pub type Neo4jTransaction<'a, T = usize> = Exclusive<Transaction<'a, T>>;

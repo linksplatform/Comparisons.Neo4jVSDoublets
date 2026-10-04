@@ -1,14 +1,10 @@
 //! # Doublets Query (Each) Benchmarks
 //!
-//! This module contains benchmarks for querying/iterating links in Doublets.
-//!
-//! ## Query Implementation
-//!
 //! | Query       | Implementation                                    |
 //! |-------------|---------------------------------------------------|
 //! | All         | Sequential array iteration                        |
 //! | Identity    | Direct array access: `links[id]`                  |
-//! | Concrete    | Index tree lookup + filter                        |
+//! | Concrete    | Index tree lookup                                 |
 //! | Outgoing    | Source index tree traversal                       |
 //! | Incoming    | Target index tree traversal                       |
 

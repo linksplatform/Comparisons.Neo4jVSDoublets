@@ -1,87 +1,44 @@
-//! # Neo4j Benched Implementations
+//! # Neo4j Benched Implementation
 //!
-//! This module contains the [`Benched`] trait implementations for all Neo4j
-//! storage backends.
+//! | Benchmark name         | [`Mode`]                | Transaction                              |
+//! |------------------------|-------------------------|------------------------------------------|
+//! | `Neo4j_NonTransaction` | [`Mode::AutoCommit`]    | one auto-commit transaction per statement |
+//! | `Neo4j_Transaction`    | [`Mode::Transaction`]   | one explicit transaction per iteration   |
 //!
-//! ## Storage Backends
-//!
-//! | Type                        | Mode            | Description                      |
-//! |-----------------------------|-----------------|----------------------------------|
-//! | `Exclusive<Client>`         | Non-transaction | Direct HTTP API calls            |
-//! | `Exclusive<Transaction>`    | Transaction     | Transaction wrapper (same impl)  |
-//!
-//! ## Implementation Details
-//!
-//! Neo4j implementations clean up by executing:
+//! The background links are created with a single `UNWIND` statement and
+//! removed with:
 //! ```cypher
 //! MATCH (l:Link) DETACH DELETE l
 //! ```
-//!
-//! This removes all Link nodes from the database for the next benchmark iteration.
 
-use doublets::data::LinkType;
+use doublets::data::LinkReference;
 
 use super::Benched;
-use crate::{Client, Exclusive, Fork, Sql, Transaction};
+use crate::{Fork, Mode, Neo4j};
 
-/// Neo4j client (non-transactional mode).
-///
-/// ## Setup
-/// ```rust,ignore
-/// let client = Exclusive::<Client<usize>>::setup(())?;
-/// ```
-///
-/// ## Fork Behavior
-/// Creates the schema (constraints/indexes) before each iteration.
-///
-/// ## Cleanup
-/// Executes `MATCH (l:Link) DETACH DELETE l` to remove all nodes.
-impl<T: LinkType> Benched for Exclusive<Client<T>> {
-    type Builder<'a> = ();
+impl<T: LinkReference> Benched for Neo4j<T> {
+    type Builder<'a> = Mode;
 
-    fn setup(_: Self::Builder<'_>) -> crate::Result<Self> {
-        unsafe { Ok(Exclusive::new(crate::connect()?)) }
+    fn setup(mode: Self::Builder<'_>) -> crate::Result<Self> {
+        let mut store = Self::connect_from_env(mode)?;
+        store.clear()?;
+        Ok(store)
     }
 
-    fn fork(&mut self) -> Fork<Self> {
-        let _ = self.create_table();
-        Fork(self)
+    fn fork(&mut self, background_links: usize) -> crate::Result<Fork<'_, Self>> {
+        self.create_points(background_links)?;
+        Ok(Fork(self))
     }
 
-    unsafe fn unfork(&mut self) {
-        let _ = self.drop_table();
-    }
-}
-
-/// Neo4j transaction wrapper.
-///
-/// ## Setup
-/// ```rust,ignore
-/// let client = connect()?;
-/// let transaction = Exclusive::<Transaction<'_, usize>>::setup(&client)?;
-/// ```
-///
-/// ## Fork Behavior
-/// Cleans up any existing data before each iteration to ensure isolation.
-///
-/// ## Cleanup
-/// Executes `MATCH (l:Link) DETACH DELETE l` to remove all nodes.
-impl<'a, T: LinkType> Benched for Exclusive<Transaction<'a, T>> {
-    type Builder<'b> = &'a Client<T>;
-
-    fn setup(builder: Self::Builder<'_>) -> crate::Result<Self> {
-        let transaction = Transaction::new(builder)?;
-        unsafe { Ok(Exclusive::new(transaction)) }
+    fn begin(&mut self) -> crate::Result<()> {
+        Neo4j::begin(self)
     }
 
-    fn fork(&mut self) -> Fork<Self> {
-        // Clean up any existing data before benchmark to ensure isolation
-        let _ = self.drop_table();
-        Fork(self)
+    fn commit(&mut self) -> crate::Result<()> {
+        Neo4j::commit(self)
     }
 
-    unsafe fn unfork(&mut self) {
-        // Clean up after benchmark iteration
-        let _ = self.drop_table();
+    fn unfork(&mut self) -> crate::Result<()> {
+        self.clear()
     }
 }

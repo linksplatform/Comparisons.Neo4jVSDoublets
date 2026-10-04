@@ -1,26 +1,18 @@
-//! # Neo4j Benchmark Implementations
+//! # Neo4j Benchmarks
 //!
-//! This module contains all benchmark implementations for Neo4j.
-//! Each benchmark tests a specific database operation using Cypher queries
-//! executed via HTTP API.
+//! Every operation runs twice, once per transaction mode:
 //!
-//! ## Benchmarked Operations
+//! | Benchmark name         | Mode                                                  |
+//! |------------------------|-------------------------------------------------------|
+//! | `Neo4j_NonTransaction` | every statement is an auto-commit transaction         |
+//! | `Neo4j_Transaction`    | one explicit transaction per iteration, commit timed  |
 //!
-//! | Benchmark       | Cypher Query                                    |
-//! |-----------------|------------------------------------------------|
-//! | `create_links`  | `CREATE (l:Link {id: $id, source: 0, target: 0})`|
-//! | `delete_links`  | `MATCH (l:Link {id: $id}) DELETE l`             |
-//! | `update_links`  | `MATCH (l:Link {id: $id}) SET l.source=..., l.target=...`|
-//! | `each_all`      | `MATCH (l:Link) RETURN l.id, l.source, l.target`|
-//! | `each_identity` | `MATCH (l:Link {id: $id}) RETURN ...`           |
-//! | `each_concrete` | `MATCH (l:Link) WHERE l.source=$s AND l.target=$t RETURN ...`|
-//! | `each_outgoing` | `MATCH (l:Link) WHERE l.source=$source RETURN ...`|
-//! | `each_incoming` | `MATCH (l:Link) WHERE l.target=$target RETURN ...`|
-//!
-//! ## Storage Backends Tested
-//!
-//! - `Neo4j_NonTransaction` - Direct HTTP API calls
-//! - `Neo4j_Transaction` - Transaction wrapper (same underlying implementation)
+//! See [`linksneo4j::neo4j_impl`] for the Cypher statement of every operation.
+
+use criterion::Criterion;
+use linksneo4j::{Benched, Mode, Neo4j};
+
+use super::{neo4j_group, Operation};
 
 mod create;
 mod delete;
@@ -31,3 +23,16 @@ pub use create::create_links;
 pub use delete::delete_links;
 pub use each::*;
 pub use update::update_links;
+
+/// Runs `operation` on Neo4j in both transaction modes.
+fn run(c: &mut Criterion, group_name: &str, operation: Operation<Neo4j<usize>>) {
+    let mut group = neo4j_group(c, group_name);
+    for (id, mode) in [
+        ("Neo4j_NonTransaction", Mode::AutoCommit),
+        ("Neo4j_Transaction", Mode::Transaction),
+    ] {
+        let mut store = Neo4j::setup(mode).expect("cannot connect to Neo4j");
+        operation(&mut group, id, &mut store);
+    }
+    group.finish();
+}

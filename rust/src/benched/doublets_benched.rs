@@ -1,119 +1,84 @@
 //! # Doublets Benched Implementations
 //!
-//! This module contains the [`Benched`] trait implementations for all Doublets
-//! storage backends.
+//! | Benchmark name                | Type                                        | Storage                  |
+//! |-------------------------------|---------------------------------------------|--------------------------|
+//! | `Doublets_United_Volatile`    | `unit::Store<T, Global<_>>`                 | RAM                      |
+//! | `Doublets_United_NonVolatile` | `unit::Store<T, FileMapped<_>>`             | memory-mapped file       |
+//! | `Doublets_Split_Volatile`     | `split::Store<T, Global<_>, Global<_>>`     | RAM                      |
+//! | `Doublets_Split_NonVolatile`  | `split::Store<T, FileMapped<_>, FileMapped<_>>` | memory-mapped files  |
 //!
-//! ## Storage Backends
-//!
-//! | Type                         | Storage        | Description                      |
-//! |------------------------------|----------------|----------------------------------|
-//! | `unit::Store` + `FileMapped` | Non-volatile   | Memory-mapped file storage       |
-//! | `unit::Store` + `Alloc`      | Volatile       | In-memory storage                |
-//! | `split::Store` + `FileMapped`| Non-volatile   | Split data/index file storage    |
-//! | `split::Store` + `Alloc`     | Volatile       | Split data/index in-memory       |
-//!
-//! ## Implementation Details
-//!
-//! All Doublets implementations clean up by calling `delete_all()` in `unfork()`,
-//! which removes all links from the storage for the next benchmark iteration.
-
-use std::alloc::Global;
+//! The background links are created with `create_point()` and removed with
+//! `delete_all()`.
 
 use doublets::{
-    data::LinkType,
-    mem::{Alloc, FileMapped},
+    data::LinkReference,
+    mem::{FileMapped, Global},
     split::{self, DataPart, IndexPart},
     unit::{self, LinkPart},
     Doublets,
 };
 
 use super::Benched;
-use crate::map_file;
+use crate::{map_file, Fork};
 
-/// Doublets United (unit) store with non-volatile (file-mapped) storage.
-///
-/// ## Setup
-/// ```rust,ignore
-/// let store = unit::Store::<usize, FileMapped<LinkPart<_>>>::setup("united.links")?;
-/// ```
-///
-/// ## Cleanup
-/// Calls `delete_all()` to remove all links between iterations.
-impl<T: LinkType> Benched for unit::Store<T, FileMapped<LinkPart<T>>> {
-    type Builder<'a> = &'a str;
+/// Implements the lifecycle that is the same for all Doublets stores.
+macro_rules! doublets_lifecycle {
+    () => {
+        fn fork(&mut self, background_links: usize) -> crate::Result<Fork<'_, Self>> {
+            for _ in 0..background_links {
+                self.create_point()?;
+            }
+            Ok(Fork(self))
+        }
 
-    fn setup(builder: Self::Builder<'_>) -> crate::Result<Self> {
-        Self::new(map_file(builder)?).map_err(Into::into)
-    }
-
-    unsafe fn unfork(&mut self) {
-        let _ = self.delete_all();
-    }
+        fn unfork(&mut self) -> crate::Result<()> {
+            Ok(self.delete_all()?)
+        }
+    };
 }
 
-/// Doublets United (unit) store with volatile (in-memory) storage.
-///
-/// ## Setup
-/// ```rust,ignore
-/// let store = unit::Store::<usize, Alloc<LinkPart<_>, Global>>::setup(())?;
-/// ```
-///
-/// ## Cleanup
-/// Calls `delete_all()` to remove all links between iterations.
-impl<T: LinkType> Benched for unit::Store<T, Alloc<LinkPart<T>, Global>> {
+impl<T: LinkReference> Benched for unit::Store<T, Global<LinkPart<T>>> {
     type Builder<'a> = ();
 
     fn setup(_: Self::Builder<'_>) -> crate::Result<Self> {
-        Self::new(Alloc::new(Global)).map_err(Into::into)
+        Ok(Self::new(Global::new())?)
     }
 
-    unsafe fn unfork(&mut self) {
-        let _ = self.delete_all();
-    }
+    doublets_lifecycle!();
 }
 
-/// Doublets Split store with non-volatile (file-mapped) storage.
-///
-/// ## Setup
-/// ```rust,ignore
-/// let store = split::Store::<usize, FileMapped<_>, FileMapped<_>>::setup(
-///     ("split_index.links", "split_data.links")
-/// )?;
-/// ```
-///
-/// ## Cleanup
-/// Calls `delete_all()` to remove all links between iterations.
-impl<T: LinkType> Benched for split::Store<T, FileMapped<DataPart<T>>, FileMapped<IndexPart<T>>> {
+impl<T: LinkReference> Benched for unit::Store<T, FileMapped<LinkPart<T>>> {
+    type Builder<'a> = &'a str;
+
+    fn setup(path: Self::Builder<'_>) -> crate::Result<Self> {
+        let mut store = Self::new(map_file(path)?)?;
+        store.delete_all()?;
+        Ok(store)
+    }
+
+    doublets_lifecycle!();
+}
+
+impl<T: LinkReference> Benched for split::Store<T, Global<DataPart<T>>, Global<IndexPart<T>>> {
+    type Builder<'a> = ();
+
+    fn setup(_: Self::Builder<'_>) -> crate::Result<Self> {
+        Ok(Self::new(Global::new(), Global::new())?)
+    }
+
+    doublets_lifecycle!();
+}
+
+impl<T: LinkReference> Benched
+    for split::Store<T, FileMapped<DataPart<T>>, FileMapped<IndexPart<T>>>
+{
     type Builder<'a> = (&'a str, &'a str);
 
     fn setup((data, index): Self::Builder<'_>) -> crate::Result<Self> {
-        Self::new(map_file(data)?, map_file(index)?).map_err(Into::into)
+        let mut store = Self::new(map_file(data)?, map_file(index)?)?;
+        store.delete_all()?;
+        Ok(store)
     }
 
-    unsafe fn unfork(&mut self) {
-        let _ = self.delete_all();
-    }
-}
-
-/// Doublets Split store with volatile (in-memory) storage.
-///
-/// ## Setup
-/// ```rust,ignore
-/// let store = split::Store::<usize, Alloc<DataPart<_>, _>, Alloc<IndexPart<_>, _>>::setup(())?;
-/// ```
-///
-/// ## Cleanup
-/// Calls `delete_all()` to remove all links between iterations.
-impl<T: LinkType> Benched
-    for split::Store<T, Alloc<DataPart<T>, Global>, Alloc<IndexPart<T>, Global>>
-{
-    type Builder<'a> = ();
-
-    fn setup(_: Self::Builder<'_>) -> crate::Result<Self> {
-        Self::new(Alloc::new(Global), Alloc::new(Global)).map_err(Into::into)
-    }
-
-    unsafe fn unfork(&mut self) {
-        let _ = self.delete_all();
-    }
+    doublets_lifecycle!();
 }

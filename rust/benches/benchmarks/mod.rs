@@ -1,39 +1,45 @@
 //! # Benchmark Implementations
 //!
-//! This module contains all benchmark implementations comparing Neo4j and Doublets.
-//! Each benchmark tests a specific database operation across all storage backends.
+//! The operations below are written once and run unchanged on every backend,
+//! so Neo4j and Doublets execute exactly the same sequence of
+//! [`Doublets`] calls.
 //!
 //! ## Module Structure
 //!
-//! The benchmarks are split into two separate modules for clear comparison:
-//!
-//! - **[`neo4j`]** - All Neo4j benchmarks using Cypher queries via HTTP API
-//! - **[`doublets`]** - All Doublets benchmarks using direct memory access
+//! - **[`neo4j`]** - runs the operations on Neo4j (both transaction modes)
+//! - **[`doublets`]** - runs the operations on the four Doublets stores
 //!
 //! ## Benchmarked Operations
 //!
-//! | Benchmark       | Operation                                      | What it measures                    |
-//! |-----------------|------------------------------------------------|-------------------------------------|
-//! | `create_links`  | Insert point links (id = source = target)      | Write performance                   |
-//! | `delete_links`  | Remove links by ID                             | Delete performance                  |
-//! | `update_links`  | Modify source/target of existing links         | Update performance                  |
-//! | `each_all`      | Query all links `[*, *, *]`                    | Full scan performance               |
-//! | `each_identity` | Query by ID `[id, *, *]`                       | Primary key lookup                  |
-//! | `each_concrete` | Query by source+target `[*, src, tgt]`         | Composite index lookup              |
-//! | `each_outgoing` | Query by source `[*, src, *]`                  | Source index lookup                 |
-//! | `each_incoming` | Query by target `[*, *, tgt]`                  | Target index lookup                 |
+//! `B` is [`background_links`] and `N` is [`benchmark_links`]. Before every
+//! iteration the store contains the point links `1..=B`.
 //!
-//! ## Storage Backends Tested
+//! | Group           | Measured work of one iteration                                      | Undone after the iteration by                 |
+//! |-----------------|---------------------------------------------------------------------|-----------------------------------------------|
+//! | `Create`        | `N` × `create_point()`, which creates links `B + 1..=B + N`         | deleting links `B + N` to `B + 1`             |
+//! | `Update`        | `N` × (`update(id, 0, 0)` then `update(id, id, id)`) = `2N` updates | nothing (the second update restores the link) |
+//! | `Delete`        | `N` × `delete(id)`, from link `B` down to link `B - N + 1`          | `N` × `create_point()`                        |
+//! | `Each_All`      | 1 × `each(...)`, which visits all `B` links                         | nothing (read only)                           |
+//! | `Each_Identity` | `N` × `each_by([id, *, *])`                                         | nothing (read only)                           |
+//! | `Each_Concrete` | `N` × `each_by([*, id, id])`                                        | nothing (read only)                           |
+//! | `Each_Outgoing` | `N` × `each_by([*, id, *])`                                         | nothing (read only)                           |
+//! | `Each_Incoming` | `N` × `each_by([*, *, id])`                                         | nothing (read only)                           |
 //!
-//! ### Doublets (4 variants)
-//! - `Doublets_United_Volatile` - In-memory unit storage
-//! - `Doublets_United_NonVolatile` - File-mapped unit storage
-//! - `Doublets_Split_Volatile` - In-memory split storage (separate data/index)
-//! - `Doublets_Split_NonVolatile` - File-mapped split storage
-//!
-//! ### Neo4j (2 variants)
-//! - `Neo4j_NonTransaction` - Direct HTTP API calls
-//! - `Neo4j_Transaction` - Transaction wrapper (same underlying implementation)
+//! The measured time of an iteration starts before [`Benched::begin`] and ends
+//! after [`Benched::commit`], so for Neo4j in transaction mode it includes
+//! starting and committing the transaction.
+
+use std::{
+    hint::black_box,
+    time::{Duration, Instant},
+};
+
+use ::doublets::{
+    data::{Flow, LinksConstants},
+    Doublets, Link,
+};
+use criterion::{measurement::WallTime, BenchmarkGroup, Criterion, SamplingMode};
+use linksneo4j::{background_links, benchmark_links, Benched, Result};
 
 pub mod doublets;
 pub mod neo4j;
@@ -57,3 +63,231 @@ pub use self::doublets::each_identity as doublets_each_identity;
 pub use self::doublets::each_incoming as doublets_each_incoming;
 pub use self::doublets::each_outgoing as doublets_each_outgoing;
 pub use self::doublets::update_links as doublets_update_links;
+
+/// Signature shared by all operations, so they can be passed around.
+pub type Operation<B> = fn(&mut BenchmarkGroup<WallTime>, &str, &mut B);
+
+/// Creates a benchmark group for Neo4j.
+///
+/// One Neo4j iteration takes milliseconds, so the minimum number of samples
+/// (10) with one or more iterations each already gives stable results, and
+/// flat sampling avoids the many extra iterations of linear sampling.
+pub fn neo4j_group<'a>(c: &'a mut Criterion, name: &str) -> BenchmarkGroup<'a, WallTime> {
+    let mut group = c.benchmark_group(name);
+    group
+        .sample_size(10)
+        .sampling_mode(SamplingMode::Flat)
+        .warm_up_time(Duration::from_secs(1))
+        .measurement_time(Duration::from_secs(5));
+    group
+}
+
+/// Creates a benchmark group for Doublets.
+///
+/// One Doublets iteration takes microseconds, so Criterion's default number
+/// of samples (100) is used to measure it precisely.
+pub fn doublets_group<'a>(c: &'a mut Criterion, name: &str) -> BenchmarkGroup<'a, WallTime> {
+    let mut group = c.benchmark_group(name);
+    group
+        .warm_up_time(Duration::from_secs(1))
+        .measurement_time(Duration::from_secs(2));
+    group
+}
+
+/// Measures `operation` on a store that contains [`background_links`] point
+/// links.
+///
+/// The background links are created once. After every iteration `undo` puts
+/// the store back into the same state, so every iteration starts from the
+/// same links. Neither of them is measured.
+fn measure<B: Benched>(
+    group: &mut BenchmarkGroup<WallTime>,
+    id: &str,
+    benched: &mut B,
+    mut operation: impl FnMut(&mut B) -> Result<()>,
+    mut undo: impl FnMut(&mut B) -> Result<()>,
+) {
+    let mut store = benched
+        .fork(background_links())
+        .expect("failed to create the background links");
+    let mut iteration = || -> Result<Duration> {
+        let started = Instant::now();
+        store.begin()?;
+        operation(&mut store)?;
+        store.commit()?;
+        let elapsed = started.elapsed();
+
+        store.begin()?;
+        undo(&mut store)?;
+        store.commit()?;
+        Ok(elapsed)
+    };
+    group.bench_function(id, |bencher| {
+        bencher.iter_custom(|iterations| {
+            (0..iterations)
+                .map(|_| iteration().expect("benchmark iteration failed"))
+                .sum()
+        })
+    });
+}
+
+/// Nothing to undo.
+fn read_only<B>(_: &mut B) -> Result<()> {
+    Ok(())
+}
+
+/// Consumes every found link, so the compiler cannot skip reading it.
+fn visit(link: Link<usize>) -> Flow {
+    black_box(link);
+    Flow::Continue
+}
+
+fn any() -> usize {
+    LinksConstants::<usize>::new().any
+}
+
+pub fn create<B: Benched + Doublets<usize>>(
+    group: &mut BenchmarkGroup<WallTime>,
+    id: &str,
+    benched: &mut B,
+) {
+    let (background, links) = (background_links(), benchmark_links());
+    measure(
+        group,
+        id,
+        benched,
+        |store| {
+            for _ in 0..links {
+                store.create_point()?;
+            }
+            Ok(())
+        },
+        |store| {
+            for id in (background + 1..=background + links).rev() {
+                store.delete(id)?;
+            }
+            Ok(())
+        },
+    );
+}
+
+pub fn update<B: Benched + Doublets<usize>>(
+    group: &mut BenchmarkGroup<WallTime>,
+    id: &str,
+    benched: &mut B,
+) {
+    let (background, links) = (background_links(), benchmark_links());
+    measure(
+        group,
+        id,
+        benched,
+        |store| {
+            for id in background - links + 1..=background {
+                store.update(id, 0, 0)?;
+                store.update(id, id, id)?;
+            }
+            Ok(())
+        },
+        read_only,
+    );
+}
+
+pub fn delete<B: Benched + Doublets<usize>>(
+    group: &mut BenchmarkGroup<WallTime>,
+    id: &str,
+    benched: &mut B,
+) {
+    let (background, links) = (background_links(), benchmark_links());
+    measure(
+        group,
+        id,
+        benched,
+        |store| {
+            for id in (background - links + 1..=background).rev() {
+                store.delete(id)?;
+            }
+            Ok(())
+        },
+        |store| {
+            for _ in 0..links {
+                store.create_point()?;
+            }
+            Ok(())
+        },
+    );
+}
+
+pub fn each_all<B: Benched + Doublets<usize>>(
+    group: &mut BenchmarkGroup<WallTime>,
+    id: &str,
+    benched: &mut B,
+) {
+    measure(
+        group,
+        id,
+        benched,
+        |store| {
+            store.each(visit);
+            Ok(())
+        },
+        read_only,
+    );
+}
+
+/// Measures `N` queries `each_by(query(id))` for the ids `1..=N`.
+fn each_by<B: Benched + Doublets<usize>>(
+    group: &mut BenchmarkGroup<WallTime>,
+    id: &str,
+    benched: &mut B,
+    query: impl Fn(usize) -> [usize; 3],
+) {
+    let links = benchmark_links();
+    measure(
+        group,
+        id,
+        benched,
+        |store| {
+            for id in 1..=links {
+                store.each_by(query(id), visit);
+            }
+            Ok(())
+        },
+        read_only,
+    );
+}
+
+pub fn each_identity<B: Benched + Doublets<usize>>(
+    group: &mut BenchmarkGroup<WallTime>,
+    id: &str,
+    benched: &mut B,
+) {
+    let any = any();
+    each_by(group, id, benched, |id| [id, any, any]);
+}
+
+pub fn each_concrete<B: Benched + Doublets<usize>>(
+    group: &mut BenchmarkGroup<WallTime>,
+    id: &str,
+    benched: &mut B,
+) {
+    let any = any();
+    each_by(group, id, benched, |id| [any, id, id]);
+}
+
+pub fn each_outgoing<B: Benched + Doublets<usize>>(
+    group: &mut BenchmarkGroup<WallTime>,
+    id: &str,
+    benched: &mut B,
+) {
+    let any = any();
+    each_by(group, id, benched, |id| [any, id, any]);
+}
+
+pub fn each_incoming<B: Benched + Doublets<usize>>(
+    group: &mut BenchmarkGroup<WallTime>,
+    id: &str,
+    benched: &mut B,
+) {
+    let any = any();
+    each_by(group, id, benched, |id| [any, any, id]);
+}
