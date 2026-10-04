@@ -22,3 +22,9 @@ target
 
 # Database files created by the benchmarks
 *.links
+
+# Benchmark output and the files generated from it by out.py
+rust/results/
+rust/results.md
+rust/*-neo4j.txt
+rust/*-doublets.txt
