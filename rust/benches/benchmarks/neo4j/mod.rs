@@ -12,7 +12,7 @@
 use criterion::Criterion;
 use linksneo4j::{Benched, Mode, Neo4j};
 
-use super::{neo4j_group, Operation};
+use super::{Operation, neo4j_group};
 
 mod create;
 mod delete;

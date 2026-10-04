@@ -5,7 +5,7 @@
 //! larger numbers of background links can be benchmarked.
 
 use doublets::Doublets;
-use linksneo4j::{doublets_impl::MAX_LINKS, Benched, DoubletsUnitedVolatile};
+use linksneo4j::{Benched, DoubletsUnitedVolatile, doublets_impl::MAX_LINKS};
 
 fn store_with_max_links() -> DoubletsUnitedVolatile {
     let mut store: DoubletsUnitedVolatile = Benched::setup(()).unwrap();

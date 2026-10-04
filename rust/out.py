@@ -49,8 +49,9 @@ IMPLEMENTATIONS = [
     ("Neo4j_Transaction", "Neo4j Transaction", "blue"),
 ]
 
-# For example: `test Create/Neo4j_Transaction ... bench:    44055505 ns/iter (+/- 5345991)`
-BENCH_LINE = re.compile(r"test\s+(\w+)/(\w+)\s+\.\.\.\s+bench:\s+(\d+)\s+ns/iter")
+# For example: `test Create/Neo4j_Transaction ... bench:  44,055,505 ns/iter (+/- 5,345,991)`
+# (Criterion 0.8 separates thousands with commas, older versions did not).
+BENCH_LINE = re.compile(r"test\s+(\w+)/(\w+)\s+\.\.\.\s+bench:\s+([\d,]+)\s+ns/iter")
 
 
 def read_results():
@@ -61,7 +62,7 @@ def read_results():
         times = results.setdefault(background, {})
         for group, implementation, ns in BENCH_LINE.findall(path.read_text()):
             operation = group.replace("_", " ")
-            times[(operation, implementation)] = int(ns)
+            times[(operation, implementation)] = int(ns.replace(",", ""))
             logging.info("%s links, %s, %s: %s ns", background, operation, implementation, ns)
     return dict(sorted(results.items()))
 

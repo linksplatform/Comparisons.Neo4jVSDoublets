@@ -11,8 +11,8 @@
 //! `cargo test -- --include-ignored`.
 
 use doublets::{
-    data::{Flow, LinksConstants},
     Doublets, Link,
+    data::{Flow, LinksConstants},
 };
 use linksneo4j::{
     Benched, DoubletsSplitNonVolatile, DoubletsSplitVolatile, DoubletsUnitedNonVolatile,

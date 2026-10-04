@@ -3,7 +3,7 @@
 This repository measures how long basic operations on links take in two
 databases:
 
-- **Neo4j** 5.26 Community Edition with default settings, used from Rust
+- **Neo4j** 2026.09 Community Edition with default settings, used from Rust
   through the [neo4rs](https://github.com/neo4j-labs/neo4rs) Bolt driver;
 - **Doublets**, the [doublets](https://crates.io/crates/doublets) Rust
   library from LinksPlatform, used in the same process as the benchmark.
@@ -87,7 +87,7 @@ The exact statements and data structures are documented in
 - The CI runs the Neo4j and Doublets benchmarks in separate GitHub Actions jobs
   (separate virtual machines), and each number of background links in its own
   job, so they do not compete for the same CPU. Neo4j runs in the official
-  `neo4j:5.26-community` Docker image without configuration changes.
+  `neo4j:2026.09-community` Docker image without configuration changes.
 - Before the benchmarks, a test checks that all six implementations return the
   same results and that undoing an iteration restores the links
   ([`rust/tests/same_behavior.rs`](rust/tests/same_behavior.rs)).
@@ -141,7 +141,7 @@ The results will appear here after the benchmarks run on the main branch.
 ## Running locally
 
 ```bash
-docker run -d --name neo4j -p 7687:7687 -e NEO4J_AUTH=neo4j/password neo4j:5.26-community
+docker run -d --name neo4j -p 7687:7687 -e NEO4J_AUTH=neo4j/password neo4j:2026.09-community
 
 cd rust
 cargo test --release -- --include-ignored     # check that all stores agree

@@ -11,15 +11,15 @@
 //! `delete_all()`.
 
 use doublets::{
+    Doublets,
     data::LinkReference,
     mem::{FileMapped, Global},
     split::{self, DataPart, IndexPart},
     unit::{self, LinkPart},
-    Doublets,
 };
 
 use super::Benched;
-use crate::{doublets_impl::MAX_LINKS, map_file, Fork};
+use crate::{Fork, doublets_impl::MAX_LINKS, map_file};
 
 /// Implements the lifecycle that is the same for all Doublets stores.
 macro_rules! doublets_lifecycle {

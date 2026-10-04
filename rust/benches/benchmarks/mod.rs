@@ -35,11 +35,11 @@ use std::{
 };
 
 use ::doublets::{
-    data::{Flow, LinksConstants},
     Doublets, Link,
+    data::{Flow, LinksConstants},
 };
-use criterion::{measurement::WallTime, BenchmarkGroup, Criterion, SamplingMode};
-use linksneo4j::{background_links, benchmark_links, Benched, Result};
+use criterion::{BenchmarkGroup, Criterion, SamplingMode, measurement::WallTime};
+use linksneo4j::{Benched, Result, background_links, benchmark_links};
 
 pub mod doublets;
 pub mod neo4j;

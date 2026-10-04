@@ -1,7 +1,7 @@
 [package]
 name = "linksneo4j"
 version = "0.2.0"
-edition = "2021"
+edition = "2024"
 
 [[bench]]
 name = "bench"
@@ -11,7 +11,7 @@ harness = false
 doublets = "0.5.0"
 # Neo4j Labs Bolt driver (https://github.com/neo4j-labs/neo4rs).
 neo4rs = "0.8"
-tokio = { version = "1", features = ["rt"] }
+tokio = { version = "1.53", features = ["rt"] }
 
 [dev-dependencies]
-criterion = "0.5"
+criterion = "0.8"

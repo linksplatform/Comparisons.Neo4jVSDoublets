@@ -71,10 +71,10 @@ use std::{
 };
 
 use doublets::{
-    data::{Flow, LinkReference, LinksConstants, ReadHandler, WriteHandler},
     Doublets, Error, Link, Links,
+    data::{Flow, LinkReference, LinksConstants, ReadHandler, WriteHandler},
 };
-use neo4rs::{query, Graph, Query, Row, Txn};
+use neo4rs::{Graph, Query, Row, Txn, query};
 use tokio::runtime::Runtime;
 
 /// How statements are grouped into transactions.

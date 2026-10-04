@@ -18,7 +18,7 @@ use benchmarks::{
     neo4j_each_outgoing,
     neo4j_update_links,
 };
-use criterion::{criterion_group, Criterion};
+use criterion::{Criterion, criterion_group};
 
 mod benchmarks;
 

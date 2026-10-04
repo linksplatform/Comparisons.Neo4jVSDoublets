@@ -40,7 +40,7 @@ jobs:
     timeout-minutes: 30
     services:
       neo4j: &neo4j
-        image: neo4j:5.26-community
+        image: neo4j:2026.09-community
         env:
           NEO4J_AUTH: neo4j/password
         options: >-
@@ -55,13 +55,15 @@ jobs:
       run:
         working-directory: rust
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: dtolnay/rust-toolchain@stable
         with:
-          components: clippy
+          components: clippy, rustfmt
       - uses: Swatinem/rust-cache@v2
         with:
           workspaces: rust
+      - name: Format
+        run: cargo fmt --check
       - name: Clippy
         run: cargo clippy --release --all-targets -- -D warnings
       - name: Test (all stores give the same results)
@@ -80,7 +82,7 @@ jobs:
       run:
         working-directory: rust
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
         with:
@@ -91,8 +93,8 @@ jobs:
           BENCHMARK_BACKGROUND_LINKS: ${{ matrix.background }}
         run: |
           set -o pipefail
-          cargo bench --bench bench -- --output-format bencher | tee ${{ matrix.background }}-neo4j.txt
-      - uses: actions/upload-artifact@v4
+          cargo bench --bench bench -- --output-format bencher --noplot | tee ${{ matrix.background }}-neo4j.txt
+      - uses: actions/upload-artifact@v7
         with:
           name: bench-${{ matrix.background }}-neo4j
           path: rust/${{ matrix.background }}-neo4j.txt
@@ -108,7 +110,7 @@ jobs:
       run:
         working-directory: rust
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
         with:
@@ -119,8 +121,8 @@ jobs:
           BENCHMARK_BACKGROUND_LINKS: ${{ matrix.background }}
         run: |
           set -o pipefail
-          cargo bench --bench bench -- --output-format bencher | tee ${{ matrix.background }}-doublets.txt
-      - uses: actions/upload-artifact@v4
+          cargo bench --bench bench -- --output-format bencher --noplot | tee ${{ matrix.background }}-doublets.txt
+      - uses: actions/upload-artifact@v7
         with:
           name: bench-${{ matrix.background }}-doublets
           path: rust/${{ matrix.background }}-doublets.txt
@@ -132,18 +134,21 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
+      - uses: actions/checkout@v7
+      - uses: actions/download-artifact@v8
         with:
           pattern: bench-*
           merge-multiple: true
           path: rust/results
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.x'
       - name: Generate tables and charts
         working-directory: rust
         run: |
           pip install numpy matplotlib
           python3 out.py
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: Benchmark results
           path: |

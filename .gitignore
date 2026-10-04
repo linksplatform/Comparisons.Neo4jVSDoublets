@@ -31,3 +31,6 @@ rust/*-doublets.txt
 
 # CI logs downloaded locally while investigating runs
 ci-logs/
+
+# Python bytecode of out.py
+__pycache__/
