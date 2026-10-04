@@ -11,5 +11,5 @@ use criterion::Criterion;
 use super::super::run;
 
 pub fn each_all(c: &mut Criterion) {
-    run(c, "Each_All", crate::benchmarks::each_all);
+    run(c, "Each_All", crate::benchmarks::each_all, None);
 }

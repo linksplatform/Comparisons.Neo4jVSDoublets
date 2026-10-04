@@ -13,7 +13,15 @@ the same [`Doublets`](https://docs.rs/doublets) interface, and every benchmark
 calls the same methods on all of them.
 
 The measured value is the time until an operation is finished from the point
-of view of the caller.
+of view of the caller. Two workloads are reported:
+
+- **One operation per call**: every link operation is a separate call through
+  the `Doublets` interface, as an application calls it one at a time.
+- **Batch** (Neo4j only): the same operations of an iteration are sent to
+  Neo4j as one list in one Cypher statement, so the fixed cost of a statement
+  (round trips, query planning, commit) is paid once per iteration instead of
+  once per operation. Doublets has no batch calls; its batch work is the same
+  sequence of function calls as in the first workload.
 
 ## What is compared
 
@@ -25,6 +33,7 @@ of view of the caller.
 | `Doublets_Split_NonVolatile`  | two memory-mapped files                    | in the OS page cache (no `fsync`)                  |
 | `Neo4j_NonTransaction`        | Neo4j server, reached over Bolt (TCP)      | committed: every statement is its own transaction  |
 | `Neo4j_Transaction`           | Neo4j server, reached over Bolt (TCP)      | committed: one explicit transaction per iteration  |
+| `Neo4j_Batch`                 | Neo4j server, reached over Bolt (TCP)      | committed: one statement with all `N` operations   |
 
 - **United** and **Split** are two Doublets storage layouts: link data and
   index trees in one array, or in two separate arrays.
@@ -56,6 +65,13 @@ not used as the link id, because Neo4j chooses it itself and may reuse it,
 while link ids are chosen by the caller. Update and Delete are single
 statements that also return the previous `source` and `target`, which the
 `Doublets` interface reports.
+
+`Neo4j_Batch` sends the `N` operations of an iteration as a list parameter
+and runs them with `UNWIND`, for example
+`UNWIND $ids AS id MATCH (l:Link {id: id}) DELETE l`. Neo4j finds each link of
+the list with the same index seek as the single statement. Update is two
+statements (to `(0, 0)` and back), every other operation one. Each All is
+already one statement, so it has no batch variant.
 
 The exact statements and data structures are documented in
 [`rust/src/neo4j_impl.rs`](rust/src/neo4j_impl.rs) and
@@ -116,8 +132,7 @@ The results will appear here after the benchmarks run on the main branch.
   once ([`experiments`](experiments)). Neo4j does not publish an official Rust
   driver.
 - **One client.** The benchmarks run operations one after another from one
-  thread. Throughput with concurrent clients or batched statements (for
-  example `UNWIND`) is not measured.
+  thread. Throughput with concurrent clients is not measured.
 - **Only time is measured.** Memory use and disk I/O are not collected.
 - **Each Concrete** returns at most one link in Doublets, which treats a
   `(source, target)` pair as unique; the benchmarks never create two links

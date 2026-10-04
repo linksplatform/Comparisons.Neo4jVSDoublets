@@ -34,6 +34,7 @@
 //! | `Doublets_Split_NonVolatile`  | in-process, memory-mapped files  | in the OS page cache, no `fsync`          |
 //! | `Neo4j_NonTransaction`        | Neo4j server over Bolt           | committed (auto-commit per statement)     |
 //! | `Neo4j_Transaction`           | Neo4j server over Bolt           | committed once per iteration              |
+//! | `Neo4j_Batch`                 | Neo4j server over Bolt           | one statement with all `N` operations     |
 //!
 //! ## How the Benchmark Works
 //!

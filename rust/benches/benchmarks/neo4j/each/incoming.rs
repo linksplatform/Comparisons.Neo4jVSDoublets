@@ -1,6 +1,7 @@
 //! # Neo4j Each Incoming Benchmark
 //!
-//! Runs [`crate::benchmarks::each_incoming`] on Neo4j in both transaction modes.
+//! Runs [`crate::benchmarks::each_incoming`] on Neo4j in both transaction modes, and
+//! the same work as one batch (see `batch.rs`).
 //!
 //! Index seek on `link_target`:
 //! ```cypher
@@ -12,5 +13,10 @@ use criterion::Criterion;
 use super::super::run;
 
 pub fn each_incoming(c: &mut Criterion) {
-    run(c, "Each_Incoming", crate::benchmarks::each_incoming);
+    run(
+        c,
+        "Each_Incoming",
+        crate::benchmarks::each_incoming,
+        Some(super::super::batch::each_incoming),
+    );
 }

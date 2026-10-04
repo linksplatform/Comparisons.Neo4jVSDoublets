@@ -6,7 +6,8 @@
 //!
 //! ## Module Structure
 //!
-//! - **[`neo4j`]** - runs the operations on Neo4j (both transaction modes)
+//! - **[`neo4j`]** - runs the operations on Neo4j (both transaction modes),
+//!   and the same work as batches
 //! - **[`doublets`]** - runs the operations on the four Doublets stores
 //!
 //! ## Benchmarked Operations
@@ -101,7 +102,7 @@ pub fn doublets_group<'a>(c: &'a mut Criterion, name: &str) -> BenchmarkGroup<'a
 /// benchmark (so benchmarks skipped by a filter create no links). After every
 /// iteration `undo` puts the store back into the same state, so every
 /// iteration starts from the same links. Neither of them is measured.
-fn measure<B: Benched>(
+pub(crate) fn measure<B: Benched>(
     group: &mut BenchmarkGroup<WallTime>,
     id: &str,
     benched: &mut B,
@@ -138,17 +139,17 @@ fn measure<B: Benched>(
 }
 
 /// Nothing to undo.
-fn read_only<B>(_: &mut B) -> Result<()> {
+pub(crate) fn read_only<B>(_: &mut B) -> Result<()> {
     Ok(())
 }
 
 /// Consumes every found link, so the compiler cannot skip reading it.
-fn visit(link: Link<usize>) -> Flow {
+pub(crate) fn visit(link: Link<usize>) -> Flow {
     black_box(link);
     Flow::Continue
 }
 
-fn any() -> usize {
+pub(crate) fn any() -> usize {
     LinksConstants::<usize>::new().any
 }
 

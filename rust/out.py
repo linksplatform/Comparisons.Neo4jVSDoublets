@@ -47,6 +47,7 @@ IMPLEMENTATIONS = [
     ("Doublets_Split_NonVolatile", "Doublets Split NonVolatile", "green"),
     ("Neo4j_NonTransaction", "Neo4j NonTransaction", "lightblue"),
     ("Neo4j_Transaction", "Neo4j Transaction", "blue"),
+    ("Neo4j_Batch", "Neo4j Batch", "navy"),
 ]
 
 # For example: `test Create/Neo4j_Transaction ... bench:  44,055,505 ns/iter (+/- 5,345,991)`
@@ -85,7 +86,7 @@ def markdown_table(times):
 
 
 def chart(times, title, path, log_scale):
-    y, width = np.arange(len(OPERATIONS)), 0.13
+    y, width = np.arange(len(OPERATIONS)), 0.8 / len(IMPLEMENTATIONS)
     fig, ax = plt.subplots(figsize=(12, 8))
     values = [series(times, implementation) for implementation, _, _ in IMPLEMENTATIONS]
     if not log_scale:
@@ -126,7 +127,8 @@ def main():
         sections.append(
             f"### {title}\n\n"
             f"Median time of one iteration in nanoseconds. In the linear chart, bars "
-            f"shorter than 0.5% of the longest bar are drawn 0.5% long to stay visible.\n\n"
+            f"shorter than 0.5% of the longest bar are drawn 0.5% long to stay visible. "
+            f"Each All is one statement already, so Neo4j Batch has no separate result for it.\n\n"
             f"{markdown_table(times)}\n\n"
             f"![{title}, linear scale](Docs/{linear.name})\n"
             f"![{title}, log scale](Docs/{log.name})"
