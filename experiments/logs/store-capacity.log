@@ -1,0 +1,24 @@
+$ store-capacity unit-ram 1040383
+524288 links created
+1040383 links created
+$ store-capacity unit-ram 1040384
+Data part should be in data memory
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+$ store-capacity unit-file 1040383
+524288 links created
+1040383 links created
+$ store-capacity unit-file 1040384
+Data part should be in data memory
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+$ store-capacity split-ram 1040383
+524288 links created
+1040383 links created
+$ store-capacity split-ram 1040384
+Index part should be in index memory
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+$ store-capacity split-file 1040383
+524288 links created
+1040383 links created
+$ store-capacity split-file 1040384
+Index part should be in index memory
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

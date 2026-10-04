@@ -10,6 +10,7 @@ They are not part of the CI. Outputs are in [`logs`](logs).
 | [`neo4rs-latency`](neo4rs-latency) | latency of link operations through neo4rs; `round_trips` binary: round trips per query |
 | [`neo4j-crate-latency`](neo4j-crate-latency) | the same for the `neo4j` crate |
 | [`split-store-bug`](split-store-bug) | wrong query results of the doublets 0.5.0 Split store after `update` |
+| [`store-capacity`](store-capacity) | the doublets 0.5.0 stores panic when link number 1,040,384 is created |
 
 Round trips per query, measured through the proxy
 ([`logs/neo4rs-round-trips.log`](logs/neo4rs-round-trips.log),
@@ -27,4 +28,13 @@ cd experiments/bolt-round-trips
 python3 proxy.py > proxy.log &
 cd ../neo4rs-latency
 PROXY_PID=$(pgrep -f proxy.py) cargo run --release --bin round_trips
+```
+
+Store capacity ([`logs/store-capacity.log`](logs/store-capacity.log)):
+
+```bash
+cd experiments/store-capacity
+cargo run --release -- unit-ram 1040383   # ok
+cargo run --release -- unit-ram 1040384   # panics: Data part should be in data memory
+cargo run --release -- split-ram 1040384  # panics: Index part should be in index memory
 ```
