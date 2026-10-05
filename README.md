@@ -110,7 +110,7 @@ The exact statements and data structures are documented in
 
 Benchmarks on the main branch use `N = 1,000` and `B` = 10,000, 100,000 and
 1,000,000; such a run takes about 12 minutes on GitHub Actions (the longest
-job, Neo4j with 1,000,000 background links, about 10 minutes). Pull requests
+job, Neo4j with 1,000,000 background links, about 11 minutes). Pull requests
 run a quick check with `N = 100` and `B = 1,000`. Larger `B` are not possible
 with doublets 0.5.0 (see [Limitations](#limitations)).
 
