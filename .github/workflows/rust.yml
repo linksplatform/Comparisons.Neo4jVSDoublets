@@ -20,11 +20,6 @@ on:
       - '.github/workflows/rust.yml'
   workflow_dispatch:
 
-# A newer run of the same branch makes the older one obsolete.
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
 env:
   CARGO_TERM_COLOR: always
   NEO4J_URI: bolt://localhost:7687
@@ -34,8 +29,46 @@ env:
   # (see also the `background` matrices below).
   BENCHMARK_LINKS: ${{ github.event_name == 'pull_request' && '100' || '1000' }}
 
+# A newer run of the same branch makes the older one obsolete: every job below
+# cancels the same job of an older run. This is set per job, so a run that
+# skips its jobs (see `changes`) does not cancel an older run.
 jobs:
+  # For a push to a pull request, GitHub checks the `paths` above against all
+  # changes of the pull request, so this job checks the files of the push
+  # itself. The pattern is the same list of paths.
+  changes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      code: ${{ steps.diff.outputs.code }}
+    steps:
+      - id: diff
+        env:
+          GH_TOKEN: ${{ github.token }}
+          COMPARE: repos/${{ github.repository }}/compare/${{ github.event.before }}...${{ github.event.after }}
+        run: |
+          if [ "${{ github.event.action }}" != synchronize ]; then
+            echo "code=true" >> "$GITHUB_OUTPUT"
+          elif ! files=$(gh api "$COMPARE" --jq '.files[].filename'); then
+            echo "Cannot compare with the previous push, running everything"
+            echo "code=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "Files changed by the push:"
+            echo "$files"
+            if grep -qE '^(rust/|rust-toolchain\.toml$|\.github/workflows/rust\.yml$)' <<< "$files"; then
+              echo "code=true" >> "$GITHUB_OUTPUT"
+            else
+              echo "No code changed, skipping the tests and benchmarks"
+              echo "code=false" >> "$GITHUB_OUTPUT"
+            fi
+          fi
+
   test:
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}-test
+      cancel-in-progress: true
     runs-on: ubuntu-latest
     timeout-minutes: 30
     services:
@@ -71,6 +104,9 @@ jobs:
 
   benchmark-neo4j:
     needs: test
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}-neo4j-${{ matrix.background }}
+      cancel-in-progress: true
     runs-on: ubuntu-latest
     timeout-minutes: 120
     strategy:
@@ -104,6 +140,9 @@ jobs:
 
   benchmark-doublets:
     needs: test
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}-doublets-${{ matrix.background }}
+      cancel-in-progress: true
     runs-on: ubuntu-latest
     timeout-minutes: 120
     strategy:
@@ -135,6 +174,9 @@ jobs:
 
   report:
     needs: [benchmark-neo4j, benchmark-doublets]
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}-report
+      cancel-in-progress: true
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
