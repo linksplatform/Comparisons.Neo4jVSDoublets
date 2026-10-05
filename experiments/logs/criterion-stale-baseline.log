@@ -1,0 +1,6 @@
+== a base directory without files (as restored by the cache)
+test Create/Doublets_United_Volatile ... Criterion.rs ERROR: error: Failed to access file "/tmp/tmp.tOUwpXRHHP/Create/Doublets_United_Volatile/base/sample.json": No such file or directory (os error 2)
+bench:      10,800 ns/iter (+/- 1,656)
+== a fresh directory (as the CI uses now)
+test Create/Doublets_United_Volatile ... bench:      10,861 ns/iter (+/- 1,089)
+

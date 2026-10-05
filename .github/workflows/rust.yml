@@ -91,6 +91,9 @@ jobs:
         env:
           BENCHMARK_BACKEND: neo4j
           BENCHMARK_BACKGROUND_LINKS: ${{ matrix.background }}
+          # A fresh directory: Criterion compares with an older result if one
+          # exists, and the directories restored by the cache are incomplete.
+          CRITERION_HOME: ${{ runner.temp }}/criterion
         run: |
           set -o pipefail
           cargo bench --bench bench -- --output-format bencher --noplot | tee ${{ matrix.background }}-neo4j.txt
@@ -119,6 +122,9 @@ jobs:
         env:
           BENCHMARK_BACKEND: doublets
           BENCHMARK_BACKGROUND_LINKS: ${{ matrix.background }}
+          # A fresh directory: Criterion compares with an older result if one
+          # exists, and the directories restored by the cache are incomplete.
+          CRITERION_HOME: ${{ runner.temp }}/criterion
         run: |
           set -o pipefail
           cargo bench --bench bench -- --output-format bencher --noplot | tee ${{ matrix.background }}-doublets.txt

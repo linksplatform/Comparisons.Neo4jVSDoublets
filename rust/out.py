@@ -61,7 +61,15 @@ def read_results():
     for path in sorted(RESULTS_DIR.glob("*.txt")):
         background = int(path.stem.split("-")[0])
         times = results.setdefault(background, {})
-        for group, implementation, ns in BENCH_LINE.findall(path.read_text()):
+        for line in path.read_text().splitlines():
+            if not line.startswith("test "):
+                continue
+            # A line without a time means the benchmark reported an error
+            # instead of its result; such a run must not be published.
+            match = BENCH_LINE.match(line)
+            if not match:
+                raise SystemExit(f"{path}: no result in line: {line}")
+            group, implementation, ns = match.groups()
             operation = group.replace("_", " ")
             times[(operation, implementation)] = int(ns.replace(",", ""))
             logging.info("%s links, %s, %s: %s ns", background, operation, implementation, ns)
