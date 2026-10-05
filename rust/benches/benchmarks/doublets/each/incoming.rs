@@ -1,80 +1,11 @@
 //! # Doublets Each Incoming Benchmark
 //!
-//! Measures the performance of querying links by target (incoming edges) in Doublets.
+//! Runs [`crate::benchmarks::each_incoming`] on all four Doublets stores.
 //!
-//! ## Implementation
-//!
-//! Doublets queries by target using:
-//! - Target index tree to find all links with given target
-//! - Time complexity: O(log n + k) where k = matching links
+//! Traverses the target index tree.
 
-use std::{
-    alloc::Global,
-    time::{Duration, Instant},
-};
+use criterion::Criterion;
 
-use criterion::{measurement::WallTime, BenchmarkGroup, Criterion};
-use doublets::data::{Flow, LinksConstants};
-use doublets::{
-    mem::{Alloc, FileMapped},
-    parts::LinkPart,
-    split::{self, DataPart, IndexPart},
-    unit, Doublets,
-};
-use linksneo4j::{bench, Benched, Fork};
-
-use crate::tri;
-
-/// Runs the each_incoming benchmark on a Doublets backend.
-fn bench<B: Benched + Doublets<usize>>(
-    group: &mut BenchmarkGroup<WallTime>,
-    id: &str,
-    mut benched: B,
-) {
-    let handler = |_| Flow::Continue;
-    let any = LinksConstants::new().any;
-    group.bench_function(id, |bencher| {
-        bench!(|fork| as B {
-            use linksneo4j::BACKGROUND_LINKS;
-            for index in 1..=BACKGROUND_LINKS {
-                elapsed! {fork.each_by([any, any, index], handler)};
-            }
-        })(bencher, &mut benched);
-    });
-}
-
-/// Creates benchmark for Doublets backends on target index lookup.
 pub fn each_incoming(c: &mut Criterion) {
-    let mut group = c.benchmark_group("Each_Incoming");
-
-    tri! {
-        bench(
-            &mut group,
-            "Doublets_United_Volatile",
-            unit::Store::<usize, Alloc<LinkPart<_>, Global>>::setup(()).unwrap()
-        )
-    }
-    tri! {
-        bench(
-            &mut group,
-            "Doublets_United_NonVolatile",
-            unit::Store::<usize, FileMapped<LinkPart<_>>>::setup("united.links").unwrap()
-        )
-    }
-    tri! {
-        bench(
-            &mut group,
-            "Doublets_Split_Volatile",
-            split::Store::<usize, Alloc<DataPart<_>, _>, Alloc<IndexPart<_>, _>>::setup(()).unwrap()
-        )
-    }
-    tri! {
-        bench(
-            &mut group,
-            "Doublets_Split_NonVolatile",
-            split::Store::<usize, FileMapped<_>, FileMapped<_>>::setup(("split_index.links", "split_data.links")).unwrap()
-        )
-    }
-
-    group.finish();
+    crate::run_doublets!(c, "Each_Incoming", crate::benchmarks::each_incoming);
 }

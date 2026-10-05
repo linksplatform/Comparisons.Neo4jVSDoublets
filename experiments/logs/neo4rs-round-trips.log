@@ -1,0 +1,4 @@
+Graph::run           3.00 round trips/query
+Graph::execute       3.00 round trips/query
+Txn::run (+begin/commit) 2.03 round trips/query
+Txn::execute (+begin/commit) 2.03 round trips/query

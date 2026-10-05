@@ -1,0 +1,57 @@
+    Finished `bench` profile [optimized] target(s) in 1.30s
+     Running benches/bench.rs (target/release/deps/bench-4a743730598bbab2)
+Gnuplot not found, using plotters backend
+
+Warning: Unable to complete 100 samples in 2.0s. You may wish to increase target time to 3.4s, enable flat sampling, or reduce sample count to 50.
+test Create/Doublets_United_Volatile ... bench:      193647 ns/iter (+/- 123479)
+
+Warning: Unable to complete 100 samples in 2.0s. You may wish to increase target time to 3.5s, enable flat sampling, or reduce sample count to 50.
+test Create/Doublets_United_NonVolatile ... bench:      186237 ns/iter (+/- 51034)
+test Create/Doublets_Split_Volatile ... bench:       94187 ns/iter (+/- 42493)
+
+Warning: Unable to complete 100 samples in 2.0s. You may wish to increase target time to 2.2s, enable flat sampling, or reduce sample count to 60.
+test Create/Doublets_Split_NonVolatile ... bench:      107673 ns/iter (+/- 111595)
+
+
+Warning: Unable to complete 100 samples in 2.0s. You may wish to increase target time to 2.9s, enable flat sampling, or reduce sample count to 50.
+test Delete/Doublets_United_Volatile ... bench:      411534 ns/iter (+/- 60221)
+test Delete/Doublets_United_NonVolatile ... bench:      447244 ns/iter (+/- 264861)
+
+Warning: Unable to complete 100 samples in 2.0s. You may wish to increase target time to 2.5s, enable flat sampling, or reduce sample count to 60.
+test Delete/Doublets_Split_Volatile ... bench:      281489 ns/iter (+/- 262945)
+test Delete/Doublets_Split_NonVolatile ... bench:      214845 ns/iter (+/- 98794)
+
+test Each_Identity/Doublets_United_Volatile ... bench:        7651 ns/iter (+/- 15885)
+test Each_Identity/Doublets_United_NonVolatile ... bench:        7509 ns/iter (+/- 1876)
+test Each_Identity/Doublets_Split_Volatile ... bench:       12747 ns/iter (+/- 4996)
+test Each_Identity/Doublets_Split_NonVolatile ... bench:       12556 ns/iter (+/- 2707)
+
+test Each_Concrete/Doublets_United_Volatile ... bench:       82018 ns/iter (+/- 28111)
+test Each_Concrete/Doublets_United_NonVolatile ... bench:       90785 ns/iter (+/- 45299)
+test Each_Concrete/Doublets_Split_Volatile ... bench:       29848 ns/iter (+/- 4794)
+test Each_Concrete/Doublets_Split_NonVolatile ... bench:       28134 ns/iter (+/- 3939)
+
+test Each_Outgoing/Doublets_United_Volatile ... bench:      169926 ns/iter (+/- 30156)
+test Each_Outgoing/Doublets_United_NonVolatile ... bench:      163993 ns/iter (+/- 30413)
+test Each_Outgoing/Doublets_Split_Volatile ... bench:       24586 ns/iter (+/- 8454)
+test Each_Outgoing/Doublets_Split_NonVolatile ... bench:       23479 ns/iter (+/- 6016)
+
+test Each_Incoming/Doublets_United_Volatile ... bench:      153936 ns/iter (+/- 22627)
+test Each_Incoming/Doublets_United_NonVolatile ... bench:      156304 ns/iter (+/- 19919)
+test Each_Incoming/Doublets_Split_Volatile ... bench:       26360 ns/iter (+/- 2301)
+test Each_Incoming/Doublets_Split_NonVolatile ... bench:       26095 ns/iter (+/- 3180)
+
+test Each_All/Doublets_United_Volatile ... bench:    11023306 ns/iter (+/- 1534427)
+test Each_All/Doublets_United_NonVolatile ... bench:    11154893 ns/iter (+/- 1644628)
+test Each_All/Doublets_Split_Volatile ... bench:    12054807 ns/iter (+/- 790075)
+test Each_All/Doublets_Split_NonVolatile ... bench:    15274995 ns/iter (+/- 4878116)
+
+test Update/Doublets_United_Volatile ... bench:      868330 ns/iter (+/- 97367)
+test Update/Doublets_United_NonVolatile ... bench:      899044 ns/iter (+/- 101421)
+test Update/Doublets_Split_Volatile ... bench:       67580 ns/iter (+/- 24952)
+test Update/Doublets_Split_NonVolatile ... bench:       66410 ns/iter (+/- 14657)
+
+
+real	5m11.254s
+user	8m23.784s
+sys	0m15.373s

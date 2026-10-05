@@ -1,198 +1,155 @@
-import re
+"""Turns Criterion's bencher output into the README results and charts.
+
+Input: `results/<background links>-<backend>.txt`, the output of
+`cargo bench --bench bench -- --output-format bencher` for one number of
+background links and one backend (`neo4j` or `doublets`).
+
+Output, for every number of background links:
+- a Markdown table in `results.md`, also written into `../README.md` between
+  the `<!-- results:start -->` and `<!-- results:end -->` markers;
+- `../Docs/bench_rust_<background links>.png` (linear scale) and
+  `../Docs/bench_rust_log_scale_<background links>.png` (log scale).
+
+`BENCHMARK_LINKS` must be set to the value used by the benchmarks.
+"""
+
 import logging
+import os
+import re
+from pathlib import Path
+
+import matplotlib
+
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 
 # Enable detailed tracing. Set to False to disable verbose output.
 DEBUG = True
-logging.basicConfig(level=logging.INFO if DEBUG else logging.WARNING,
-                    format="%(message)s")
+logging.basicConfig(level=logging.INFO if DEBUG else logging.WARNING, format="%(message)s")
 
-# Read the complete file
-data = open("out.txt").read()
-if DEBUG:
-    logging.info("Loaded out.txt, length: %d characters", len(data))
+RESULTS_DIR = Path("results")
+DOCS_DIR = Path("../Docs")
+README = Path("../README.md")
+START_MARKER = "<!-- results:start -->"
+END_MARKER = "<!-- results:end -->"
 
-# Use two regex patterns to extract benchmarks.
-# The first captures Neo4j tests and the second captures Doublets tests.
-patterns = [
-    r"test\s+(\w+)/(Neo4j)_(\w+)\s+\.\.\.\s+bench:\s+(\d+)\s+ns/iter\s+\(\+/-\s+\d+\)",
-    r"test\s+(\w+)/(Doublets)_(\w+)_(\w+)\s+\.\.\.\s+bench:\s+(\d+)\s+ns/iter\s+\(\+/-\s+\d+\)"
-]
-
-# Instead of using lists, we use dictionaries mapping operation names to values.
-Neo4j_Transaction = {}
-Neo4j_NonTransaction = {}
-Doublets_United_Volatile = {}
-Doublets_United_NonVolatile = {}
-Doublets_Split_Volatile = {}
-Doublets_Split_NonVolatile = {}
-
-# Process each regex pattern
-for pattern in patterns:
-    matches = re.findall(pattern, data)
-    if DEBUG:
-        logging.info("Pattern %s matched %d entries", pattern, len(matches))
-    for match in matches:
-        # Normalise name
-        op = match[0].replace("_", " ")  # Create, Each All, …
-        if match[1] == 'Neo4j':
-            # (operation, 'Neo4j', transaction, time)
-            transaction = match[2]
-            time_val = int(match[3])
-            if DEBUG:
-                logging.info("Neo4j %s - %s: %d ns", op, transaction, time_val)
-            if transaction == "Transaction":
-                Neo4j_Transaction[op] = time_val
-            else:
-                Neo4j_NonTransaction[op] = time_val
-        else:
-            # (operation, 'Doublets', trees, storage, time)
-            trees = match[2]
-            storage = match[3]
-            time_val = int(match[4])
-            if DEBUG:
-                logging.info("Doublets %s - %s %s: %d ns", op, trees, storage, time_val)
-            if trees == 'United':
-                if storage == 'Volatile':
-                    Doublets_United_Volatile[op] = time_val
-                else:
-                    Doublets_United_NonVolatile[op] = time_val
-            else:
-                if storage == 'Volatile':
-                    Doublets_Split_Volatile[op] = time_val
-                else:
-                    Doublets_Split_NonVolatile[op] = time_val
-
-# Operation order for table and plots
-ordered_ops = [
+OPERATIONS = [
     "Create", "Update", "Delete",
-    "Each All", "Each Identity", "Each Concrete", "Each Outgoing", "Each Incoming"
+    "Each All", "Each Identity", "Each Concrete", "Each Outgoing", "Each Incoming",
 ]
 
-if DEBUG:
-    logging.info("\nFinal dictionaries (after parsing):")
-    logging.info("Neo4j_Transaction: %s", Neo4j_Transaction)
-    logging.info("Neo4j_NonTransaction: %s", Neo4j_NonTransaction)
-    logging.info("Doublets_United_Volatile: %s", Doublets_United_Volatile)
-    logging.info("Doublets_United_NonVolatile: %s", Doublets_United_NonVolatile)
-    logging.info("Doublets_Split_Volatile: %s", Doublets_Split_Volatile)
-    logging.info("Doublets_Split_NonVolatile: %s", Doublets_Split_NonVolatile)
+# Benchmark id suffix, column name and chart color of every implementation.
+IMPLEMENTATIONS = [
+    ("Doublets_United_Volatile", "Doublets United Volatile", "salmon"),
+    ("Doublets_United_NonVolatile", "Doublets United NonVolatile", "red"),
+    ("Doublets_Split_Volatile", "Doublets Split Volatile", "lightgreen"),
+    ("Doublets_Split_NonVolatile", "Doublets Split NonVolatile", "green"),
+    ("Neo4j_NonTransaction", "Neo4j NonTransaction", "lightblue"),
+    ("Neo4j_Transaction", "Neo4j Transaction", "blue"),
+    ("Neo4j_Batch", "Neo4j Batch", "navy"),
+]
 
-# Assemble series in the desired order.
-def get_series(d): return [d.get(op, 0) for op in ordered_ops]
+# For example: `test Create/Neo4j_Transaction ... bench:  44,055,505 ns/iter (+/- 5,345,991)`
+# (Criterion 0.8 separates thousands with commas, older versions did not).
+BENCH_LINE = re.compile(r"test\s+(\w+)/(\w+)\s+\.\.\.\s+bench:\s+([\d,]+)\s+ns/iter")
 
-du_volatile_arr   = get_series(Doublets_United_Volatile)
-du_nonvolatile_arr= get_series(Doublets_United_NonVolatile)
-ds_volatile_arr   = get_series(Doublets_Split_Volatile)
-ds_nonvolatile_arr= get_series(Doublets_Split_NonVolatile)
-neo4j_non_arr     = get_series(Neo4j_NonTransaction)
-neo4j_trans_arr   = get_series(Neo4j_Transaction)
 
-# ─────────────────────────────────────────────────────────────────────────────
-# Markdown Table
-# ─────────────────────────────────────────────────────────────────────────────
-def print_results_markdown():
-    header = (
-        "| Operation     | Doublets United Volatile | Doublets United NonVolatile | "
-        "Doublets Split Volatile | Doublets Split NonVolatile | Neo4j NonTransaction | Neo4j Transaction |\n"
-        "|---------------|--------------------------|-----------------------------|-------------------------|----------------------------|----------------------|-------------------|"
-    )
-    lines = [header]
+def read_results():
+    """Returns {background links: {(operation, implementation): ns}}."""
+    results = {}
+    for path in sorted(RESULTS_DIR.glob("*.txt")):
+        background = int(path.stem.split("-")[0])
+        times = results.setdefault(background, {})
+        for line in path.read_text().splitlines():
+            if not line.startswith("test "):
+                continue
+            # A line without a time means the benchmark reported an error
+            # instead of its result; such a run must not be published.
+            match = BENCH_LINE.match(line)
+            if not match:
+                raise SystemExit(f"{path}: no result in line: {line}")
+            group, implementation, ns = match.groups()
+            operation = group.replace("_", " ")
+            times[(operation, implementation)] = int(ns.replace(",", ""))
+            logging.info("%s links, %s, %s: %s ns", background, operation, implementation, ns)
+    return dict(sorted(results.items()))
 
-    for i, op in enumerate(ordered_ops):
-        neo4j_val1 = neo4j_non_arr[i]   if neo4j_non_arr[i]   else float('inf')
-        neo4j_val2 = neo4j_trans_arr[i] if neo4j_trans_arr[i] else float('inf')
-        min_neo4j  = min(neo4j_val1, neo4j_val2)
 
-        def annotate(v):
-            if v == 0: return "N/A"
-            if min_neo4j == float('inf'): return f"{v}"
-            return f"{v} ({min_neo4j / v:.1f}x faster)"
+def series(times, implementation):
+    """Times of `implementation` in the order of OPERATIONS (0 when missing)."""
+    return [times.get((operation, implementation), 0) for operation in OPERATIONS]
 
-        row = (
-            f"| {op:<13} | {annotate(du_volatile_arr[i]):<24} | "
-            f"{annotate(du_nonvolatile_arr[i]):<27} | "
-            f"{annotate(ds_volatile_arr[i]):<23} | "
-            f"{annotate(ds_nonvolatile_arr[i]):<26} | "
-            f"{neo4j_non_arr[i] or 'N/A':<20} | {neo4j_trans_arr[i] or 'N/A':<17} |"
+
+def markdown_table(times):
+    header = "| Operation | " + " | ".join(name for _, name, _ in IMPLEMENTATIONS) + " |"
+    separator = "|---|" + "---:|" * len(IMPLEMENTATIONS)
+    rows = [header, separator]
+    for operation in OPERATIONS:
+        cells = [times.get((operation, implementation)) for implementation, _, _ in IMPLEMENTATIONS]
+        rows.append(
+            f"| {operation} | " + " | ".join(f"{cell:,}" if cell else "N/A" for cell in cells) + " |"
         )
-        lines.append(row)
+    return "\n".join(rows)
 
-    table_md = "\n".join(lines)
-    print(table_md)
 
-    # Save to file for CI to use
-    with open("results.md", "w") as f:
-        f.write(table_md)
-
-    if DEBUG: logging.info("\nGenerated Markdown Table:\n%s", table_md)
-
-# ─────────────────────────────────────────────────────────────────────────────
-# Plots
-# ─────────────────────────────────────────────────────────────────────────────
-def ensure_min_visible(arr, min_val):
-    """Ensure non-zero values are at least min_val for visibility on graph."""
-    return [max(v, min_val) if v > 0 else 0 for v in arr]
-
-def bench1():
-    """Horizontal bars – raw values (pixel scale)."""
-    y, w  = np.arange(len(ordered_ops)), 0.1
+def chart(times, title, path, log_scale):
+    y, width = np.arange(len(OPERATIONS)), 0.8 / len(IMPLEMENTATIONS)
     fig, ax = plt.subplots(figsize=(12, 8))
+    values = [series(times, implementation) for implementation, _, _ in IMPLEMENTATIONS]
+    if not log_scale:
+        # Bars of 0.5% of the longest bar stay visible (about 4 pixels).
+        min_visible = max(max(v) for v in values) * 0.005
+        values = [[max(t, min_visible) if t else 0 for t in v] for v in values]
+    for index, ((_, name, color), times_ns) in enumerate(zip(IMPLEMENTATIONS, values)):
+        offset = (index - (len(IMPLEMENTATIONS) - 1) / 2) * width
+        ax.barh(y + offset, times_ns, width, label=name, color=color)
+    ax.set_xlabel("Time of one iteration (ns)" + (", log scale" if log_scale else ""))
+    if log_scale:
+        ax.set_xscale("log")
+    ax.set_title(title)
+    ax.set_yticks(y)
+    ax.set_yticklabels(OPERATIONS)
+    ax.invert_yaxis()
+    ax.legend(loc="upper left", bbox_to_anchor=(1.01, 1))
+    fig.tight_layout()
+    fig.savefig(path)
+    plt.close(fig)
+    logging.info("%s saved", path)
 
-    # Calculate maximum value across all data series to determine scale
-    all_values = (du_volatile_arr + du_nonvolatile_arr + ds_volatile_arr +
-                  ds_nonvolatile_arr + neo4j_non_arr + neo4j_trans_arr)
-    max_val = max(all_values) if all_values else 1
 
-    # Minimum visible bar width: ~0.5% of max value ensures at least 2 pixels
-    # on typical 12-inch wide figure at 100 DPI (~900px plot area)
-    min_visible = max_val * 0.005
-    if DEBUG:
-        logging.info("bench1: max_val=%d, min_visible=%d", max_val, min_visible)
+def main():
+    links = int(os.environ["BENCHMARK_LINKS"])
+    results = read_results()
+    if not results:
+        raise SystemExit(f"no results found in {RESULTS_DIR}/")
+    DOCS_DIR.mkdir(exist_ok=True)
 
-    # Apply minimum visibility to all data series
-    du_volatile_vis    = ensure_min_visible(du_volatile_arr, min_visible)
-    du_nonvolatile_vis = ensure_min_visible(du_nonvolatile_arr, min_visible)
-    ds_volatile_vis    = ensure_min_visible(ds_volatile_arr, min_visible)
-    ds_nonvolatile_vis = ensure_min_visible(ds_nonvolatile_arr, min_visible)
-    neo4j_non_vis      = ensure_min_visible(neo4j_non_arr, min_visible)
-    neo4j_trans_vis    = ensure_min_visible(neo4j_trans_arr, min_visible)
+    sections = []
+    for background, times in results.items():
+        title = f"{background:,} background links, {links:,} links per iteration"
+        linear = DOCS_DIR / f"bench_rust_{background}.png"
+        log = DOCS_DIR / f"bench_rust_log_scale_{background}.png"
+        chart(times, title, linear, log_scale=False)
+        chart(times, title, log, log_scale=True)
+        sections.append(
+            f"### {title}\n\n"
+            f"Median time of one iteration in nanoseconds. In the linear chart, bars "
+            f"shorter than 0.5% of the longest bar are drawn 0.5% long to stay visible. "
+            f"Each All is one statement already, so Neo4j Batch has no separate result for it.\n\n"
+            f"{markdown_table(times)}\n\n"
+            f"![{title}, linear scale](Docs/{linear.name})\n"
+            f"![{title}, log scale](Docs/{log.name})"
+        )
+    results_md = "\n\n".join(sections)
+    Path("results.md").write_text(results_md + "\n")
+    print(results_md)
 
-    ax.barh(y - 2*w, du_volatile_vis,   w, label='Doublets United Volatile',   color='salmon')
-    ax.barh(y -   w, du_nonvolatile_vis,w, label='Doublets United NonVolatile',color='red')
-    ax.barh(y      , ds_volatile_vis,    w, label='Doublets Split Volatile',    color='lightgreen')
-    ax.barh(y +   w, ds_nonvolatile_vis, w, label='Doublets Split NonVolatile', color='green')
-    ax.barh(y + 2*w, neo4j_non_vis,      w, label='Neo4j NonTransaction',       color='lightblue')
-    ax.barh(y + 3*w, neo4j_trans_vis,    w, label='Neo4j Transaction',          color='blue')
+    readme = README.read_text()
+    start, end = readme.index(START_MARKER) + len(START_MARKER), readme.index(END_MARKER)
+    README.write_text(readme[:start] + "\n" + results_md + "\n" + readme[end:])
+    logging.info("%s updated", README)
 
-    ax.set_xlabel('Time (ns)')
-    ax.set_title ('Benchmark Comparison: Neo4j vs Doublets (Rust)')
-    ax.set_yticks(y); ax.set_yticklabels(ordered_ops); ax.legend()
-    fig.tight_layout(); plt.savefig("bench_rust.png"); plt.close(fig)
-    if DEBUG: logging.info("bench_rust.png saved.")
 
-def bench2():
-    """Horizontal bars – raw values on a log scale."""
-    y, w  = np.arange(len(ordered_ops)), 0.1
-    fig, ax = plt.subplots(figsize=(12, 8))
-
-    ax.barh(y - 2*w, du_volatile_arr,   w, label='Doublets United Volatile',   color='salmon')
-    ax.barh(y -   w, du_nonvolatile_arr,w, label='Doublets United NonVolatile',color='red')
-    ax.barh(y      , ds_volatile_arr,    w, label='Doublets Split Volatile',    color='lightgreen')
-    ax.barh(y +   w, ds_nonvolatile_arr, w, label='Doublets Split NonVolatile', color='green')
-    ax.barh(y + 2*w, neo4j_non_arr,      w, label='Neo4j NonTransaction',       color='lightblue')
-    ax.barh(y + 3*w, neo4j_trans_arr,    w, label='Neo4j Transaction',          color='blue')
-
-    ax.set_xlabel('Time (ns) – log scale')
-    ax.set_title ('Benchmark Comparison: Neo4j vs Doublets (Rust)')
-    ax.set_yticks(y); ax.set_yticklabels(ordered_ops); ax.set_xscale('log'); ax.legend()
-    fig.tight_layout(); plt.savefig("bench_rust_log_scale.png"); plt.close(fig)
-    if DEBUG: logging.info("bench_rust_log_scale.png saved.")
-
-# ─────────────────────────────────────────────────────────────────────────────
-# Run
-# ─────────────────────────────────────────────────────────────────────────────
-print_results_markdown()
-bench1()
-bench2()
+if __name__ == "__main__":
+    main()

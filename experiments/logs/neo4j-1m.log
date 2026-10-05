@@ -1,0 +1,15 @@
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on build directory
+    Finished `bench` profile [optimized] target(s) in 26.06s
+     Running benches/bench.rs (target/release/deps/bench-4a743730598bbab2)
+Gnuplot not found, using plotters backend
+
+Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 14.2s.
+test Each_Identity/Neo4j_Transaction ... bench:  1560547428 ns/iter (+/- 864572701)
+
+
+real	1m35.918s
+user	0m11.020s
+sys	0m5.534s
