@@ -1,16 +1,19 @@
 # Comparisons.Neo4jVSDoublets
 
 This repository measures how long basic operations on links take in two
-databases:
+databases, with the same benchmarks written in two languages:
 
-- **Neo4j** 2026.09 Community Edition with default settings, used from Rust
-  through the [neo4rs](https://github.com/neo4j-labs/neo4rs) Bolt driver;
-- **Doublets**, the [doublets](https://crates.io/crates/doublets) Rust
-  library from LinksPlatform, used in the same process as the benchmark.
+| Language | Neo4j 2026.09 Community Edition (default settings)                     | Doublets (LinksPlatform, in the benchmark process)                                  |
+|----------|------------------------------------------------------------------------|-------------------------------------------------------------------------------------|
+| Rust     | [neo4rs](https://github.com/neo4j-labs/neo4rs) Bolt driver             | [doublets](https://crates.io/crates/doublets) crate                                 |
+| C#       | official [Neo4j.Driver](https://www.nuget.org/packages/Neo4j.Driver)   | [Platform.Data.Doublets](https://www.nuget.org/packages/Platform.Data.Doublets) package |
 
-A link (doublet) is a triple `(id, source, target)`. Both databases implement
-the same [`Doublets`](https://docs.rs/doublets) interface, and every benchmark
-calls the same methods on all of them.
+A link (doublet) is a triple `(id, source, target)`. In each language both
+databases implement the same interface (the [`Doublets`](https://docs.rs/doublets)
+trait in Rust, [`IBenchedLinks`](csharp/Neo4jVSDoublets/IBenchedLinks.cs) in
+C#), and every benchmark calls the same methods on all of them. Both languages
+send the same Cypher statements and run the same operations with the same
+sizes, so their results can be compared with each other.
 
 The measured value is the time until an operation is finished from the point
 of view of the caller. Two workloads are reported:
@@ -75,7 +78,11 @@ already one statement, so it has no batch variant.
 
 The exact statements and data structures are documented in
 [`rust/src/neo4j_impl.rs`](rust/src/neo4j_impl.rs) and
-[`rust/src/doublets_impl.rs`](rust/src/doublets_impl.rs).
+[`rust/src/doublets_impl.rs`](rust/src/doublets_impl.rs), and for C# in
+[`csharp/Neo4jVSDoublets/Neo4jLinks.cs`](csharp/Neo4jVSDoublets/Neo4jLinks.cs) and
+[`csharp/Neo4jVSDoublets/DoubletsLinks.cs`](csharp/Neo4jVSDoublets/DoubletsLinks.cs).
+The C# names of the operations are `CreatePoint`, `Update`, `Delete` and
+`Each(id, source, target, visit)`.
 
 ## Method
 
@@ -100,19 +107,26 @@ The exact statements and data structures are documented in
 - [Criterion.rs](https://github.com/bheisler/criterion.rs) collects the
   samples: 10 samples (at least 5 s) for Neo4j, 100 samples for Doublets. The
   tables show the median time of one iteration.
-- The CI runs the Neo4j and Doublets benchmarks in separate GitHub Actions jobs
-  (separate virtual machines), and each number of background links in its own
-  job, so they do not compete for the same CPU. Neo4j runs in the official
-  `neo4j:2026.09-community` Docker image without configuration changes.
-- Before the benchmarks, a test checks that all seven implementations return the
+- The C# benchmarks sample the same way: their
+  [harness](csharp/Neo4jVSDoublets/Harness.cs) warms up and chooses the
+  number of iterations of every sample with the formulas of Criterion 0.8
+  (flat sampling for Neo4j, linear for Doublets), and prints the same
+  `bencher` lines (median and standard deviation), so one script reports both
+  languages.
+- The CI runs every language, database and number of background links in its
+  own GitHub Actions job (a separate virtual machine), so they do not compete
+  for the same CPU. Neo4j runs in the official `neo4j:2026.09-community`
+  Docker image without configuration changes.
+- Before the benchmarks, tests check that all seven implementations return the
   same results and that undoing an iteration restores the links
-  ([`rust/tests/same_behavior.rs`](rust/tests/same_behavior.rs)).
+  ([`rust/tests/same_behavior.rs`](rust/tests/same_behavior.rs),
+  [`csharp/Neo4jVSDoublets.Tests/SameBehaviorTests.cs`](csharp/Neo4jVSDoublets.Tests/SameBehaviorTests.cs)).
 
 Benchmarks on the main branch use `N = 1,000` and `B` = 10,000, 100,000 and
 1,000,000; such a run takes about 12 minutes on GitHub Actions (the longest
 job, Neo4j with 1,000,000 background links, about 11 minutes). Pull requests
 run a quick check with `N = 100` and `B = 1,000`. Larger `B` are not possible
-with doublets 0.5.0 (see [Limitations](#limitations)). Changes that do not
+with the Rust doublets 0.5.0 (see [Limitations](#limitations)). Changes that do not
 touch the code, such as this README, start no tests or benchmarks.
 
 ## Results
@@ -203,25 +217,27 @@ _No results yet._
 
 ## Limitations
 
-- **Driver round trips.** neo4rs needs 3 network round trips for a statement
+- **Driver round trips (Rust).** neo4rs needs 3 network round trips for a statement
   outside of an explicit transaction and 2 inside one. The
   [`neo4j`](https://crates.io/crates/neo4j) crate, which follows the API of the
   official drivers, needs 2 and 1 because it sends several Bolt messages at
   once ([`experiments`](experiments)). Neo4j does not publish an official Rust
-  driver.
+  driver; the C# benchmarks use the official .NET driver.
 - **One client.** The benchmarks run operations one after another from one
   thread. Throughput with concurrent clients is not measured.
 - **Only time is measured.** Memory use and disk I/O are not collected.
 - **Each Concrete** returns at most one link in Doublets, which treats a
   `(source, target)` pair as unique; the benchmarks never create two links
   with the same pair.
-- **At most 1,040,383 links.** The doublets 0.5.0 stores panic when link
+- **At most 1,040,383 links (Rust).** The doublets 0.5.0 stores panic when link
   number 1,040,384 is created: after growing their memory, they use only the
   newly added part of it as the whole array (see
   [`experiments/store-capacity`](experiments/store-capacity) and the
   "Capacity" section of [`rust/src/doublets_impl.rs`](rust/src/doublets_impl.rs)).
-  This is why `B` stops at 1,000,000.
-- **Point links only.** The doublets 0.5.0 Split store does not find links
+  This is why `B` stops at 1,000,000. The C# Platform.Data.Doublets stores
+  have no such limit, but use the same sizes, so the results of both languages
+  stay comparable.
+- **Point links only.** The Rust doublets 0.5.0 Split store does not find links
   with `source != target` by `[*, source, *]` and `[*, source, target]` queries
   after an `update` (see
   [`experiments/split-store-bug`](experiments/split-store-bug)). The
@@ -240,7 +256,15 @@ cd rust
 cargo test --release -- --include-ignored     # check that all stores agree
 cargo bench --bench bench                     # both databases
 BENCHMARK_BACKEND=doublets cargo bench --bench bench   # Doublets only, no server needed
+
+cd ../csharp                                  # .NET SDK 10
+NEO4J_URI=bolt://localhost:7687 dotnet test   # check that all stores agree (without NEO4J_URI the Neo4j tests are skipped)
+dotnet run -c Release --project Neo4jVSDoublets          # both databases
+BENCHMARK_BACKEND=doublets dotnet run -c Release --project Neo4jVSDoublets   # Doublets only
+dotnet run -c Release --project Neo4jVSDoublets Each_    # only benchmarks whose name contains Each_
 ```
+
+Both languages read the same environment variables:
 
 | Environment variable         | Default                 | Meaning                                    |
 |------------------------------|-------------------------|--------------------------------------------|
@@ -253,8 +277,9 @@ BENCHMARK_BACKEND=doublets cargo bench --bench bench   # Doublets only, no serve
 
 The tables and charts are generated with
 [`scripts/benchmark_report.py`](scripts/benchmark_report.py) from the output of
-`cargo bench --bench bench -- --output-format bencher`, saved as
-`results/rust-<B>-<neo4j|doublets>.txt` after the lines that
+`cargo bench --bench bench -- --output-format bencher` (Rust) or
+`dotnet run -c Release --project Neo4jVSDoublets` (C#), saved as
+`results/<rust|csharp>-<B>-<neo4j|doublets>.txt` after the lines that
 [`scripts/benchmark_header.sh`](scripts/benchmark_header.sh) prints:
 
 ```bash
@@ -264,6 +289,9 @@ for backend in neo4j doublets; do
   { scripts/benchmark_header.sh $backend
     (cd rust && BENCHMARK_BACKEND=$backend cargo bench --bench bench -- --output-format bencher --noplot)
   } > results/rust-1000-$backend.txt
+  { scripts/benchmark_header.sh $backend
+    (cd csharp && BENCHMARK_BACKEND=$backend dotnet run -c Release --project Neo4jVSDoublets)
+  } > results/csharp-1000-$backend.txt
 done
 pip install matplotlib
 python3 scripts/benchmark_report.py results --readme README.md --charts Docs

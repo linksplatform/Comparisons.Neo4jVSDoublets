@@ -1,4 +1,4 @@
-name: Benchmark Rust version
+name: Benchmarks
 
 # Runs only when code that affects the results changes.
 on:
@@ -8,22 +8,26 @@ on:
       - master
     paths:
       - 'rust/**'
+      - 'csharp/**'
       - 'scripts/**'
       - 'rust-toolchain.toml'
-      - '.github/workflows/rust.yml'
+      - '.github/workflows/benchmarks.yml'
   pull_request:
     branches:
       - main
       - master
     paths:
       - 'rust/**'
+      - 'csharp/**'
       - 'scripts/**'
       - 'rust-toolchain.toml'
-      - '.github/workflows/rust.yml'
+      - '.github/workflows/benchmarks.yml'
   workflow_dispatch:
 
 env:
   CARGO_TERM_COLOR: always
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
   NEO4J_URI: bolt://localhost:7687
   NEO4J_USER: neo4j
   NEO4J_PASSWORD: password
@@ -57,7 +61,7 @@ jobs:
           else
             echo "Files changed by the push:"
             echo "$files"
-            if grep -qE '^(rust/|scripts/|rust-toolchain\.toml$|\.github/workflows/rust\.yml$)' <<< "$files"; then
+            if grep -qE '^(rust/|csharp/|scripts/|rust-toolchain\.toml$|\.github/workflows/benchmarks\.yml$)' <<< "$files"; then
               echo "code=true" >> "$GITHUB_OUTPUT"
             else
               echo "No code changed, skipping the tests and benchmarks"
@@ -112,79 +116,134 @@ jobs:
           pip install matplotlib
           python3 -m unittest discover -s scripts -v
 
-  benchmark-neo4j:
-    needs: test
+  test-csharp:
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
     concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}-neo4j-${{ matrix.background }}
+      group: ${{ github.workflow }}-${{ github.ref }}-test-csharp
       cancel-in-progress: true
     runs-on: ubuntu-latest
-    timeout-minutes: 120
-    strategy:
-      matrix:
-        background: ${{ fromJSON(github.event_name == 'pull_request' && '[1000]' || '[10000, 100000, 1000000]') }}
+    timeout-minutes: 30
     services:
       neo4j: *neo4j
     defaults:
       run:
-        working-directory: rust
+        working-directory: csharp
     steps:
       - uses: actions/checkout@v7
-      - uses: dtolnay/rust-toolchain@stable
-      - uses: Swatinem/rust-cache@v2
+      - uses: actions/setup-dotnet@v6
         with:
-          workspaces: rust
-      - name: Run benchmark
-        env:
-          BENCHMARK_BACKEND: neo4j
-          BENCHMARK_BACKGROUND_LINKS: ${{ matrix.background }}
-          # A fresh directory: Criterion compares with an older result if one
-          # exists, and the directories restored by the cache are incomplete.
-          CRITERION_HOME: ${{ runner.temp }}/criterion
-        run: |
-          set -o pipefail
-          { ../scripts/benchmark_header.sh neo4j
-            cargo bench --bench bench -- --output-format bencher --noplot
-          } | tee rust-${{ matrix.background }}-neo4j.txt
-      - uses: actions/upload-artifact@v7
-        with:
-          name: bench-rust-${{ matrix.background }}-neo4j
-          path: rust/rust-${{ matrix.background }}-neo4j.txt
+          global-json-file: csharp/global.json
+      - name: Format
+        run: dotnet format --verify-no-changes
+      - name: Build (warnings are errors)
+        run: dotnet build -c Release
+      - name: Test (all stores give the same results)
+        run: dotnet test -c Release --no-build
 
-  benchmark-doublets:
-    needs: test
+  benchmark-neo4j:
+    needs: [test, test-csharp]
     concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}-doublets-${{ matrix.background }}
+      group: ${{ github.workflow }}-${{ github.ref }}-neo4j-${{ matrix.language }}-${{ matrix.background }}
       cancel-in-progress: true
     runs-on: ubuntu-latest
     timeout-minutes: 120
     strategy:
       matrix:
+        language: [rust, csharp]
         background: ${{ fromJSON(github.event_name == 'pull_request' && '[1000]' || '[10000, 100000, 1000000]') }}
+        include:
+          - language: rust
+            benchmark: cargo bench --bench bench -- --output-format bencher --noplot
+          - language: csharp
+            benchmark: dotnet run -c Release --no-build --project Neo4jVSDoublets
+    services:
+      neo4j: *neo4j
     defaults:
       run:
-        working-directory: rust
+        working-directory: ${{ matrix.language }}
     steps:
       - uses: actions/checkout@v7
-      - uses: dtolnay/rust-toolchain@stable
-      - uses: Swatinem/rust-cache@v2
+      - if: matrix.language == 'rust'
+        uses: dtolnay/rust-toolchain@stable
+      - if: matrix.language == 'rust'
+        uses: Swatinem/rust-cache@v2
         with:
           workspaces: rust
+      - if: matrix.language == 'csharp'
+        uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: csharp/global.json
+      - name: Build
+        if: matrix.language == 'csharp'
+        run: dotnet build -c Release
+      - name: Run benchmark
+        env:
+          BENCHMARK_BACKEND: neo4j
+          BENCHMARK_BACKGROUND_LINKS: ${{ matrix.background }}
+          # Rust only: a fresh directory, because Criterion compares with an older
+          # result if one exists, and the directories restored by the cache are incomplete.
+          CRITERION_HOME: ${{ runner.temp }}/criterion
+        run: |
+          set -o pipefail
+          { ../scripts/benchmark_header.sh neo4j
+            ${{ matrix.benchmark }}
+          } | tee ${{ matrix.language }}-${{ matrix.background }}-neo4j.txt
+      - uses: actions/upload-artifact@v7
+        with:
+          name: bench-${{ matrix.language }}-${{ matrix.background }}-neo4j
+          path: ${{ matrix.language }}/${{ matrix.language }}-${{ matrix.background }}-neo4j.txt
+
+  benchmark-doublets:
+    needs: [test, test-csharp]
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}-doublets-${{ matrix.language }}-${{ matrix.background }}
+      cancel-in-progress: true
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    strategy:
+      matrix:
+        language: [rust, csharp]
+        background: ${{ fromJSON(github.event_name == 'pull_request' && '[1000]' || '[10000, 100000, 1000000]') }}
+        include:
+          - language: rust
+            benchmark: cargo bench --bench bench -- --output-format bencher --noplot
+          - language: csharp
+            benchmark: dotnet run -c Release --no-build --project Neo4jVSDoublets
+    defaults:
+      run:
+        working-directory: ${{ matrix.language }}
+    steps:
+      - uses: actions/checkout@v7
+      - if: matrix.language == 'rust'
+        uses: dtolnay/rust-toolchain@stable
+      - if: matrix.language == 'rust'
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: rust
+      - if: matrix.language == 'csharp'
+        uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: csharp/global.json
+      - name: Build
+        if: matrix.language == 'csharp'
+        run: dotnet build -c Release
       - name: Run benchmark
         env:
           BENCHMARK_BACKEND: doublets
           BENCHMARK_BACKGROUND_LINKS: ${{ matrix.background }}
-          # A fresh directory: Criterion compares with an older result if one
-          # exists, and the directories restored by the cache are incomplete.
+          # Rust only: a fresh directory, because Criterion compares with an older
+          # result if one exists, and the directories restored by the cache are incomplete.
           CRITERION_HOME: ${{ runner.temp }}/criterion
         run: |
           set -o pipefail
           { ../scripts/benchmark_header.sh doublets
-            cargo bench --bench bench -- --output-format bencher --noplot
-          } | tee rust-${{ matrix.background }}-doublets.txt
+            ${{ matrix.benchmark }}
+          } | tee ${{ matrix.language }}-${{ matrix.background }}-doublets.txt
       - uses: actions/upload-artifact@v7
         with:
-          name: bench-rust-${{ matrix.background }}-doublets
-          path: rust/rust-${{ matrix.background }}-doublets.txt
+          name: bench-${{ matrix.language }}-${{ matrix.background }}-doublets
+          path: ${{ matrix.language }}/${{ matrix.language }}-${{ matrix.background }}-doublets.txt
 
   report:
     needs: [benchmark-neo4j, benchmark-doublets]
