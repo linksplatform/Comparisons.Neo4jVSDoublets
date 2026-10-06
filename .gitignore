@@ -23,14 +23,17 @@ target
 # Database files created by the benchmarks
 *.links
 
-# Benchmark output and the files generated from it by out.py
+# Benchmark output read by scripts/benchmark_report.py
+results/
 rust/results/
 rust/results.md
 rust/*-neo4j.txt
 rust/*-doublets.txt
+csharp/*-neo4j.txt
+csharp/*-doublets.txt
 
 # CI logs downloaded locally while investigating runs
 ci-logs/
 
-# Python bytecode of out.py
+# Python bytecode of the report scripts
 __pycache__/

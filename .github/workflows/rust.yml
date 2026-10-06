@@ -8,6 +8,7 @@ on:
       - master
     paths:
       - 'rust/**'
+      - 'scripts/**'
       - 'rust-toolchain.toml'
       - '.github/workflows/rust.yml'
   pull_request:
@@ -16,6 +17,7 @@ on:
       - master
     paths:
       - 'rust/**'
+      - 'scripts/**'
       - 'rust-toolchain.toml'
       - '.github/workflows/rust.yml'
   workflow_dispatch:
@@ -55,7 +57,7 @@ jobs:
           else
             echo "Files changed by the push:"
             echo "$files"
-            if grep -qE '^(rust/|rust-toolchain\.toml$|\.github/workflows/rust\.yml$)' <<< "$files"; then
+            if grep -qE '^(rust/|scripts/|rust-toolchain\.toml$|\.github/workflows/rust\.yml$)' <<< "$files"; then
               echo "code=true" >> "$GITHUB_OUTPUT"
             else
               echo "No code changed, skipping the tests and benchmarks"
@@ -101,6 +103,14 @@ jobs:
         run: cargo clippy --release --all-targets -- -D warnings
       - name: Test (all stores give the same results)
         run: cargo test --release -- --include-ignored
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.x'
+      - name: Test the report generator
+        working-directory: .
+        run: |
+          pip install matplotlib
+          python3 -m unittest discover -s scripts -v
 
   benchmark-neo4j:
     needs: test
@@ -132,11 +142,13 @@ jobs:
           CRITERION_HOME: ${{ runner.temp }}/criterion
         run: |
           set -o pipefail
-          cargo bench --bench bench -- --output-format bencher --noplot | tee ${{ matrix.background }}-neo4j.txt
+          { ../scripts/benchmark_header.sh neo4j
+            cargo bench --bench bench -- --output-format bencher --noplot
+          } | tee rust-${{ matrix.background }}-neo4j.txt
       - uses: actions/upload-artifact@v7
         with:
-          name: bench-${{ matrix.background }}-neo4j
-          path: rust/${{ matrix.background }}-neo4j.txt
+          name: bench-rust-${{ matrix.background }}-neo4j
+          path: rust/rust-${{ matrix.background }}-neo4j.txt
 
   benchmark-doublets:
     needs: test
@@ -166,11 +178,13 @@ jobs:
           CRITERION_HOME: ${{ runner.temp }}/criterion
         run: |
           set -o pipefail
-          cargo bench --bench bench -- --output-format bencher --noplot | tee ${{ matrix.background }}-doublets.txt
+          { ../scripts/benchmark_header.sh doublets
+            cargo bench --bench bench -- --output-format bencher --noplot
+          } | tee rust-${{ matrix.background }}-doublets.txt
       - uses: actions/upload-artifact@v7
         with:
-          name: bench-${{ matrix.background }}-doublets
-          path: rust/${{ matrix.background }}-doublets.txt
+          name: bench-rust-${{ matrix.background }}-doublets
+          path: rust/rust-${{ matrix.background }}-doublets.txt
 
   report:
     needs: [benchmark-neo4j, benchmark-doublets]
@@ -187,22 +201,22 @@ jobs:
         with:
           pattern: bench-*
           merge-multiple: true
-          path: rust/results
+          path: results
       - uses: actions/setup-python@v7
         with:
           python-version: '3.x'
       - name: Generate tables and charts
-        working-directory: rust
         run: |
-          pip install numpy matplotlib
-          python3 out.py
+          set -o pipefail
+          pip install matplotlib
+          python3 scripts/benchmark_report.py results --readme README.md --charts Docs | tee "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@v7
         with:
           name: Benchmark results
           path: |
-            rust/results
-            rust/results.md
-            Docs/bench_rust_*.png
+            results
+            README.md
+            Docs/bench_*.png
       - name: Commit results
         if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
         run: |
