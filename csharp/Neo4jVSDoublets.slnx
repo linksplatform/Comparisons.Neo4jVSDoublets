@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Neo4jVSDoublets.Tests/Neo4jVSDoublets.Tests.csproj" />
+  <Project Path="Neo4jVSDoublets/Neo4jVSDoublets.csproj" />
+</Solution>
