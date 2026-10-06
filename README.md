@@ -156,61 +156,113 @@ code on the main branch. Every cell is the median time of one iteration
 
 #### Rust: 10,000 background links, 1,000 links per iteration
 
-_Median time of one iteration with 1,000 links. Neo4j 2026.09.0 Community through neo4rs 0.8.0; doublets 0.5.0. CPU unknown, [GitHub Actions run](https://github.com/linksplatform/Comparisons.Neo4jVSDoublets/actions/runs/37293828831) on 2026-10-05._
+_Median time of one iteration with 1,000 links. Neo4j 2026.09.0 Community through neo4rs 0.8.0; doublets 0.5.0. CPU AMD EPYC 9V74 80-Core Processor (Neo4j) and AMD EPYC 7763 64-Core Processor (Doublets), [GitHub Actions run](https://github.com/linksplatform/Comparisons.Neo4jVSDoublets/actions/runs/37524891785) on 2026-10-06._
 
 | Operation | Doublets United Volatile | Doublets United NonVolatile | Doublets Split Volatile | Doublets Split NonVolatile | Neo4j NonTransaction | Neo4j Transaction | Neo4j Batch |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| Create | 79.8 µs (128× faster) | 79.2 µs (129× faster) | 51.2 µs (200× faster) | 51.4 µs (199× faster) | 838 ms | 377 ms | **10.2 ms** |
-| Update | 396 µs (162× faster) | 391 µs (164× faster) | 39.4 µs (1,630× faster) | 39.2 µs (1,640× faster) | 1.49 s | 776 ms | **64.3 ms** |
-| Delete | 180 µs (52× faster) | 179 µs (52× faster) | 105 µs (88.7× faster) | 104 µs (89.7× faster) | 757 ms | 385 ms | **9.33 ms** |
-| Each All | 13.1 µs (2,560× faster) | 13.5 µs (2,490× faster) | 69.6 µs (482× faster) | 69.3 µs (484× faster) | **33.5 ms** | 34 ms | — |
-| Each Identity | 5.02 µs (1,390× faster) | 5.01 µs (1,390× faster) | 9.71 µs (718× faster) | 9.7 µs (719× faster) | 573 ms | 375 ms | **6.97 ms** |
-| Each Concrete | 34.6 µs (203× faster) | 34.3 µs (205× faster) | 16.5 µs (425× faster) | 16.9 µs (417× faster) | 571 ms | 379 ms | **7.02 ms** |
-| Each Outgoing | 28.2 µs (231× faster) | 28.5 µs (228× faster) | 14.1 µs (463× faster) | 14.1 µs (463× faster) | 569 ms | 375 ms | **6.51 ms** |
-| Each Incoming | 67.1 µs (97.8× faster) | 64.9 µs (101× faster) | 16.5 µs (397× faster) | 16.5 µs (397× faster) | 566 ms | 372 ms | **6.56 ms** |
+| Create | 79.8 µs (120× faster) | 79.7 µs (121× faster) | 51.5 µs (187× faster) | 51.8 µs (186× faster) | 869 ms | 393 ms | **9.62 ms** |
+| Update | 396 µs (162× faster) | 390 µs (164× faster) | 39.1 µs (1,640× faster) | 39.1 µs (1,640× faster) | 1.5 s | 795 ms | **64.1 ms** |
+| Delete | 180 µs (47.1× faster) | 180 µs (47.2× faster) | 105 µs (80.6× faster) | 104 µs (81.4× faster) | 758 ms | 391 ms | **8.49 ms** |
+| Each All | 13.1 µs (2,610× faster) | 13.4 µs (2,540× faster) | 69.7 µs (489× faster) | 69.1 µs (493× faster) | **34.1 ms** | 34.5 ms | — |
+| Each Identity | 5.01 µs (1,290× faster) | 5.01 µs (1,290× faster) | 9.7 µs (669× faster) | 9.7 µs (669× faster) | 581 ms | 378 ms | **6.48 ms** |
+| Each Concrete | 34.6 µs (188× faster) | 34.3 µs (189× faster) | 16.5 µs (393× faster) | 16.9 µs (385× faster) | 585 ms | 386 ms | **6.5 ms** |
+| Each Outgoing | 28.3 µs (227× faster) | 28.5 µs (225× faster) | 14.1 µs (457× faster) | 14.1 µs (456× faster) | 579 ms | 384 ms | **6.42 ms** |
+| Each Incoming | 63.9 µs (101× faster) | 66.1 µs (97.5× faster) | 16.5 µs (390× faster) | 16.5 µs (390× faster) | 576 ms | 389 ms | **6.44 ms** |
 
 ![Rust, 10,000 background links, 1,000 links per iteration, linear scale](Docs/bench_rust_10000.png)
 ![Rust, 10,000 background links, 1,000 links per iteration, log scale](Docs/bench_rust_log_scale_10000.png)
 
 #### Rust: 100,000 background links, 1,000 links per iteration
 
-_Median time of one iteration with 1,000 links. Neo4j 2026.09.0 Community through neo4rs 0.8.0; doublets 0.5.0. CPU unknown, [GitHub Actions run](https://github.com/linksplatform/Comparisons.Neo4jVSDoublets/actions/runs/37293828831) on 2026-10-05._
+_Median time of one iteration with 1,000 links. Neo4j 2026.09.0 Community through neo4rs 0.8.0; doublets 0.5.0. CPU INTEL(R) XEON(R) PLATINUM 8573C (Neo4j) and AMD EPYC 9V74 80-Core Processor (Doublets), [GitHub Actions run](https://github.com/linksplatform/Comparisons.Neo4jVSDoublets/actions/runs/37524891785) on 2026-10-06._
 
 | Operation | Doublets United Volatile | Doublets United NonVolatile | Doublets Split Volatile | Doublets Split NonVolatile | Neo4j NonTransaction | Neo4j Transaction | Neo4j Batch |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| Create | 101 µs (103× faster) | 100 µs (103× faster) | 70.5 µs (146× faster) | 51.7 µs (199× faster) | 1.04 s | 483 ms | **10.3 ms** |
-| Update | 461 µs (146× faster) | 455 µs (148× faster) | 39.2 µs (1,720× faster) | 39.2 µs (1,720× faster) | 1.84 s | 968 ms | **67.3 ms** |
-| Delete | 217 µs (45.2× faster) | 216 µs (45.2× faster) | 111 µs (88.5× faster) | 105 µs (93.3× faster) | 943 ms | 481 ms | **9.78 ms** |
-| Each All | 131 µs (2,840× faster) | 135 µs (2,760× faster) | 696 µs (534× faster) | 691 µs (537× faster) | **372 ms** | 372 ms | — |
-| Each Identity | 5.01 µs (1,380× faster) | 5.01 µs (1,380× faster) | 9.69 µs (711× faster) | 9.68 µs (712× faster) | 702 ms | 470 ms | **6.89 ms** |
-| Each Concrete | 47.4 µs (145× faster) | 49.6 µs (138× faster) | 16.5 µs (415× faster) | 16.8 µs (408× faster) | 706 ms | 478 ms | **6.87 ms** |
-| Each Outgoing | 46.4 µs (149× faster) | 46.9 µs (147× faster) | 14 µs (492× faster) | 14.1 µs (492× faster) | 705 ms | 470 ms | **6.91 ms** |
-| Each Incoming | 79.1 µs (86.5× faster) | 78.3 µs (87.3× faster) | 16.5 µs (414× faster) | 16.5 µs (413× faster) | 703 ms | 467 ms | **6.84 ms** |
+| Create | 80.8 µs (116× faster) | 80.8 µs (116× faster) | 37.3 µs (251× faster) | 37.3 µs (251× faster) | 911 ms | 307 ms | **9.38 ms** |
+| Update | 365 µs (184× faster) | 363 µs (185× faster) | 28.5 µs (2,350× faster) | 28.4 µs (2,360× faster) | 1.64 s | 626 ms | **67.1 ms** |
+| Delete | 146 µs (62.9× faster) | 149 µs (61.9× faster) | 81.3 µs (113× faster) | 80.6 µs (114× faster) | 822 ms | 312 ms | **9.19 ms** |
+| Each All | 108 µs (2,930× faster) | 110 µs (2,870× faster) | 630 µs (501× faster) | 630 µs (502× faster) | **316 ms** | 322 ms | — |
+| Each Identity | 3.88 µs (1,620× faster) | 3.88 µs (1,620× faster) | 8.49 µs (740× faster) | 8.49 µs (740× faster) | 461 ms | 290 ms | **6.28 ms** |
+| Each Concrete | 37.1 µs (172× faster) | 37.2 µs (172× faster) | 14.3 µs (448× faster) | 14.3 µs (448× faster) | 466 ms | 294 ms | **6.39 ms** |
+| Each Outgoing | 30.4 µs (204× faster) | 30.5 µs (204× faster) | 11.5 µs (538× faster) | 11.5 µs (538× faster) | 469 ms | 303 ms | **6.21 ms** |
+| Each Incoming | 51.2 µs (122× faster) | 51.6 µs (121× faster) | 11.8 µs (530× faster) | 11.8 µs (530× faster) | 454 ms | 293 ms | **6.24 ms** |
 
 ![Rust, 100,000 background links, 1,000 links per iteration, linear scale](Docs/bench_rust_100000.png)
 ![Rust, 100,000 background links, 1,000 links per iteration, log scale](Docs/bench_rust_log_scale_100000.png)
 
 #### Rust: 1,000,000 background links, 1,000 links per iteration
 
-_Median time of one iteration with 1,000 links. Neo4j 2026.09.0 Community through neo4rs 0.8.0; doublets 0.5.0. CPU unknown, [GitHub Actions run](https://github.com/linksplatform/Comparisons.Neo4jVSDoublets/actions/runs/37293828831) on 2026-10-05._
+_Median time of one iteration with 1,000 links. Neo4j 2026.09.0 Community through neo4rs 0.8.0; doublets 0.5.0. CPU AMD EPYC 7763 64-Core Processor, [GitHub Actions run](https://github.com/linksplatform/Comparisons.Neo4jVSDoublets/actions/runs/37524891785) on 2026-10-06._
 
 | Operation | Doublets United Volatile | Doublets United NonVolatile | Doublets Split Volatile | Doublets Split NonVolatile | Neo4j NonTransaction | Neo4j Transaction | Neo4j Batch |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| Create | 116 µs (45.6× faster) | 120 µs (44.2× faster) | 28.6 µs (185× faster) | 30.4 µs (174× faster) | 580 ms | 197 ms | **5.3 ms** |
-| Update | 453 µs (125× faster) | 451 µs (126× faster) | 22.2 µs (2,550× faster) | 23.6 µs (2,400× faster) | 990 ms | 411 ms | **56.7 ms** |
-| Delete | 202 µs (26.5× faster) | 200 µs (26.7× faster) | 67.1 µs (79.7× faster) | 68.9 µs (77.5× faster) | 462 ms | 203 ms | **5.34 ms** |
-| Each All | 2.16 ms (908× faster) | 2.16 ms (906× faster) | 5.81 ms (337× faster) | 5.55 ms (353× faster) | **1.96 s** | 2.04 s | — |
-| Each Identity | 3.14 µs (1,230× faster) | 3.15 µs (1,230× faster) | 7.25 µs (535× faster) | 7.5 µs (517× faster) | 292 ms | 191 ms | **3.88 ms** |
-| Each Concrete | 53.4 µs (72.9× faster) | 58.6 µs (66.5× faster) | 11.8 µs (330× faster) | 11.8 µs (330× faster) | 309 ms | 191 ms | **3.89 ms** |
-| Each Outgoing | 68.6 µs (54.5× faster) | 68.5 µs (54.6× faster) | 10.6 µs (351× faster) | 10.4 µs (360× faster) | 291 ms | 188 ms | **3.74 ms** |
-| Each Incoming | 90.8 µs (42.7× faster) | 91.2 µs (42.5× faster) | 10.9 µs (357× faster) | 10.6 µs (366× faster) | 288 ms | 192 ms | **3.88 ms** |
+| Create | 113 µs (87.6× faster) | 113 µs (88× faster) | 51.1 µs (194× faster) | 51.5 µs (193× faster) | 978 ms | 476 ms | **9.94 ms** |
+| Update | 520 µs (129× faster) | 511 µs (132× faster) | 39.2 µs (1,710× faster) | 39.2 µs (1,720× faster) | 1.71 s | 958 ms | **67.2 ms** |
+| Delete | 250 µs (37.8× faster) | 248 µs (38.1× faster) | 105 µs (89.5× faster) | 106 µs (89.3× faster) | 922 ms | 480 ms | **9.44 ms** |
+| Each All | 2.67 ms (1,360× faster) | 2.97 ms (1,220× faster) | 7.05 ms (513× faster) | 7.12 ms (508× faster) | **3.62 s** | 3.65 s | — |
+| Each Identity | 5.01 µs (1,470× faster) | 5.01 µs (1,470× faster) | 9.7 µs (760× faster) | 9.69 µs (761× faster) | 707 ms | 468 ms | **7.37 ms** |
+| Each Concrete | 53.9 µs (130× faster) | 59.2 µs (118× faster) | 16.5 µs (424× faster) | 17.2 µs (408× faster) | 707 ms | 470 ms | **7.01 ms** |
+| Each Outgoing | 59.9 µs (116× faster) | 60.2 µs (115× faster) | 14.1 µs (492× faster) | 14.1 µs (492× faster) | 694 ms | 466 ms | **6.92 ms** |
+| Each Incoming | 107 µs (65.2× faster) | 105 µs (66.2× faster) | 16.5 µs (421× faster) | 16.5 µs (421× faster) | 693 ms | 464 ms | **6.96 ms** |
 
 ![Rust, 1,000,000 background links, 1,000 links per iteration, linear scale](Docs/bench_rust_1000000.png)
 ![Rust, 1,000,000 background links, 1,000 links per iteration, log scale](Docs/bench_rust_log_scale_1000000.png)
 
 ### C#
 
-_No results yet._
+#### C#: 10,000 background links, 1,000 links per iteration
+
+_Median time of one iteration with 1,000 links. Neo4j 2026.09.0 Community through Neo4j.Driver 6.3.0; Platform.Data.Doublets 0.18.1. CPU AMD EPYC 9V74 80-Core Processor (Neo4j) and AMD EPYC 7763 64-Core Processor (Doublets), [GitHub Actions run](https://github.com/linksplatform/Comparisons.Neo4jVSDoublets/actions/runs/37524891785) on 2026-10-06._
+
+| Operation | Doublets United Volatile | Doublets United NonVolatile | Doublets Split Volatile | Doublets Split NonVolatile | Neo4j NonTransaction | Neo4j Transaction | Neo4j Batch |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Create | 660 µs (14× faster) | 638 µs (14.5× faster) | 195 µs (47.4× faster) | 180 µs (51.2× faster) | 1.24 s | 334 ms | **9.23 ms** |
+| Update | 1.02 ms (20.5× faster) | 1.01 ms (20.7× faster) | 126 µs (166× faster) | 126 µs (166× faster) | 1.79 s | 714 ms | **20.9 ms** |
+| Delete | 288 µs (31.7× faster) | 289 µs (31.7× faster) | 154 µs (59.4× faster) | 164 µs (55.8× faster) | 1.31 s | 354 ms | **9.14 ms** |
+| Each All | 190 µs (106× faster) | 191 µs (106× faster) | 169 µs (119× faster) | 170 µs (119× faster) | **20.2 ms** | 20.7 ms | — |
+| Each Identity | 36.5 µs (118× faster) | 36.4 µs (118× faster) | 56.5 µs (76.1× faster) | 56.4 µs (76.3× faster) | 524 ms | 335 ms | **4.3 ms** |
+| Each Concrete | 67.1 µs (65.1× faster) | 73.8 µs (59.2× faster) | 60.4 µs (72.3× faster) | 60.4 µs (72.3× faster) | 1.45 s | 334 ms | **4.37 ms** |
+| Each Outgoing | 101 µs (42.2× faster) | 98.8 µs (43× faster) | 60.6 µs (70.1× faster) | 59.8 µs (71× faster) | 522 ms | 333 ms | **4.25 ms** |
+| Each Incoming | 154 µs (27.4× faster) | 152 µs (27.6× faster) | 62.2 µs (67.7× faster) | 61.2 µs (68.8× faster) | 521 ms | 336 ms | **4.21 ms** |
+
+![C#, 10,000 background links, 1,000 links per iteration, linear scale](Docs/bench_csharp_10000.png)
+![C#, 10,000 background links, 1,000 links per iteration, log scale](Docs/bench_csharp_log_scale_10000.png)
+
+#### C#: 100,000 background links, 1,000 links per iteration
+
+_Median time of one iteration with 1,000 links. Neo4j 2026.09.0 Community through Neo4j.Driver 6.3.0; Platform.Data.Doublets 0.18.1. CPU AMD EPYC 7763 64-Core Processor (Neo4j) and AMD EPYC 9V45 96-Core Processor (Doublets), [GitHub Actions run](https://github.com/linksplatform/Comparisons.Neo4jVSDoublets/actions/runs/37524891785) on 2026-10-06._
+
+| Operation | Doublets United Volatile | Doublets United NonVolatile | Doublets Split Volatile | Doublets Split NonVolatile | Neo4j NonTransaction | Neo4j Transaction | Neo4j Batch |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Create | 419 µs (24.2× faster) | 411 µs (24.7× faster) | 75.5 µs (134× faster) | 84.4 µs (120× faster) | 1.12 s | 472 ms | **10.1 ms** |
+| Update | 628 µs (41.4× faster) | 631 µs (41.2× faster) | 74.2 µs (351× faster) | 75.2 µs (346× faster) | 1.97 s | 1.02 s | **26 ms** |
+| Delete | 219 µs (46.3× faster) | 224 µs (45.3× faster) | 82.6 µs (122× faster) | 91.3 µs (111× faster) | 1.01 s | 504 ms | **10.1 ms** |
+| Each All | 1.36 ms (188× faster) | 1.33 ms (191× faster) | 1.12 ms (228× faster) | 1.09 ms (233× faster) | **255 ms** | 263 ms | — |
+| Each Identity | 23.8 µs (248× faster) | 24.1 µs (245× faster) | 35.9 µs (164× faster) | 35.3 µs (167× faster) | 790 ms | 481 ms | **5.9 ms** |
+| Each Concrete | 76 µs (74.8× faster) | 83.2 µs (68.3× faster) | 37.6 µs (151× faster) | 38 µs (150× faster) | 790 ms | 482 ms | **5.69 ms** |
+| Each Outgoing | 87.8 µs (63.8× faster) | 84.6 µs (66.2× faster) | 37.9 µs (148× faster) | 38.3 µs (146× faster) | 776 ms | 479 ms | **5.6 ms** |
+| Each Incoming | 140 µs (40.6× faster) | 130 µs (43.6× faster) | 38.1 µs (149× faster) | 38.6 µs (146× faster) | 771 ms | 476 ms | **5.66 ms** |
+
+![C#, 100,000 background links, 1,000 links per iteration, linear scale](Docs/bench_csharp_100000.png)
+![C#, 100,000 background links, 1,000 links per iteration, log scale](Docs/bench_csharp_log_scale_100000.png)
+
+#### C#: 1,000,000 background links, 1,000 links per iteration
+
+_Median time of one iteration with 1,000 links. Neo4j 2026.09.0 Community through Neo4j.Driver 6.3.0; Platform.Data.Doublets 0.18.1. CPU Intel(R) Xeon(R) Platinum 8370C CPU @ 2.80GHz (Neo4j) and AMD EPYC 7763 64-Core Processor (Doublets), [GitHub Actions run](https://github.com/linksplatform/Comparisons.Neo4jVSDoublets/actions/runs/37524891785) on 2026-10-06._
+
+| Operation | Doublets United Volatile | Doublets United NonVolatile | Doublets Split Volatile | Doublets Split NonVolatile | Neo4j NonTransaction | Neo4j Transaction | Neo4j Batch |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Create | 913 µs (11.6× faster) | 935 µs (11.3× faster) | 177 µs (60× faster) | 195 µs (54.3× faster) | 967 ms | 368 ms | **10.6 ms** |
+| Update | 1.32 ms (23.2× faster) | 1.32 ms (23.3× faster) | 130 µs (236× faster) | 128 µs (240× faster) | 1.73 s | 830 ms | **30.7 ms** |
+| Delete | 462 µs (21.8× faster) | 470 µs (21.4× faster) | 165 µs (61.2× faster) | 190 µs (53.2× faster) | 841 ms | 390 ms | **10.1 ms** |
+| Each All | 22.4 ms (124× faster) | 22 ms (126× faster) | 18.4 ms (150× faster) | 19.3 ms (144× faster) | 2.8 s | **2.77 s** | — |
+| Each Identity | 44.7 µs (147× faster) | 41.9 µs (157× faster) | 61.8 µs (106× faster) | 64.1 µs (103× faster) | 604 ms | 365 ms | **6.57 ms** |
+| Each Concrete | 142 µs (46.2× faster) | 145 µs (45.2× faster) | 68.9 µs (95.5× faster) | 69.8 µs (94.2× faster) | 618 ms | 369 ms | **6.58 ms** |
+| Each Outgoing | 167 µs (36.9× faster) | 162 µs (38.1× faster) | 70.7 µs (87.3× faster) | 70.4 µs (87.6× faster) | 602 ms | 369 ms | **6.17 ms** |
+| Each Incoming | 208 µs (29.7× faster) | 217 µs (28.6× faster) | 71.2 µs (87× faster) | 71.7 µs (86.4× faster) | 584 ms | 380 ms | **6.19 ms** |
+
+![C#, 1,000,000 background links, 1,000 links per iteration, linear scale](Docs/bench_csharp_1000000.png)
+![C#, 1,000,000 background links, 1,000 links per iteration, log scale](Docs/bench_csharp_log_scale_1000000.png)
 
 <!-- markdownlint-restore -->
 <!-- results:end -->
